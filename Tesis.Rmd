@@ -1,0 +1,301 @@
+---
+documentclass: DissertateUSU
+title: 'IA en los mercados financieros. Consecuencias y caso practico'
+author: Arnau Muns Orenga
+bibliography: refs.bib
+csl: accounting-organizations-and-society.csl
+output:
+  pdf_document:
+    latex_engine: xelatex
+    includes:
+      in_header: preamble.tex
+    keep_tex: yes
+geometry: [top=2.5cm, bottom=2.5cm, right=2.5cm, left=2.5cm]
+params:
+  year: '2018'
+  degree: 'Degree'
+  field: 'Field'
+  chair: 'Chair Person'
+  committee1: 'Committee Member 1'
+  committee2: 'Committee Member 2'
+  committee3: 'Committee Member 3'
+  committee4: 'Committee Member 4'
+  gradschool: 'The Graduate School Individual'
+    
+---
+
+```{r global_options, include=FALSE}
+## This saves you from having to do this for every chunk
+knitr::opts_chunk$set(fig.path = 'figures/',
+                      echo = FALSE, 
+                      warning = FALSE, 
+                      message = FALSE)
+## Do NOT Remove
+dissertateUSU::preamble_for_title()
+```
+
+<!-- Title page printed automatically -->
+\pagenumbering{Roman}
+\pagestyle{empty}
+\copyrightpage
+
+<!-- Dedicación -->
+\newpage
+\fancyhead[L]{Dedicación}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+\chapter*{\textbf{DEDICACIÓN}}
+
+Este trabajo está dedicado a mi familia.
+
+<!-- Resumen -->
+\newpage
+\pagestyle{fancy}
+\fancyhead[L]{Resumen}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+\chapter*{\textbf{RESUMEN}}
+
+Resumen
+
+<!-- Palabras clave -->
+\newpage
+\fancyhead[L]{Palabras clave}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+\chapter*{\textbf{Palabras clave}}
+
+**Stock**, Inteligencia artificial, Aprendizaje automático, Modelo predictivo, precios OHLC 
+
+<!-- Front Matter -->
+\newpage
+\fancyhead[L]{Table of Contents}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+\tableofcontents
+
+\newpage
+\fancyhead[L]{\textbf{Lista de Tablas}}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+\listoftables
+
+\newpage
+\fancyhead[L]{\textbf{Lista de Figuras}}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+\listoffigures
+
+
+\newpage
+\pagenumbering{arabic}
+
+<!-- Introduction -->
+\newpage
+\fancyhead[L]{Introducción}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+
+\chapter{\textbf{Introducción}}
+
+```{r child="introduccion.rmd"}
+```
+
+<!-- Metodologia -->
+\FloatBarrier
+\newpage
+\fancyhead[L]{Metodología}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+
+\chapter{\textbf{Metodología}}
+\justifying
+```{r child="metodologia.rmd"}
+```
+
+<!-- Chapter 3-->
+\FloatBarrier
+\newpage
+\fancyhead[L]{Consecuencias de la implantación de la IA en los mercados financieros}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+
+\chapter{\textbf{Consecuencias de la implantación de la IA en los mercados financieros}}
+
+Tells us more.
+
+<!-- contextualizacion -->
+\FloatBarrier
+\newpage
+\fancyhead[L]{Contextualización}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\section{3.1 \textbf{Contextualización}}
+
+no se que pasa pero el titulo no sale bien
+
+<!-- evolucion historica -->
+\FloatBarrier
+\newpage
+\fancyhead[L]{Evolución histórica}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\section{3.2 \textbf{Evolución histórica}}
+
+<!-- consecuencias economias -->
+\FloatBarrier
+\newpage
+\fancyhead[L]{Consecuencias económicas}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\section{3.3 \textbf{Consecuencias económicas}}
+
+\FloatBarrier
+
+<!-- Chapter 4 -->
+\newpage
+\fancyhead[L]{Chapter 4's Title}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+
+\chapter{\textbf{Caso práctico: modelización predictiva de la dirección de un stock}}
+\justifying
+Explicar la motivación para llevar a cabo un caso práctico. Explicar el tipo de modelos que se van a desarrollar y cómo encajan éstos en la situación actual de aplicación de la IA en los mercados financieros.
+
+
+\fancyhead[L]{Investigaciones previas}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+
+\section{4.1 \textbf{Investigaciones previas}}
+
+\FloatBarrier
+\newpage
+\fancyhead[L]{Base de datos}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+
+\chapter{\textbf{Base de datos}}
+
+<!-- apartado obtencion y descripcion -->
+
+\fancyhead[L]{Obtención y descripción}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\section{5.1 \textbf{Obtención y descripción}}
+
+
+* Cómo se obtienen. Procedimiento y fuente de los datos. Explicar las distintas tablas que conforman la base de datos.
+* Explicar cuantas empresas forman el portfolio. Explicar con qué criterio se seleccionan las empresas que forman el portfolio (Elección propia en función de los portfolios de distintos gurús del mundo de las financias. i.e. Warren Buffet)
+* Descripción de los datos (variables + estadística descriptiva)
+
+```{r child="descripcion_obtencion.rmd"}
+```
+
+<!-- Apartado preprocessing -->
+\fancyhead[L]{Procesamiento de los datos}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\section{5.2 \textbf{Procesamiento de los datos}}
+
+```{r child="smoothing.rmd"}
+```
+
+<!-- Apartado creación de variables -->
+\fancyhead[L]{Creación de variables}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\section{5.3 \textbf{Creación de variables}}
+
+```{r child="feature_extraction.rmd"}
+```
+
+\FloatBarrier
+\newpage
+\fancyhead[L]{Modelización}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+
+\chapter{\textbf{Modelización}}
+
+<!-- definiciones de los  modelos -->
+\fancyhead[L]{Definiciones de los modelos}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\section{6.1 \textbf{Definiciones de los modelos}}
+
+```{r child="definiciones de los modelos.rmd"}
+```
+
+<!-- Apartado Definicion metricas de rendimiento -->
+\fancyhead[L]{Métricas de rendimiento}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\section{6.2 \textbf{Métricas de rendimiento}}
+
+```{r child="metricas de rendimiento.rmd"}
+```
+
+<!-- experimentos -->
+\fancyhead[L]{Experimentos}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\section{6.3 \textbf{Experimentos}}
+
+\justifying
+```{r child="modelling.rmd"}
+```
+
+\FloatBarrier
+\newpage
+\fancyhead[L]{Resultados de los experimentos}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+
+\chapter{\textbf{Resultados de los experiemtos}}
+
+Keep it going.
+
+
+<!-- Apartado resultados -->
+\fancyhead[L]{Resultados y análisis}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\section{7.2 \textbf{Resultados y análisis}}
+
+*poner para la prediccion a distintos meses cual es la empresa que mejor resultado da y el alisado etc
+
+<!-- conclusiones -->
+\FloatBarrier
+\newpage
+\fancyhead[L]{Conclusiones}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+
+\chapter{\textbf{Conclusiones}}
+
+Well done.
+
+\FloatBarrier
+
+\newpage
+\fancyhead[L]{Bibliografía}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+
+\chapter{\textbf{Bibliografía}}
+
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.4in}
+\setlength{\parskip}{6pt}
+\noindent

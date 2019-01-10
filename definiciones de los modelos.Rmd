@@ -1,0 +1,40 @@
+---
+output: pdf_document
+---
+
+En este apartado se detallan los distintos modelos utilizados para intentar predecir la dirección de movimiento de los stocks. Todos los modelos que se definen y construyen en el presente trabajo son modelos de clasificación binaria al estar definida la variable respuesta como Up and Down.
+
+##Random Forest
+
+Los árboles de decisión CART, llamados así por su nombre en inglés `Classification and Regression Trees`, son un tipo de modelos que se pueden utilizar para distintos tipos de aplicaciones de aprendizaje automático. En resumidas palabras, el método consiste en partir los datos a partir de un valor de cierta variable. Cada nodo padre genera 2 nodos hijos al tratarse de un problema de clasificación donde la variable respuesta tiene 2 clases. Esta partición se hace a partir de un criterio de impureza de los datos de manera que los nodos finales, llamados hojas, tengan la mayor pureza posible. Sin embargo los árboles que se hacen crecer de una manera muy profunda, es decir árboles muy grandes en cuanto al número de *split* y la profundidad que cogen, para aprender patrones altamente irregulares tienden a sobreajustar los datos de entrenamiento (problema conocido en inglés como *overfitting*). Un ligero ruido en los datos puede causar que el árbol crezca de una manera completamente diferente [@saha2016 p. 7]. Esto se debe al hecho de que los árboles de decisión tienen poco sesgo pero una alta varianza, al hacer pocas asumpciones sobre la variable respuesta (sesgo) pero altamente susceptibles a las variables predictoras (varianza). En otras palabras, un árbol de decisión casi no hace asumpciones sobre la variable objetivo (sesgo pequeño) pero es altamente susceptible a variaciones de los datos que se utilizan como input (alta varianza). Seguidamente se muestra una ejemplo sencillo de cómo un árbol de decisión luce. Esta imagen representa el ejemplo en el que se quiere predecir el género de una persona a partir de se altura y su peso.
+
+\centering
+
+![](CART.png)
+\centering
+  \captionof{figure}{Ejemplo de árbol de decisión}
+  
+\setlength\parskip{5ex}
+\justifying
+
+En este punto es cuando aparece el modelo de aprendizaje automático llamado `Random Forest`. Este tipo de modelos superan el problema explicado en el párrafo anterior entrenando múltiples árboles de decisión en un subespacio del espacio formado por las variables predictoras/explicativas, asumiendo como coste un ligero incremento del sesgo. Esto significa que ninguno de los árboles del bosque es entrenado con la totalidad de los datos de entrenamiento. Los datos son recursivamente partidos en particiones, de manera que en un nodo particular la partición se elabora haciendo una "pregunta" a una de las variables. Por ejemplo, una partición podría estar hecha "preguntándole" a la variable *Rate of Change 1 day* cuántos datos tienen un valor superior/inferior a un cierto valor X. La elección del criterio de partición de los datos se basa en alguna medida de impureza tales como la Entropía de Shannon o la medida de impureza de Gini. En el presente trabajo se utiliza la función `randomForest` implementada en el paquete de R con el mismo nombre. Esta función utiliza como medida de impureza a partir de la cual se particionan los datos el índice de impureza de Gini [@RF]. Este índice se utiliza como la función para medir la calidad de cada partición en cada nodo. La impureza de Gini en el nodo N se calcula a partir de la fórmula siguiente:
+
+$$g(N)=\sum_{i\neq j}P(w_i)P(w_j)$$
+
+Dónde $P(w_i)$ es la proporción de casos donde la variable respuesta toma la clase i. $P(w_j)$ entonces es la propoción de casos en los cuales la variable respuesta toma la clase j.
+
+La manera heurística para escoger la mejor decisión de particion en un nodo específico se basa en el hecho de conseguir la mayor reducción posible de impureza. Es decir, la mejor partición posible en un determinado nodo viene definida por la mayor ganancia de información (variable que mejor particiona los datos / inclye más observaciones en cada partición) o por la mayor reducción de impureza. La ganancia de información que genera una determinada partición se puede calcular con la fórmula siguiente:
+
+$$\bigtriangleup I(N) = I(N) - P_L * I(N_L) - P_R*I(N_L)$$
+
+Dónde $I(N)$ es la medida de impureza (ya sea la impureza de Gini o la entropía de Shannon) de un nodo $N$. $P_L$ es la proporción de casos que en el nodo padre $N$ van a parar al hijo **izquierdo**. De un modo similar, $P_R$ representa la proporción de casos en el nodo padre $N$ que se van a parar al nodo hijo **derecho** después de realizar la partición. $N_L$ y $N_R$ son los nodos hijos izquierdo y derecho, respectivamente.
+
+Este tipo de modelos de aprendizaje automático son conocidos como modelos *ensemble*. En el núcleo de estos modelos está el *Bootstrap aggregating*, mayormente conocido como *bagging*. Esto significa que la predicción final se calcula como una media de la solución obtenida con cada árbol construido sobre cada remuestra generada con la técnica no paramétrica del *bootstrap*. En otras palabras: utilizando *bootstrap* se calculan remuestras de los datos con las cuales se contruye un árbol. Dentro de cada árbol calculado sobre cada remuestra *bootstrap* cada nodo es partido utilizando la mejor variable dentro de la muestra de variables escogidas aleatoriamente en cada nodo. Al final, la predicción del modelo es una media de los valores obtenidos con todos estos árboles calculados sobre las distintas remuestras *bootstrap* [véase @RF p. 18 y @ensemble]. El método *bagging* mejora la estabilidad y la precisión de los algoritmos de aprendizaje. Al mismo tiempo reduce la varianza y el sobreajuste, los cuales son un problema relativamente común al construir árboles de decisión CART [véase @saha2016 p. 8 para un resumen del algoritmo escrito en pseudocódigo].
+
+##Regresión logística
+
+##Deep Neural Network Classifier
+
+
+
+

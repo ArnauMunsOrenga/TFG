@@ -1,0 +1,12 @@
+---
+output: pdf_document
+---
+\justifying
+La metodología que se va a seguir en el presente trabajo es la siguiente:
+
+\centering
+![](metodologia.png)
+\centering
+  \captionof{figure}{Metodología propuesta}
+  
+\justifying

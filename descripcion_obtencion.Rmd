@@ -1,0 +1,234 @@
+---
+output: pdf_document
+---
+
+#### Obtención
+
+Los datos con los que se va a realizar el presente trabajo se obtienen a través del paquete `quantmod`. Este paquete se diseñó para assistir a los *traders* quantitativos en el desarrollo, evaluación y puesta en funcionamiento de modelos de *trading* basados en la estadística. (revisar, cita (pckg info)). Concretamente, se utiliza la función `getSymbols` para obtener los datos ya que permite cargar y manejar `Symbols` en un ambiente especificado (cita (funs help)). Las posibles fuentes de datos son: Yahoo; Google, aunque actualmente no funciona; Alphavantage, con la ventaja de que podemos obtener datos intra-dia; MySQL, FRED, etc. (cita). Para obtener los datos se procede a utilizar *Yahoo Finance* como la fuente.
+
+\setlength\parskip{5ex}
+La metodología para la búsqueda de los distintos stocks con los cuales entrenar los modelos predictivos empieza con la idea de querer encontrar empresas representativas dentro de distintos sectores estratégicos y con amplio impacto en la economía real. Además se pretende que los stocks utilizados tengan rentabilidad financiera con el objetivo de llevar el presente trabajo lo más cerca posible de una situación real de inversión. Para ello se utiliza el portfolio a fecha 01/01/2019 del gran *gurú* de las finanzas Warren Buffet [@warrenbuffet]. Dentro de las numerosas empresas presentes en este portfolio se escogen los 3 *stocks* del NYSE (bolsa de nueva york) y una del NASDAQ.
+```{r}
+library(kableExtra)
+library(dplyr)
+library(quantmod)
+```
+
+```{r}
+kable(data.frame(Simbolo=c("AAPL","WFC","KO","AXP"),
+                 Nombre=c("Apple Inc.","Wells Fargo & CO","Coca-Cola Company","American Express CO"),
+                 Bolsa=c("NASDAQ","NYSE","NYSE","NYSE")), "latex") %>%
+kable_styling(latex_options = c("basic"),font_size = 10,bootstrap_options = "hover")
+```
+\centering
+  \captionof{table}{Stocks utilizados}
+
+\setlength\parskip{5ex}
+\justifying
+Al hecho de que los *stocks* que forman la base de datos formen parte del portfolio de uno de los *gurús* del mundo de las finanzas y la inversión, se le suma también el hecho de que las empresas escogidas son empresas multinacionales con un gran capital que ocupan una posición destacada sus respectivos mercados, siendo representativas de cada uno de los sectores en los cuales operan.
+
+Coca - cola (explicar un poco la compañía)
+etc
+etc
+
+
+#### Descripción
+
+Después de utilizar la función `getSymbols` se obtiene una tabla para cada stock con un formato estandarizado. Se obtienen 5 series temporales con periodicidad diaria que hacen referencia a los precios de **apertura**, **cierre**, **máximo**, **mínimo** y **volúmen**. Además se incluye el precio ajustado pero esta variable no será utilizada en este trabajo. Todas las variables presentes en la base de datos utilizada son numéricas.
+
+\setlength\parskip{5ex}
+\justifying
+Los datos utilizados en este trabajo compreden el período 2000 - ?, siendo el día `2000-01-01` la primera observación de cada serie temporal. La última observación de la base de datos es (revisar)
+
+\setlength\parskip{5ex}
+\justifying
+La función `str` permite visualizar fácilmente la estructura y formato que presentan en R las distintas tablas de la base de datos inicial. En el siguiente output se muestra como ejemplo la empresa Coca-Cola Company.
+
+\centering
+```{r}
+
+source("C:/Users/i0386388/Desktop/tesis/Tesis/load.R")
+
+prices.KO<-as.data.frame(KO)
+prices.WFC<-as.data.frame(WFC)
+prices.AAPL<-as.data.frame(AAPL)
+prices.AXP<-as.data.frame(AXP)
+str(prices.KO)
+```
+
+\setlength\parskip{5ex}
+\justifying
+
+*Tablas descriptivas*
+
+Se explora descriptivamente los datos analizando los estadísticos descriptivos . Para cada empresa, se obtienen los distintos estadísticos de cada una de las variables descritas previamente. Para ello se elaboran 4 tablas que hacen referencia a los distintos estadísticos, calculados sobre los distintos precios y el volúmen, para una misma empresa. 
+
+```{r}
+a<-format(data.frame(paste0(round(summary(prices.KO$KO.Open),2)) %>% rbind(a=paste0(round(summary(prices.KO$KO.High),2))) %>%rbind(b=paste0(round(summary(prices.KO$KO.Low),2))) %>% rbind(c=paste0(round(summary(prices.KO$KO.Close),2))) %>% rbind(paste0(round(summary(prices.KO$KO.Volume)/1000000,3),"M"))),scientific=TRUE)
+
+rownames(a)<-c("Open","High","Low","Close","Volume")
+names(a)<-names(summary(prices.KO$KO.Open))
+
+kable(a,"latex",digits = 2) %>% 
+  kable_styling(font_size = 10,latex_options = c("basic"))
+```
+  \captionof{table}{Estadísticos descriptivos para los distintos precios de Coca-Cola Company}
+  
+\setlength\parskip{5ex}
+\justifying
+Como se puede apreciar en la tabla 5.2 el rango que han tomado los precios de cierre para la empresa Coca-Cola CO. en el período estudiado se mueve entre `r round(min(prices.KO$KO.Close),2)` y `r round(max(prices.KO$KO.Close),2)`. El precio medio de cierre para el período estudiado es de `r round(mean(prices.KO$KO.Close),2)` dólares.
+
+```{r}
+a<-format(data.frame(paste0(round(summary(prices.AAPL$AAPL.Open),2)) %>% rbind(a=paste0(round(summary(prices.AAPL$AAPL.High),2))) %>%rbind(b=paste0(round(summary(prices.AAPL$AAPL.Low),2))) %>% rbind(c=paste0(round(summary(prices.AAPL$AAPL.Close),2))) %>% rbind(paste0(round(summary(prices.AAPL$AAPL.Volume)/1000000,3),"M"))),scientific=TRUE)
+
+rownames(a)<-c("Open","High","Low","Close","Volume")
+names(a)<-names(summary(prices.KO$KO.Open))
+kable(a,"latex") %>% 
+  kable_styling(font_size = 10,latex_options = c("basic"))
+```
+  \captionof{table}{Estadísticos descriptivos para los distintos precios de Apple Inc.}
+
+\setlength\parskip{5ex}
+\justifying
+Como se puede apreciar en la tabla 5.3 el rango que han tomado los precios de cierre para la empresa Apple Inc. en el período estudiado se mueve entre `r round(min(prices.AAPL$AAPL.Close),2)` y `r round(max(prices.AAPL$AAPL.Close),2)`. El precio medio de cierre para el período estudiado es de `r round(mean(prices.AAPL$AAPL.Close),2)` dólares, superior al de la empresa Coca-Cola CO.
+
+```{r}
+a<-format(data.frame(paste0(round(summary(prices.AXP$AXP.Open),2)) %>% rbind(a=paste0(round(summary(prices.AXP$AXP.High),2))) %>%rbind(b=paste0(round(summary(prices.AXP$AXP.Low),2))) %>% rbind(c=paste0(round(summary(prices.AXP$AXP.Close),2))) %>% rbind(paste0(round(summary(prices.AXP$AXP.Volume)/1000000,3),"M"))),scientific=TRUE)
+
+rownames(a)<-c("Open","High","Low","Close","Volume")
+names(a)<-names(summary(prices.KO$KO.Open))
+kable(a,"latex",digits = 2) %>% 
+  kable_styling(font_size = 10,latex_options = c("basic"))
+```
+  \captionof{table}{Estadísticos descriptivos para los distintos precios de American Express CO.}
+
+\setlength\parskip{5ex}
+\justifying
+Como se puede apreciar en la tabla 5.4 el rango que han tomado los precios de cierre para la American Express CO. en el período estudiado se mueve entre `r round(min(prices.AXP$AXP.Close),2)` y `r round(max(prices.AXP$AXP.Close),2)`. El precio medio de cierre para el período estudiado es de `r round(mean(prices.AXP$AXP.Close),2)` dólares, ligeramente superior al de la empresa Apple Inc..
+
+```{r}
+a<-format(data.frame(paste0(round(summary(prices.WFC$WFC.Open),2)) %>% rbind(a=paste0(round(summary(prices.WFC$WFC.High),2))) %>%rbind(b=paste0(round(summary(prices.WFC$WFC.Low),2))) %>% rbind(c=paste0(round(summary(prices.WFC$WFC.Close),2))) %>% rbind(paste0(round(summary(prices.WFC$WFC.Volume)/1000000,3),"M"))),scientific=TRUE)
+
+rownames(a)<-c("Open","High","Low","Close","Volume")
+names(a)<-names(summary(prices.KO$KO.Open))
+kable(a,"latex",digits = 2) %>% 
+  kable_styling(font_size = 10,latex_options = c("basic"))
+```
+  \captionof{table}{Estadísticos descriptivos para los distintos precios de Wells Fargo and CO.}
+
+\setlength\parskip{5ex}
+\justifying
+Como se puede apreciar en la tabla 5.4 el rango que han tomado los precios de cierre para la empresa Wells Fargo and CO. en el período estudiado se mueve entre `r round(min(prices.WFC$WFC.Close),2)` y `r round(max(prices.WFC$WFC.Close),2)`. El precio medio de cierre para el período estudiado es de `r round(mean(prices.WFC$WFC.Close),2)` dólares, ligeramente superior al de Coca-Cola CO. inferior al de `AAPL` y `AXP`.
+
+*Visualización gráfica*
+
+Seguidamente se explora gráficamente el precio de cierre para cada una de las empresas, al ser éste la variable a partir de la cual se calculará la variable respuesta sobre la que hacer predicción. El objetivo de este tipo de análisis es poder visualizar el tipo de evolución que han presentado los distintos *stocks* durante el período de estudio.
+
+\setlength\parskip{5ex}
+\justifying  
+En el siguiente gráfico se representa el precio de cierre de Coca-Cola Company para el período comprendido entre el 03/01/2000 y 28/12/2018.
+
+```{r fig.height=3, fig.width=6,fig.align = "center"}
+chartSeries(KO$KO.Close,name="KO Close",color.vol = T)
+```
+  \captionof{figure}{Precio de cierre de Coca-Cola Company 03/01/2000 - 28/12/2018}
+
+\setlength\parskip{5ex}
+\justifying  
+En el siguiente gráfico se representa el precio de cierre de Apple Inc. para el período comprendido entre el 03/01/2000 y 28/12/2018.
+```{r fig.height=3, fig.width=6,fig.align = "center"}
+chartSeries(AAPL$AAPL.Close,"candlesticks",name="AAPL Close price",color.vol = T)
+```
+  \captionof{figure}{Precio de cierre de Apple Inc. 03/01/2000 - 28/12/2018}
+
+\setlength\parskip{5ex}
+\justifying
+En el siguiente gráfico se representa el precio de cierre de Wells Fargo and CO. para el período comprendido entre el 03/01/2000 y 28/12/2018.
+
+```{r fig.height=3, fig.width=6,fig.align = "center"}
+chartSeries(AXP$AXP.Close,"candlesticks",name="AXP Close price",color.vol = T)
+```
+\centering
+  \captionof{figure}{Precio de cierre de American Express CO. 03/01/2000 - 28/12/2018}
+
+\setlength\parskip{5ex}
+\justifying
+En el siguiente gráfico se representa el precio de cierre de Wells Fargo and CO. para el período comprendido entre el 03/01/2000 y 28/12/2018.
+
+```{r fig.height=3, fig.width=6,fig.align = "center"}
+chartSeries(WFC$WFC.Close,"candlesticks",name="WFC Close price",color.vol = T)
+```
+\centering
+  \captionof{figure}{Precio de cierre de Wells Fargo and CO. 03/01/2000 - 28/12/2018}
+
+\setlength\parskip{5ex}
+\justifying
+
+A partir de esta exploración gráfica se descubre que 3 de las 4 empresas (KO, AXP y WFC) presentan un comportamiento relativamente similar. Como se puede observar en la figura 5.1, 5.3 y 5.4 la evolución de `KO, AXP y WFC` en el período estudiado presenta una tendencia, en general, creciente. Si se analiza en detalle el lector puede detectar 3 etapas claramente destacada en la evolución de estos stocks, siendo la primera de ellas distinta en el caso de Wells Fargo & CO. Estos 3 períodos claramente diferenciados son los correspondientes a los años 2000-2007, 2008-2010 y 2011-2018.
+
+**2000-2006**
+
+En el caso de las empresas Coca-Cola CO. y American Express CO. la primera etapa (2000 - inicios de 2006) corresponde a la relajación de los mercados financieros posterior al *boom de las .com*. La segunda mitad de los 90 fueron una época de expansión económica en la cual se produjo un boom financiero en USA [ver @stockboomJermann] que se relajo a partir de finales de milenio. 
+
+**2006-2008**
+
+Esta relajación fué seguida por la segunda etapa, un período de crecimiento económico y de los mercados financieros que se produjo a partir del 2006 y hasta el 2008. Esta etapa de crecimiento fué previa a la gran recesión mundial que tuvo lugar a partir del año 2008 [ver @crisisreasons, @crisisreasons2, @crisisreasons3 pp. 77-110 para más información]
+
+\setlength\parskip{5ex}
+\justifying
+
+*Descriptiva financiera*
+
+CONTAR LAS VECES QUE EL PRECIO EN EL DÍA T ES MAYOR/INFERIOR A T-1 QUE EL PRECIO A BAJADO EN EL PRECIO SIN ALISAR. DESPUES CON EL PRECIO ALISADO Y COMPARANDO LA % DE DÍA 
+
+SABEMOS QUE ESTA VARIABLE SE PUEDE PREDECIR MUY BIEN A.K.A PODEMOS CLASIFICAR MUY BIEN CON INDICADORES TECNICOS LOS DÍAS QUE INCREMENTA O DECREMENTA EL PRECIO. ESTO PRUEBA QUE LOS INDICADORES TECNICOS SON UTILES A LA HORA DE HACER INVERSIONES PORQUE, ANALIZADOS CORRECTAMENTE, "PERMITEN" SABER SI EN UN DIA T EL PRECIO HABRÁ SUBIDO O NO RESPECTO A T-1. ESTA NO ES LA VARIABLE RESPUESTA QUE SE UTILIZA EN ESTE TRABAJO, AL UTILIZAR INDICADORES TECNICOS CALCULADOS CON EL PROPIO EN PRECIO EN T PARA PODER SABER SI EL PRECIO EN T HA SUBIDO RESPECTO T-1
+
+
+Seguidamente se muestran las distintas tablas comparativas de los distintos precios obtenidos inicialmente. Éstas incluyen la media, la desviación típica o volatilidad del precio y el coeficiente de variación, el cual es un estadístico utilizado de manera frecuente para medir la volatilidad de un stock al ser una variable que no tiene en cuenta las unidades de medida. Esto significa que permite comparar distintos stocks en cuanto a volatilidad se refiere sin tener en cuenta la magnitud que éstos presenten.
+
+Este tipo de visualización permite analizar más detenidamente cada uno de los precios y poder compararlos fácilmente entre todas las empresas. Es además una buena manera de analizar a priori la predictibilidad de los distintos precios al poder comparar los distintos coeficientes de variación. La idea de evaluar la predictibilidad de una serie temporal con el coeficiente de variación sugiere que es más fácil de predecir una serie temporal con un comportamiento más estable, esto es, con menos unidades de desviación típica por unidad de media [@CoVMike].
+
+```{r}
+kable(data.frame(Nombre=c("Apple Inc.","Wells Fargo & CO","Coca-Cola Company","American Express CO"),
+                 Media=c(mean(prices.AAPL$AAPL.Open),mean(prices.WFC$WFC.Open),mean(prices.KO$KO.Open),mean(prices.AXP$AXP.Open)),
+                 Desv_std=c(sd(prices.AAPL$AAPL.Open),sd(prices.WFC$WFC.Open),sd(prices.KO$KO.Open),sd(prices.AXP$AXP.Open)),
+                 CoV=c((sd(prices.AAPL$AAPL.Open)/mean(prices.AAPL$AAPL.Open)),(sd(prices.WFC$WFC.Open)/mean(prices.WFC$WFC.Open)),(sd(prices.KO$KO.Open/mean(prices.KO$KO.Open))),(sd(prices.AXP$AXP.Open)/mean(prices.AXP$AXP.Open)))),"latex") %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+```
+\centering
+  \captionof{table}{Estadísticos descriptivos para el precio de apertura (Open).}
+  
+COMENTAR TABLAS??
+
+```{r}
+kable(data.frame(Nombre=c("Apple Inc.","Wells Fargo & CO","Coca-Cola Company","American Express CO"),
+                 Media=c(mean(prices.AAPL$AAPL.High),mean(prices.WFC$WFC.High),mean(prices.KO$KO.High),mean(prices.AXP$AXP.High)),
+                 Desv_std=c(sd(prices.AAPL$AAPL.High),sd(prices.WFC$WFC.High),sd(prices.KO$KO.High),sd(prices.AXP$AXP.High)),
+                 CoV=c((sd(prices.AAPL$AAPL.High)/mean(prices.AAPL$AAPL.High)),(sd(prices.WFC$WFC.High)/mean(prices.WFC$WFC.High)),(sd(prices.KO$KO.High/mean(prices.KO$KO.High))),(sd(prices.AXP$AXP.High)/mean(prices.AXP$AXP.High)))), "latex") %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+```
+\centering
+  \captionof{table}{Estadísticos descriptivos para el precio máximo (High).}
+  
+```{r}
+kable(data.frame(Nombre=c("Apple Inc.","Wells Fargo & CO","Coca-Cola Company","American Express CO"),
+                 Media=c(mean(prices.AAPL$AAPL.Low),mean(prices.WFC$WFC.Low),mean(prices.KO$KO.Low),mean(prices.AXP$AXP.Low)),
+                 Desv_std=c(sd(prices.AAPL$AAPL.Low),sd(prices.WFC$WFC.Low),sd(prices.KO$KO.Low),sd(prices.AXP$AXP.Low)),
+                 CoV=c((sd(prices.AAPL$AAPL.Low)/mean(prices.AAPL$AAPL.Low)),(sd(prices.WFC$WFC.Low)/mean(prices.WFC$WFC.Low)),(sd(prices.KO$KO.Low/mean(prices.KO$KO.Low))),(sd(prices.AXP$AXP.Low)/mean(prices.AXP$AXP.Low)))), "latex") %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+```
+\centering
+  \captionof{table}{Estadísticos descriptivos para el precio mínimo (Low).}
+  
+```{r}
+kable(data.frame(Nombre=c("Apple Inc.","Wells Fargo & CO","Coca-Cola Company","American Express CO"),
+                 Media=c(mean(prices.AAPL$AAPL.Close),mean(prices.WFC$WFC.Close),mean(prices.KO$KO.Close),mean(prices.AXP$AXP.Close)),
+                 Desv_std=c(sd(prices.AAPL$AAPL.Close),sd(prices.WFC$WFC.Close),sd(prices.KO$KO.Close),sd(prices.AXP$AXP.Close)),
+                 CoV=c((sd(prices.AAPL$AAPL.Close)/mean(prices.AAPL$AAPL.Close)),(sd(prices.WFC$WFC.Close)/mean(prices.WFC$WFC.Close)),(sd(prices.KO$KO.Close/mean(prices.KO$KO.Close))),(sd(prices.AXP$AXP.Close)/mean(prices.AXP$AXP.Close)))), "latex") %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+```
+\centering
+  \captionof{table}{Estadísticos descriptivos para el precio de cierre (Close).}
+   
+  
+\justifying

@@ -1,0 +1,31 @@
+---
+output: pdf_document
+---
+
+\justifying
+
+Los modelos construidos están pensados para ser de ayuda a la hora de tomar una decisión de compra o venta de un *stock*. Si la predicción es +1 (Up) se espera que el precio al cabo de $d=30, \ 60 \ y \ 90 $ días sea superior al actual y entonces la acción lógica del inversor sería **comprar**. Al contrario ocurriría si la predicción fuera -1, lo cual significaría que se espera que el precio al cabo de $d$ días sea inferior. En este caso la decisión razonable a tomar por parte del inversor sería **vender**. Una predicción errónea puede causar grandes perdidas de dinero para el inversor. Por lo tanto, se deben definir métricas que ayuden a evaluar la potencia predictiva de los modelos construidos. Las métricas que se utilizan en el presente trabajo para evaluar la robustez del clasificador binario Random Forest que se crea a continuación son las siguientes:
+
+*Accuracy*
+
+Esta métrica hace referencia a la proporción de casos clasificados correctamente entre el total de casos con los que se prueba el modelo. Se calcula a partir de la fórmula siguiente:
+
+ $$Accuracy = \frac{tp+tn}{tp+tn+fp+fn} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (M.1)$$
+ 
+*Recall/Sensitivity*
+
+Esta métrica mide la habilidad de un modelo clasificador de identificar correctamente los casos positivos.
+$$Sensitivity = \frac{tp}{tp+fn} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (M.2)$$
+
+*Specificity*
+Esta métrica mide la habilidad de un modelo clasificador de identificar correctamente los casos negativos.
+$$Specificity = \frac{tn}{tn+fp} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (M.3)$$
+
+Dónde,
+
+tp = número de verdaderos positivos $\equiv$ número de veces en las que el caso era positivo y el modelo predice positivo
+tn = número de verdaderos negativos $\equiv$ número de veces en las que el caso era negativo y el modelo predice negativo
+fp = número de falsos positivos $\equiv$ número de veces en las que el caso era negativo y el modelo predice positivo
+fn = número de falsos negativos $\equiv$ número de veces en las que el caso era positivo y el modelo predice negativo
+
+

@@ -1,0 +1,739 @@
+---
+output: pdf_document
+---
+
+```{r}
+library(dplyr)
+library(randomForest)
+library(caret)
+set.seed(420)
+library(kableExtra)
+```
+
+##Partición muestras de entrenamiento, validación y test
+
+Una vez calculada la variable respuesta y las variablex explicativas/predictoras se procede a construir los modelos predictivos. En primer lugar se particionan los conjuntos de datos en las muestras de entrenamiento, validación y test. En la muestra de entrenamiento se encuentran los datos con los que se entrarán los modelos, es decir, son los datos a partir de los cuales los modelos van observar el fenómeno de estudio y van a aprender sobre él. La muestra de validación se utiliza para obtener una optimización de los hyper parámetros. En inglés este proceso se llama *hyper-parameter fine tunning*. Finalmente, la muestra test la forman los datos sobre los cuales se va a evaluar el rendimiento de los modelos entrenados con los datos *train + validation* después de tunear los hyper parámetros. 
+
+\setlength\parskip{5ex}
+Las series temporales de precios necesitan un tratamiento especial al momento de hacer las particiones entre muestras de entrenamiento, validación y test ya que se debe mantener la estructura temporal inherente en los datos. 
+
+* Muestra de entrenamiento: 2000-2015
+* Muestra de validación: 2016
+* Muestra de test: 2017-2018
+
+\setlength\parskip{5ex}
+Los modelos que se construyen requieren una muestra de entrenamiento considerable al tener que captar largas tendencias en los precios. Además los hyper parámetros que se deben optimizar, en el caso del Random Forest, no son demasiados y por eso se decide utilizar 17 años de entrenamiento y sólo 6 meses para la muestra de validación y test.
+
+```{r}
+load("C:/Users/i0386388/Desktop/tesis/data_model_ready.RData",.GlobalEnv)
+```
+
+```{r}
+source("C:/Users/i0386388/Desktop/tesis/Tesis/partitioning2.R")
+```
+
+PONER AQUÍ EL NÚMERO TOTAL DE EXPERIMENTOS: CUANTOS MODELOS SE HACEN DE CADA TIPO, CONTANDO PARAMETER FINE TUNING Y TEST PERFORMANCE
+
+*Modelización y resultados*
+
+##Random Forest
+
+\setlength\parskip{5ex}
+Para realizar los experimentos utilizando este modelo descrito en el apartado 6.1 del presente trabajo se optimiza el parámetro `mtry` [véase @tuningRF]. Acorde con la documentación de la función `randomForest` que se puede consultar en [@RF], el parámetro `mtry` controla el número de variables aleatóriamente muestreadas que son candidatas en cada *split* del árbol. Es decir, es el número de variables a tener en cuenta en cada *split* a partir de las cuales se selecciona la que mejor particiona los datos. Esta optimización se hace sobre la muestra de validación utilizando como métrica el % de casos mal clasificados. Esto significa que se selecciona el valor de `mtry` que propocione un menor porcentage de casos mal clasificados (1-accuracy).  
+
+
+\setlength\parskip{5ex}
+Seguidamente se muestra una tabla resumen con el valor óptimo del hyper parámtero `mtry` para cada tipo de alisado de cada empresa. Además se incluye en la tabla el valor de *accuracy* obtenido con cada modelo sobre la muestra de validación utilizando el parámetro óptimo `mtry` para cada tipo de alisado.
+
+```{r}
+load("C:/Users/i0386388/Desktop/tesis/mtry_errors_datasplit.RData")
+
+```
+
+```{r}
+#KO
+
+a<-data.frame(mtry1m=as.numeric(c(which(errors_KO_30_1m_target_feature==min(errors_KO_30_1m_target_feature))[1],
+                                    which(errors_KO_60_1m_target_feature==min(errors_KO_60_1m_target_feature[-1]))[1],
+                                   which(errors_KO_90_1m_target_feature==min(errors_KO_90_1m_target_feature[-1]))[1],
+                                   which(errors_KO_fun_1m_target_feature==min(errors_KO_fun_1m_target_feature[-1]))[1])),
+              accuracy1m=as.numeric(c((1-min(errors_KO_30_1m_target_feature))*100,
+                                    (1-min(errors_KO_60_1m_target_feature[-1]))*100,
+                                    (1-min(errors_KO_90_1m_target_feature[-1]))*100,
+                                    (1-min(errors_KO_fun_1m_target_feature[-1]))*100)),
+              
+              
+              mtry2m=as.numeric(c(which(errors_KO_30_2m_target_feature==min(errors_KO_30_2m_target_feature[-1]))[1],
+                                    which(errors_KO_60_2m_target_feature==min(errors_KO_60_2m_target_feature[-1]))[1],
+                                   which(errors_KO_90_2m_target_feature==min(errors_KO_90_2m_target_feature))[1],
+                                   which(errors_KO_fun_2m_target_feature==min(errors_KO_fun_2m_target_feature))[1])),
+              
+                 accuracy2m=as.numeric(c((1-min(errors_KO_30_2m_target_feature[-1]))*100,
+                                    (1-min(errors_KO_60_2m_target_feature[-1]))*100,
+                                    (1-min(errors_KO_90_2m_target_feature))*100,
+                                    (1-min(errors_KO_fun_2m_target_feature))*100)),
+              
+              
+              mtry3m=as.numeric(c(which(errors_KO_30_3m_target_feature==min(errors_KO_30_3m_target_feature[-1]))[1],
+                                    which(errors_KO_60_3m_target_feature==min(errors_KO_60_3m_target_feature[-1]))[1],
+                                   which(errors_KO_90_3m_target_feature==min(errors_KO_90_3m_target_feature[-1]))[1],
+                                   which(errors_KO_fun_3m_target_feature==min(errors_KO_fun_3m_target_feature))[1])),
+              
+              accuracy3m=as.numeric(c((1-min(errors_KO_30_3m_target_feature[-1]))*100,
+                                    (1-min(errors_KO_60_3m_target_feature[-1]))*100,
+                                    (1-min(errors_KO_90_3m_target_feature[-1]))*100,
+                                    (1-min(errors_KO_fun_3m_target_feature))*100))
+              
+              ) 
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+kable(a, "latex") %>%
+  add_header_above(c(" ", "Predicción 1 mes" = 2, "Predicción 2 meses" = 2,"Predicción 3 meses"=2)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+```
+  \captionof{table}{Coca Cola CO.: valores optimizados para mtry y accuracy obtenida}
+
+\setlength\parskip{5ex}
+
+Como se puede observar para la empresa Coca-Cola CO. el mejor resultado, es decir la *accuracy* obtenida más alta, para la predicción a 1 mes se obtiene con el alisado correspondiente a una media móbil exponencial a 30 días con un valor de 63.5%. Para la predicción a 2 meses el mejor resultado es de 75% de accuracy y se obtiene alisando los datos con una EMA de 90 días  (el mejor resultado global para la muestra de validación). Por lo que respecta a la predicción a 3 meses el mejor resultado se obtiene alisando los datos con una EMA 90 días con un valor de 67.46%. Para esta empresa no se aprecia un patrón de crecimiento de la *accuracy* sino más bien unos resultados repartidos más o menos uniformente entre los distintos experimentos realizados.
+
+```{r}
+#APPLE
+
+
+a<-data.frame(mtry1m=c(as.numeric(which(errors_AAPL_30_1m_target_feature==min(errors_AAPL_30_1m_target_feature))[1]),
+                                    as.numeric(which(errors_AAPL_60_1m_target_feature==min(errors_AAPL_60_1m_target_feature))[1]),
+                                   as.numeric(which(errors_AAPL_90_1m_target_feature==min(errors_AAPL_90_1m_target_feature))[1]),
+                                   as.numeric(which(errors_AAPL_fun_1m_target_feature==min(errors_AAPL_fun_1m_target_feature))[1])),
+              accuracy1m=as.numeric(c((1-min(errors_AAPL_30_1m_target_feature))*100,
+                                    (1-min(errors_AAPL_60_1m_target_feature[-c(35:37)]))*100,
+                                    (1-min(errors_AAPL_90_1m_target_feature))*100,
+                                    (1-min(errors_AAPL_fun_1m_target_feature))*100)),
+              
+              
+              mtry2m=as.numeric(c(which(errors_AAPL_30_2m_target_feature==min(errors_AAPL_30_2m_target_feature))[1],
+                                    which(errors_AAPL_60_2m_target_feature==min(errors_AAPL_60_2m_target_feature[-1]))[1],
+                                   which(errors_AAPL_90_2m_target_feature==min(errors_AAPL_90_2m_target_feature))[2],
+                                   which(errors_AAPL_fun_2m_target_feature==min(errors_AAPL_fun_2m_target_feature))[1])),
+              
+                 accuracy2m=as.numeric(c((1-min(errors_AAPL_30_2m_target_feature))*100,
+                                    (1-min(errors_AAPL_60_2m_target_feature[-1]))*100,
+                                    (1-min(errors_AAPL_90_2m_target_feature))*100,
+                                    (1-min(errors_AAPL_fun_2m_target_feature))*100)),
+              
+              
+              mtry3m=as.numeric(c(which(errors_AAPL_30_3m_target_feature==min(errors_AAPL_30_3m_target_feature))[1],
+                                    which(errors_AAPL_60_3m_target_feature==min(errors_AAPL_60_3m_target_feature))[1],
+                                   which(errors_AAPL_90_3m_target_feature==min(errors_AAPL_90_3m_target_feature))[1],
+                                   which(errors_AAPL_fun_3m_target_feature==min(errors_AAPL_fun_3m_target_feature))[1])),
+              
+              accuracy3m=as.numeric(c((1-min(errors_AAPL_30_3m_target_feature))*100,
+                                    (1-min(errors_AAPL_60_3m_target_feature))*100,
+                                    (1-min(errors_AAPL_90_3m_target_feature))*100,
+                                    (1-min(errors_AAPL_fun_3m_target_feature))*100))
+              
+              ) 
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+kable(a, "latex") %>%
+  add_header_above(c(" ", "Predicción 1 mes" = 2, "Predicción 2 meses" = 2,"Predicción 3 meses"=2)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+```
+  \captionof{table}{Apple Inc.: valores optimizados para mtry y accuracy obtenida}
+  
+\setlength\parskip{5ex}
+
+Como se puede apreciar en la tabla 6.2, para la empresa Apple Inc. la situación es diferente. Se obtienen, en general, mejores resultados que en el caso de la empresa Coca Cola. Para la predicción a 1 mes el mejor resultado se obtiene con un alisado utilizando EMA de 90 días con una *accuracy* del 87.30%. Para la predicción hecha a 2 meses el mejor resultado es un 69.84% de accuracy obtenido con un alisado EMA 90 días. Para el caso en el que la predicción es a 3 meses el mejor resultado es de un 73.81% de *accuracy* con un alisado de EMA 90 días. Es decir, en el caso de la empresa Apple Inc el mejor resultado global se obtiene prediciendo si la media móbil exponencial a 90 días del precio de cierre estará más alta o no a 1 meses vista. En este caso los mejores resultados se obtienen con una predicción hecha a 1 mes vista con los datos fuertemente alisados. El hecho de predecir si al cabo de un mes la media móbil exponencial del precio de cierre calculada con 90 días será más alta o no, es de ayuda para el inversor ya que significa que el precio de cierre al cabo de un mes será más alto. Esto se debe al hecho de que si la EMA 90 días será más alta al cabo de un mes significa que los precios de ese último mes han sido más altos.
+
+```{r}
+#AMerican express
+
+
+a<-data.frame(mtry1m=as.numeric(c(which(errors_AXP_30_1m_target_feature==min(errors_AXP_30_1m_target_feature))[1],
+                                    which(errors_AXP_60_1m_target_feature==min(errors_AXP_60_1m_target_feature[-1]))[1],
+                                   which(errors_AXP_90_1m_target_feature==min(errors_AXP_90_1m_target_feature))[1],
+                                   which(errors_AXP_fun_1m_target_feature==min(errors_AXP_fun_1m_target_feature))[2])),
+              accuracy1m=as.numeric(c((1-min(errors_AXP_30_1m_target_feature))*100,
+                                    (1-min(errors_AXP_60_1m_target_feature[-1]))*100,
+                                    (1-min(errors_AXP_90_1m_target_feature))*100,
+                                    (1-min(errors_AXP_fun_1m_target_feature))*100)),
+              
+              
+              mtry2m=as.numeric(c(which(errors_AXP_30_2m_target_feature==min(errors_AXP_30_2m_target_feature[-1]))[1],
+                                    which(errors_AXP_60_2m_target_feature==min(errors_AXP_60_2m_target_feature[-1]))[1],
+                                   which(errors_AXP_90_2m_target_feature==min(errors_AXP_90_2m_target_feature))[1],
+                                   which(errors_AXP_fun_2m_target_feature==min(errors_AXP_fun_2m_target_feature))[1])),
+              
+                 accuracy2m=as.numeric(c((1-min(errors_AXP_30_2m_target_feature[-1]))*100,
+                                    (1-min(errors_AXP_60_2m_target_feature[-1]))*100,
+                                    (1-min(errors_AXP_90_2m_target_feature))*100,
+                                    (1-min(errors_AXP_fun_2m_target_feature))*100)),
+              
+              
+              mtry3m=as.numeric(c(which(errors_AXP_30_3m_target_feature==min(errors_AXP_30_3m_target_feature[-1]))[1],
+                                    which(errors_AXP_60_3m_target_feature==min(errors_AXP_60_3m_target_feature))[1],
+                                   which(errors_AXP_90_3m_target_feature==min(errors_AXP_90_3m_target_feature))[2],
+                                   which(errors_AXP_fun_3m_target_feature==min(errors_AXP_fun_3m_target_feature))[1])),
+              
+              accuracy3m=as.numeric(c((1-min(errors_AXP_30_3m_target_feature[-1]))*100,
+                                    (1-min(errors_AXP_60_3m_target_feature))*100,
+                                    (1-min(errors_AXP_90_3m_target_feature))*100,
+                                    (1-min(errors_AXP_fun_3m_target_feature))*100))
+              
+              ) 
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+kable(a, "latex") %>%
+    add_header_above(c(" ", "Predicción 1 mes" = 2, "Predicción 2 meses" = 2,"Predicción 3 meses"=2)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+```
+  \captionof{table}{American Express CO.: valores optimizados para mtry y accuracy obtenida}
+  
+\setlength\parskip{5ex}
+
+Los resultados obtenidos para la empresa American Express CO. son globalmente mejores en los casos en los que la predicción está hecha para el siguiente mes y para al cabo de 3 meses. Para el caso en el que la predicción se hace a 1 mes, el mejor resultado obtenido es de 79.76% de *accuracy* en la muestra de validación y se corresponde a un alisado de los datos utilizando la fórmula del alisado exponencial. A su vez se obtiene el mismo resultado con los datos alisados mediante una media móbil exponencial de 30 días. Para el caso en el que la predicción se hace a 2 meses el mejor resultado que se obtiene es de 59.92% de *accuracy* en el caso de alisar los datos con la fórmula del alisado exponencial. Este resultado es ligeramente superior al que se obtendría con una predicción aleatória (50%). El resultado que se obtiene en el caso de la predicción hecha a 3 meses ya que en el mejor de los casos, cuando se alisan los datos con una media móbil exponencial de 90 días, es de 80.16% de *accuracy* (mejor resultado global). Esto significa que, para esta empresa, la mejor clasificación se obtiene prediciendo si la EMA 90 días será más alta o no al cabo de 3 meses. En esencia, este caso de predicción representa que se está analizando si el incremento de los precios ha hecho que la media móbil exponencial haya subido los últimos 3 meses.
+
+```{r}
+#wells fargo
+
+
+a<-data.frame(mtry1m=as.numeric(c(which(errors_WFC_30_1m_target_feature==min(errors_WFC_30_1m_target_feature))[1],
+                                    which(errors_WFC_60_1m_target_feature==min(errors_WFC_60_1m_target_feature[-1]))[1],
+                                   which(errors_WFC_90_1m_target_feature==min(errors_WFC_90_1m_target_feature[-1]))[1],
+                                   which(errors_WFC_fun_1m_target_feature==min(errors_WFC_fun_1m_target_feature))[1])),
+              accuracy1m=as.numeric(c((1-min(errors_WFC_30_1m_target_feature))*100,
+                                    (1-min(errors_WFC_60_1m_target_feature[-1]))*100,
+                                    (1-min(errors_WFC_90_1m_target_feature[-1]))*100,
+                                    (1-min(errors_WFC_fun_1m_target_feature))*100)),
+              
+              
+              mtry2m=as.numeric(c(which(errors_WFC_30_2m_target_feature==min(errors_WFC_30_2m_target_feature[-1]))[1],
+                                    which(errors_WFC_60_2m_target_feature==min(errors_WFC_60_2m_target_feature[-1]))[1],
+                                   which(errors_WFC_90_2m_target_feature==min(errors_WFC_90_2m_target_feature[-1]))[1],
+                                   which(errors_WFC_fun_2m_target_feature==min(errors_WFC_fun_2m_target_feature))[1])),
+              
+                 accuracy2m=as.numeric(c((1-min(errors_WFC_30_2m_target_feature[-1]))*100,
+                                    (1-min(errors_WFC_60_2m_target_feature[-1]))*100,
+                                    (1-min(errors_WFC_90_2m_target_feature[-1]))*100,
+                                    (1-min(errors_WFC_fun_2m_target_feature))*100)),
+              
+              
+              mtry3m=as.numeric(c(which(errors_WFC_30_3m_target_feature==min(errors_WFC_30_3m_target_feature[-1]))[1],
+                                    which(errors_WFC_60_3m_target_feature==min(errors_WFC_60_3m_target_feature[-1]))[1],
+                                   which(errors_WFC_90_3m_target_feature==min(errors_WFC_90_3m_target_feature[-1]))[1],
+                                   which(errors_WFC_fun_3m_target_feature==min(errors_WFC_fun_3m_target_feature[-1]))[1])),
+              
+              accuracy3m=as.numeric(c((1-min(errors_WFC_30_3m_target_feature[-1]))*100,
+                                    (1-min(errors_WFC_60_3m_target_feature[-1]))*100,
+                                    (1-min(errors_WFC_90_3m_target_feature[-1]))*100,
+                                    (1-min(errors_WFC_fun_3m_target_feature[-1]))*100))
+              
+              ) 
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+kable(a, "latex") %>%
+    add_header_above(c(" ", "Predicción 1 mes" = 2, "Predicción 2 meses" = 2,"Predicción 3 meses"=2)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+```
+  \captionof{table}{Wells Fargo and CO.: valores optimizados para mtry y accuracy obtenida}
+  
+\setlength\parskip{5ex}
+En el caso de Wells Fargo & CO. los resultados sobre la muestra de validación se pueden observar en la tabla 6.4. Son, en general, peores que los resultados obtenidos con la empresa Apple Inc. y American Express CO.. Para la predicción hecha a 1 mes el mejor resultado se obtiene utilizando la fórmula de alisado exponencial (2) con una *accuracy* de 69.84% (mejor resultado global para esta empresa). Esto significa que sobre la muestra de validación aproximadamente el 70% de los casos queda bien clasificado. En el caso de la predicción a 2 meses el mejor resultado obtenido es de 58.33% de *accuracy* obtenido alisando los datos con la fórmula de alisado exponencial (2). El mejor resultadao cuando la predicción se hace a 3 meses vista es del 64.28% de *accuracy*.
+
+
+*Resultados sobre muestra test*
+
+Una vez optimizados los valores del hyper parámetro `mtry` se entrenan los modelos con las muestras de entrenamiento + validación con el objetivo de testar el modelo con los datos de test. En total se construyen 48 modelos: 4 por cada tipo de variable respuesta y, a su vez, 4 por cada empresa. En las tablas siguientes se muestran los valores de *accuracy*, *sensitivity* y *specificity* de los distintos modelos sobre los datos test.
+
+<!-- <!-- models --> 
+<!-- ```{r} -->
+<!-- #KO models -->
+<!-- train_vali_KO_30_1m<- -->
+<!--   train_KO_30_1m_target_feature %>% bind_rows(validation_KO_30_1m_target_feature) -->
+<!--       rownames(train_vali_KO_30_1m)<-c(rownames(train_KO_30_1m_target_feature),rownames(validation_KO_30_1m_target_feature)) -->
+
+<!-- train_vali_KO_60_1m<- -->
+<!--   train_KO_60_1m_target_feature %>% bind_rows(validation_KO_60_1m_target_feature) -->
+<!--       rownames(train_vali_KO_60_1m)<-c(rownames(train_KO_60_1m_target_feature),rownames(validation_KO_60_1m_target_feature)) -->
+
+<!-- train_vali_KO_90_1m<- -->
+<!--   train_KO_90_1m_target_feature %>% bind_rows(validation_KO_90_1m_target_feature) -->
+<!--         rownames(train_vali_KO_90_1m)<-c(rownames(train_KO_90_1m_target_feature),rownames(validation_KO_90_1m_target_feature)) -->
+
+<!-- train_vali_KO_fun_1m<- -->
+<!--   train_KO_fun_1m_target_feature %>% bind_rows(validation_KO_fun_1m_target_feature) -->
+<!--         rownames(train_vali_KO_fun_1m)<-c(rownames(train_KO_fun_1m_target_feature),rownames(validation_KO_fun_1m_target_feature)) -->
+
+
+<!--         train_vali_KO_30_2m<- -->
+<!--   train_KO_30_2m_target_feature %>% bind_rows(validation_KO_30_2m_target_feature) -->
+<!--       rownames(train_vali_KO_30_2m)<-c(rownames(train_KO_30_2m_target_feature),rownames(validation_KO_30_2m_target_feature)) -->
+
+<!-- train_vali_KO_60_2m<- -->
+<!--   train_KO_60_2m_target_feature %>% bind_rows(validation_KO_60_2m_target_feature) -->
+<!--       rownames(train_vali_KO_60_2m)<-c(rownames(train_KO_60_2m_target_feature),rownames(validation_KO_60_2m_target_feature)) -->
+
+<!-- train_vali_KO_90_2m<- -->
+<!--   train_KO_90_2m_target_feature %>% bind_rows(validation_KO_90_2m_target_feature) -->
+<!--         rownames(train_vali_KO_90_2m)<-c(rownames(train_KO_90_2m_target_feature),rownames(validation_KO_90_2m_target_feature)) -->
+
+<!--         train_vali_KO_fun_2m<- -->
+<!--   train_KO_fun_2m_target_feature %>% bind_rows(validation_KO_fun_2m_target_feature) -->
+<!--         rownames(train_vali_KO_fun_2m)<-c(rownames(train_KO_fun_2m_target_feature),rownames(validation_KO_fun_2m_target_feature)) -->
+
+<!--         train_vali_KO_30_3m<- -->
+<!--   train_KO_30_3m_target_feature %>% bind_rows(validation_KO_30_3m_target_feature) -->
+<!--       rownames(train_vali_KO_30_3m)<-c(rownames(train_KO_30_3m_target_feature),rownames(validation_KO_30_3m_target_feature)) -->
+
+<!-- train_vali_KO_60_3m<- -->
+<!--   train_KO_60_3m_target_feature %>% bind_rows(validation_KO_60_3m_target_feature) -->
+<!--       rownames(train_vali_KO_60_3m)<-c(rownames(train_KO_60_3m_target_feature),rownames(validation_KO_60_3m_target_feature)) -->
+
+<!-- train_vali_KO_90_3m<- -->
+<!--   train_KO_90_3m_target_feature %>% bind_rows(validation_KO_90_3m_target_feature) -->
+<!--         rownames(train_vali_KO_90_3m)<-c(rownames(train_KO_90_3m_target_feature),rownames(validation_KO_90_3m_target_feature)) -->
+
+<!--         train_vali_KO_fun_3m<- -->
+<!--   train_KO_fun_3m_target_feature %>% bind_rows(validation_KO_fun_3m_target_feature) -->
+<!--         rownames(train_vali_KO_fun_3m)<-c(rownames(train_KO_fun_3m_target_feature),rownames(validation_KO_fun_3m_target_feature)) -->
+
+<!-- model_KO_30_1m_target_feature<-randomForest(target~.,data=train_vali_KO_30_1m,mtry=13) -->
+<!-- model_KO_60_1m_target_feature<-randomForest(target~.,data=train_vali_KO_60_1m,mtry=2) -->
+<!-- model_KO_90_1m_target_feature<-randomForest(target~.,data=train_vali_KO_90_1m,mtry=2) -->
+<!-- model_KO_fun_1m_target_feature<-randomForest(target~.,data=train_vali_KO_fun_1m,mtry=2) -->
+
+<!-- model_KO_30_2m_target_feature<-randomForest(target~.,data=train_vali_KO_30_2m,mtry=2) -->
+<!-- model_KO_60_2m_target_feature<-randomForest(target~.,data=train_vali_KO_60_2m,mtry=2) -->
+<!-- model_KO_90_2m_target_feature<-randomForest(target~.,data=train_vali_KO_90_2m,mtry=4) -->
+<!-- model_KO_fun_2m_target_feature<-randomForest(target~.,data=train_vali_KO_fun_2m,mtry=16) -->
+
+<!-- model_KO_30_3m_target_feature<-randomForest(target~.,data=train_vali_KO_30_3m,mtry=2) -->
+<!-- model_KO_60_3m_target_feature<-randomForest(target~.,data=train_vali_KO_60_3m,mtry=2) -->
+<!-- model_KO_90_3m_target_feature<-randomForest(target~.,data=train_vali_KO_90_3m,mtry=2) -->
+<!-- model_KO_fun_3m_target_feature<-randomForest(target~.,data=train_vali_KO_fun_3m,mtry=3) -->
+
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #AAPL models -->
+<!-- train_vali_AAPL_30_1m<- -->
+<!--   train_AAPL_30_1m_target_feature %>% bind_rows(validation_AAPL_30_1m_target_feature) -->
+<!--       rownames(train_vali_AAPL_30_1m)<-c(rownames(train_AAPL_30_1m_target_feature),rownames(validation_AAPL_30_1m_target_feature)) -->
+
+<!-- train_vali_AAPL_60_1m<- -->
+<!--   train_AAPL_60_1m_target_feature %>% bind_rows(validation_AAPL_60_1m_target_feature) -->
+<!--       rownames(train_vali_AAPL_60_1m)<-c(rownames(train_AAPL_60_1m_target_feature),rownames(validation_AAPL_60_1m_target_feature)) -->
+
+<!-- train_vali_AAPL_90_1m<- -->
+<!--   train_AAPL_90_1m_target_feature %>% bind_rows(validation_AAPL_90_1m_target_feature) -->
+<!--         rownames(train_vali_AAPL_90_1m)<-c(rownames(train_AAPL_90_1m_target_feature),rownames(validation_AAPL_90_1m_target_feature)) -->
+
+<!-- train_vali_AAPL_fun_1m<- -->
+<!--   train_AAPL_fun_1m_target_feature %>% bind_rows(validation_AAPL_fun_1m_target_feature) -->
+<!--         rownames(train_vali_AAPL_fun_1m)<-c(rownames(train_AAPL_fun_1m_target_feature),rownames(validation_AAPL_fun_1m_target_feature)) -->
+
+
+<!--         train_vali_AAPL_30_2m<- -->
+<!--   train_AAPL_30_2m_target_feature %>% bind_rows(validation_AAPL_30_2m_target_feature) -->
+<!--       rownames(train_vali_AAPL_30_2m)<-c(rownames(train_AAPL_30_2m_target_feature),rownames(validation_AAPL_30_2m_target_feature)) -->
+
+<!-- train_vali_AAPL_60_2m<- -->
+<!--   train_AAPL_60_2m_target_feature %>% bind_rows(validation_AAPL_60_2m_target_feature) -->
+<!--       rownames(train_vali_AAPL_60_2m)<-c(rownames(train_AAPL_60_2m_target_feature),rownames(validation_AAPL_60_2m_target_feature)) -->
+
+<!-- train_vali_AAPL_90_2m<- -->
+<!--   train_AAPL_90_2m_target_feature %>% bind_rows(validation_AAPL_90_2m_target_feature) -->
+<!--         rownames(train_vali_AAPL_90_2m)<-c(rownames(train_AAPL_90_2m_target_feature),rownames(validation_AAPL_90_2m_target_feature)) -->
+
+<!--         train_vali_AAPL_fun_2m<- -->
+<!--   train_AAPL_fun_2m_target_feature %>% bind_rows(validation_AAPL_fun_2m_target_feature) -->
+<!--         rownames(train_vali_AAPL_fun_2m)<-c(rownames(train_AAPL_fun_2m_target_feature),rownames(validation_AAPL_fun_2m_target_feature)) -->
+
+<!--         train_vali_AAPL_30_3m<- -->
+<!--   train_AAPL_30_3m_target_feature %>% bind_rows(validation_AAPL_30_3m_target_feature) -->
+<!--       rownames(train_vali_AAPL_30_3m)<-c(rownames(train_AAPL_30_3m_target_feature),rownames(validation_AAPL_30_3m_target_feature)) -->
+
+<!-- train_vali_AAPL_60_3m<- -->
+<!--   train_AAPL_60_3m_target_feature %>% bind_rows(validation_AAPL_60_3m_target_feature) -->
+<!--       rownames(train_vali_AAPL_60_3m)<-c(rownames(train_AAPL_60_3m_target_feature),rownames(validation_AAPL_60_3m_target_feature)) -->
+
+<!-- train_vali_AAPL_90_3m<- -->
+<!--   train_AAPL_90_3m_target_feature %>% bind_rows(validation_AAPL_90_3m_target_feature) -->
+<!--         rownames(train_vali_AAPL_90_3m)<-c(rownames(train_AAPL_90_3m_target_feature),rownames(validation_AAPL_90_3m_target_feature)) -->
+
+<!--         train_vali_AAPL_fun_3m<- -->
+<!--   train_AAPL_fun_3m_target_feature %>% bind_rows(validation_AAPL_fun_3m_target_feature) -->
+<!--         rownames(train_vali_AAPL_fun_3m)<-c(rownames(train_AAPL_fun_3m_target_feature),rownames(validation_AAPL_fun_3m_target_feature)) -->
+
+<!-- model_AAPL_30_1m_target_feature<-randomForest(target~.,data=train_vali_AAPL_30_1m,mtry=29) -->
+<!-- model_AAPL_60_1m_target_feature<-randomForest(target~.,data=train_vali_AAPL_60_1m,mtry=26) -->
+<!-- model_AAPL_90_1m_target_feature<-randomForest(target~.,data=train_vali_AAPL_90_1m,mtry=28) -->
+<!-- model_AAPL_fun_1m_target_feature<-randomForest(target~.,data=train_vali_AAPL_fun_1m,mtry=27) -->
+
+<!-- model_AAPL_30_2m_target_feature<-randomForest(target~.,data=train_vali_AAPL_30_2m,mtry=11) -->
+<!-- model_AAPL_60_2m_target_feature<-randomForest(target~.,data=train_vali_AAPL_60_2m,mtry=2) -->
+<!-- model_AAPL_90_2m_target_feature<-randomForest(target~.,data=train_vali_AAPL_90_2m,mtry=2) -->
+<!-- model_AAPL_fun_2m_target_feature<-randomForest(target~.,data=train_vali_AAPL_fun_2m,mtry=11) -->
+
+<!-- model_AAPL_30_3m_target_feature<-randomForest(target~.,data=train_vali_AAPL_30_3m,mtry=14) -->
+<!-- model_AAPL_60_3m_target_feature<-randomForest(target~.,data=train_vali_AAPL_60_3m,mtry=23) -->
+<!-- model_AAPL_90_3m_target_feature<-randomForest(target~.,data=train_vali_AAPL_90_3m,mtry=18) -->
+<!-- model_AAPL_fun_3m_target_feature<-randomForest(target~.,data=train_vali_AAPL_fun_3m,mtry=11) -->
+
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #AXP models -->
+<!-- train_vali_AXP_30_1m<- -->
+<!--   train_AXP_30_1m_target_feature %>% bind_rows(validation_AXP_30_1m_target_feature) -->
+<!--       rownames(train_vali_AXP_30_1m)<-c(rownames(train_AXP_30_1m_target_feature),rownames(validation_AXP_30_1m_target_feature)) -->
+
+<!-- train_vali_AXP_60_1m<- -->
+<!--   train_AXP_60_1m_target_feature %>% bind_rows(validation_AXP_60_1m_target_feature) -->
+<!--       rownames(train_vali_AXP_60_1m)<-c(rownames(train_AXP_60_1m_target_feature),rownames(validation_AXP_60_1m_target_feature)) -->
+
+<!-- train_vali_AXP_90_1m<- -->
+<!--   train_AXP_90_1m_target_feature %>% bind_rows(validation_AXP_90_1m_target_feature) -->
+<!--         rownames(train_vali_AXP_90_1m)<-c(rownames(train_AXP_90_1m_target_feature),rownames(validation_AXP_90_1m_target_feature)) -->
+
+<!-- train_vali_AXP_fun_1m<- -->
+<!--   train_AXP_fun_1m_target_feature %>% bind_rows(validation_AXP_fun_1m_target_feature) -->
+<!--         rownames(train_vali_AXP_fun_1m)<-c(rownames(train_AXP_fun_1m_target_feature),rownames(validation_AXP_fun_1m_target_feature)) -->
+
+
+<!--         train_vali_AXP_30_2m<- -->
+<!--   train_AXP_30_2m_target_feature %>% bind_rows(validation_AXP_30_2m_target_feature) -->
+<!--       rownames(train_vali_AXP_30_2m)<-c(rownames(train_AXP_30_2m_target_feature),rownames(validation_AXP_30_2m_target_feature)) -->
+
+<!-- train_vali_AXP_60_2m<- -->
+<!--   train_AXP_60_2m_target_feature %>% bind_rows(validation_AXP_60_2m_target_feature) -->
+<!--       rownames(train_vali_AXP_60_2m)<-c(rownames(train_AXP_60_2m_target_feature),rownames(validation_AXP_60_2m_target_feature)) -->
+
+<!-- train_vali_AXP_90_2m<- -->
+<!--   train_AXP_90_2m_target_feature %>% bind_rows(validation_AXP_90_2m_target_feature) -->
+<!--         rownames(train_vali_AXP_90_2m)<-c(rownames(train_AXP_90_2m_target_feature),rownames(validation_AXP_90_2m_target_feature)) -->
+
+<!--         train_vali_AXP_fun_2m<- -->
+<!--   train_AXP_fun_2m_target_feature %>% bind_rows(validation_AXP_fun_2m_target_feature) -->
+<!--         rownames(train_vali_AXP_fun_2m)<-c(rownames(train_AXP_fun_2m_target_feature),rownames(validation_AXP_fun_2m_target_feature)) -->
+
+<!--         train_vali_AXP_30_3m<- -->
+<!--   train_AXP_30_3m_target_feature %>% bind_rows(validation_AXP_30_3m_target_feature) -->
+<!--       rownames(train_vali_AXP_30_3m)<-c(rownames(train_AXP_30_3m_target_feature),rownames(validation_AXP_30_3m_target_feature)) -->
+
+<!-- train_vali_AXP_60_3m<- -->
+<!--   train_AXP_60_3m_target_feature %>% bind_rows(validation_AXP_60_3m_target_feature) -->
+<!--       rownames(train_vali_AXP_60_3m)<-c(rownames(train_AXP_60_3m_target_feature),rownames(validation_AXP_60_3m_target_feature)) -->
+
+<!-- train_vali_AXP_90_3m<- -->
+<!--   train_AXP_90_3m_target_feature %>% bind_rows(validation_AXP_90_3m_target_feature) -->
+<!--         rownames(train_vali_AXP_90_3m)<-c(rownames(train_AXP_90_3m_target_feature),rownames(validation_AXP_90_3m_target_feature)) -->
+
+<!--         train_vali_AXP_fun_3m<- -->
+<!--   train_AXP_fun_3m_target_feature %>% bind_rows(validation_AXP_fun_3m_target_feature) -->
+<!--         rownames(train_vali_AXP_fun_3m)<-c(rownames(train_AXP_fun_3m_target_feature),rownames(validation_AXP_fun_3m_target_feature)) -->
+
+<!-- model_AXP_30_1m_target_feature<-randomForest(target~.,data=train_vali_AXP_30_1m,mtry=9) -->
+<!-- model_AXP_60_1m_target_feature<-randomForest(target~.,data=train_vali_AXP_60_1m,mtry=2) -->
+<!-- model_AXP_90_1m_target_feature<-randomForest(target~.,data=train_vali_AXP_90_1m,mtry=10) -->
+<!-- model_AXP_fun_1m_target_feature<-randomForest(target~.,data=train_vali_AXP_fun_1m,mtry=2) -->
+
+<!-- model_AXP_30_2m_target_feature<-randomForest(target~.,data=train_vali_AXP_30_2m,mtry=2) -->
+<!-- model_AXP_60_2m_target_feature<-randomForest(target~.,data=train_vali_AXP_60_2m,mtry=2) -->
+<!-- model_AXP_90_2m_target_feature<-randomForest(target~.,data=train_vali_AXP_90_2m,mtry=31) -->
+<!-- model_AXP_fun_2m_target_feature<-randomForest(target~.,data=train_vali_AXP_fun_2m,mtry=3) -->
+
+<!-- model_AXP_30_3m_target_feature<-randomForest(target~.,data=train_vali_AXP_30_3m,mtry=2) -->
+<!-- model_AXP_60_3m_target_feature<-randomForest(target~.,data=train_vali_AXP_60_3m,mtry=5) -->
+<!-- model_AXP_90_3m_target_feature<-randomForest(target~.,data=train_vali_AXP_90_3m,mtry=2) -->
+<!-- model_AXP_fun_3m_target_feature<-randomForest(target~.,data=train_vali_AXP_fun_3m,mtry=4) -->
+
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #WFC models -->
+<!-- train_vali_WFC_30_1m<- -->
+<!--   train_WFC_30_1m_target_feature %>% bind_rows(validation_WFC_30_1m_target_feature) -->
+<!--       rownames(train_vali_WFC_30_1m)<-c(rownames(train_WFC_30_1m_target_feature),rownames(validation_WFC_30_1m_target_feature)) -->
+
+<!-- train_vali_WFC_60_1m<- -->
+<!--   train_WFC_60_1m_target_feature %>% bind_rows(validation_WFC_60_1m_target_feature) -->
+<!--       rownames(train_vali_WFC_60_1m)<-c(rownames(train_WFC_60_1m_target_feature),rownames(validation_WFC_60_1m_target_feature)) -->
+<!--       train_vali_WFC_60_1m$PNratio[train_vali_WFC_60_1m$PNratio==Inf]<-1 -->
+
+<!-- train_vali_WFC_90_1m<- -->
+<!--   train_WFC_90_1m_target_feature %>% bind_rows(validation_WFC_90_1m_target_feature) -->
+<!--         rownames(train_vali_WFC_90_1m)<-c(rownames(train_WFC_90_1m_target_feature),rownames(validation_WFC_90_1m_target_feature)) -->
+
+<!-- train_vali_WFC_fun_1m<- -->
+<!--   train_WFC_fun_1m_target_feature %>% bind_rows(validation_WFC_fun_1m_target_feature) -->
+<!--         rownames(train_vali_WFC_fun_1m)<-c(rownames(train_WFC_fun_1m_target_feature),rownames(validation_WFC_fun_1m_target_feature)) -->
+
+
+<!--         train_vali_WFC_30_2m<- -->
+<!--   train_WFC_30_2m_target_feature %>% bind_rows(validation_WFC_30_2m_target_feature) -->
+<!--       rownames(train_vali_WFC_30_2m)<-c(rownames(train_WFC_30_2m_target_feature),rownames(validation_WFC_30_2m_target_feature)) -->
+
+<!-- train_vali_WFC_60_2m<- -->
+<!--   train_WFC_60_2m_target_feature %>% bind_rows(validation_WFC_60_2m_target_feature) -->
+<!--       rownames(train_vali_WFC_60_2m)<-c(rownames(train_WFC_60_2m_target_feature),rownames(validation_WFC_60_2m_target_feature)) -->
+
+<!-- train_vali_WFC_90_2m<- -->
+<!--   train_WFC_90_2m_target_feature %>% bind_rows(validation_WFC_90_2m_target_feature) -->
+<!--         rownames(train_vali_WFC_90_2m)<-c(rownames(train_WFC_90_2m_target_feature),rownames(validation_WFC_90_2m_target_feature)) -->
+
+<!--         train_vali_WFC_fun_2m<- -->
+<!--   train_WFC_fun_2m_target_feature %>% bind_rows(validation_WFC_fun_2m_target_feature) -->
+<!--         rownames(train_vali_WFC_fun_2m)<-c(rownames(train_WFC_fun_2m_target_feature),rownames(validation_WFC_fun_2m_target_feature)) -->
+
+<!--         train_vali_WFC_30_3m<- -->
+<!--   train_WFC_30_3m_target_feature %>% bind_rows(validation_WFC_30_3m_target_feature) -->
+<!--       rownames(train_vali_WFC_30_3m)<-c(rownames(train_WFC_30_3m_target_feature),rownames(validation_WFC_30_3m_target_feature)) -->
+
+<!-- train_vali_WFC_60_3m<- -->
+<!--   train_WFC_60_3m_target_feature %>% bind_rows(validation_WFC_60_3m_target_feature) -->
+<!--       rownames(train_vali_WFC_60_3m)<-c(rownames(train_WFC_60_3m_target_feature),rownames(validation_WFC_60_3m_target_feature)) -->
+
+<!-- train_vali_WFC_90_3m<- -->
+<!--   train_WFC_90_3m_target_feature %>% bind_rows(validation_WFC_90_3m_target_feature) -->
+<!--         rownames(train_vali_WFC_90_3m)<-c(rownames(train_WFC_90_3m_target_feature),rownames(validation_WFC_90_3m_target_feature)) -->
+
+<!--         train_vali_WFC_fun_3m<- -->
+<!--   train_WFC_fun_3m_target_feature %>% bind_rows(validation_WFC_fun_3m_target_feature) -->
+<!--         rownames(train_vali_WFC_fun_3m)<-c(rownames(train_WFC_fun_3m_target_feature),rownames(validation_WFC_fun_3m_target_feature)) -->
+
+<!-- model_WFC_30_1m_target_feature<-randomForest(target~.,data=train_vali_WFC_30_1m,mtry=4) -->
+<!-- model_WFC_60_1m_target_feature<-randomForest(target~.,data=train_vali_WFC_60_1m,mtry=3) -->
+<!-- model_WFC_90_1m_target_feature<-randomForest(target~.,data=train_vali_WFC_90_1m,mtry=3) -->
+<!-- model_WFC_fun_1m_target_feature<-randomForest(target~.,data=train_vali_WFC_fun_1m,mtry=4) -->
+
+<!-- model_WFC_30_2m_target_feature<-randomForest(target~.,data=train_vali_WFC_30_2m,mtry=2) -->
+
+<!-- train_vali_WFC_60_2m$PNratio[train_vali_WFC_60_2m$PNratio==Inf]<-1 -->
+<!-- model_WFC_60_2m_target_feature<-randomForest(target~.,data=train_vali_WFC_60_2m,mtry=2) -->
+<!-- model_WFC_90_2m_target_feature<-randomForest(target~.,data=train_vali_WFC_90_2m,mtry=2) -->
+<!-- model_WFC_fun_2m_target_feature<-randomForest(target~.,data=train_vali_WFC_fun_2m,mtry=3) -->
+
+<!-- model_WFC_30_3m_target_feature<-randomForest(target~.,data=train_vali_WFC_30_3m,mtry=2) -->
+
+<!-- train_vali_WFC_60_3m$PNratio[train_vali_WFC_60_3m$PNratio==Inf]<-1 -->
+<!-- model_WFC_60_3m_target_feature<-randomForest(target~.,data=train_vali_WFC_60_3m,mtry=2) -->
+<!-- model_WFC_90_3m_target_feature<-randomForest(target~.,data=train_vali_WFC_90_3m,mtry=13) -->
+<!-- model_WFC_fun_3m_target_feature<-randomForest(target~.,data=train_vali_WFC_fun_3m,mtry=3) -->
+
+<!-- ``` -->
+
+```{r}
+load("C:/Users/i0386388/Desktop/tesis/datasplit_testmodels.RData")
+```
+
+<!-- confusion matrix -->
+
+```{r ConfusionMatrixKO}
+CM_KO_30_1m<-confusionMatrix(predict(model_KO_30_1m_target_feature,test_KO_30_1m_target_feature),test_KO_30_1m_target_feature$target)
+CM_KO_60_1m<-confusionMatrix(predict(model_KO_60_1m_target_feature,test_KO_60_1m_target_feature),test_KO_60_1m_target_feature$target)
+CM_KO_90_1m<-confusionMatrix(predict(model_KO_90_1m_target_feature,test_KO_90_1m_target_feature),test_KO_90_1m_target_feature$target)
+CM_KO_fun_1m<-confusionMatrix(predict(model_KO_fun_1m_target_feature,test_KO_fun_1m_target_feature),test_KO_fun_1m_target_feature$target)
+
+
+CM_KO_30_2m<-confusionMatrix(predict(model_KO_30_2m_target_feature,test_KO_30_2m_target_feature),test_KO_30_2m_target_feature$target)
+CM_KO_60_2m<-confusionMatrix(predict(model_KO_60_2m_target_feature,test_KO_60_2m_target_feature),test_KO_60_2m_target_feature$target)
+CM_KO_90_2m<-confusionMatrix(predict(model_KO_90_2m_target_feature,test_KO_90_2m_target_feature),test_KO_90_2m_target_feature$target)
+CM_KO_fun_2m<-confusionMatrix(predict(model_KO_fun_2m_target_feature,test_KO_fun_2m_target_feature),test_KO_fun_2m_target_feature$target)
+
+CM_KO_30_3m<-confusionMatrix(predict(model_KO_30_3m_target_feature,test_KO_30_3m_target_feature),test_KO_30_3m_target_feature$target)
+CM_KO_60_3m<-confusionMatrix(predict(model_KO_60_3m_target_feature,test_KO_60_3m_target_feature),test_KO_60_3m_target_feature$target)
+CM_KO_90_3m<-confusionMatrix(predict(model_KO_90_3m_target_feature,test_KO_90_3m_target_feature),test_KO_90_3m_target_feature$target)
+CM_KO_fun_3m<-confusionMatrix(predict(model_KO_fun_3m_target_feature,test_KO_fun_3m_target_feature),test_KO_fun_3m_target_feature$target)
+
+
+a<-data.frame(acc1m=as.numeric(c(round(CM_KO_30_1m$overall[1]*100,2),
+                                    round(CM_KO_60_1m$overall[1]*100,2),
+                                   round(CM_KO_90_1m$overall[1]*100,2),
+                                   round(CM_KO_fun_1m$overall[1]*100,2))),
+              sensi1m=as.numeric(c(round(CM_KO_30_1m$byClass[1]*100,2),
+                                    round(CM_KO_60_1m$byClass[1]*100,2),
+                                    round(CM_KO_90_1m$byClass[1]*100,2),
+                                    round(CM_KO_fun_1m$byClass[1]*100,2))),
+              speci1m=as.numeric(c(round(CM_KO_30_1m$byClass[2]*100,2),
+                                    round(CM_KO_60_1m$byClass[2]*100,2),
+                                    round(CM_KO_90_1m$byClass[2]*100,2),
+                                    round(CM_KO_fun_1m$byClass[2]*100,2))),
+              
+              acc2m=as.numeric(c(round(CM_KO_30_2m$overall[1]*100,2),
+                                    round(CM_KO_60_2m$overall[1]*100,2),
+                                   round(CM_KO_90_2m$overall[1]*100,2),
+                                   round(CM_KO_fun_2m$overall[1]*100,2))),
+              sensi2m=as.numeric(c(round(CM_KO_30_2m$byClass[1]*100,2),
+                                    round(CM_KO_60_2m$byClass[1]*100,2),
+                                    round(CM_KO_90_2m$byClass[1]*100,2),
+                                    round(CM_KO_fun_2m$byClass[1]*100,2))),
+              speci2m=as.numeric(c(round(CM_KO_30_2m$byClass[2]*100,2),
+                                    round(CM_KO_60_2m$byClass[2]*100,2),
+                                    round(CM_KO_90_2m$byClass[2]*100,2),
+                                    round(CM_KO_fun_2m$byClass[2]*100,2))),
+              
+              acc3m=as.numeric(c(round(CM_KO_30_3m$overall[1]*100,2),
+                                    round(CM_KO_60_3m$overall[1]*100,2),
+                                   round(CM_KO_90_3m$overall[1]*100,2),
+                                   round(CM_KO_fun_3m$overall[1]*100,2))),
+              sensi3m=as.numeric(c(round(CM_KO_30_3m$byClass[1]*100,2),
+                                    round(CM_KO_60_3m$byClass[1]*100,2),
+                                    round(CM_KO_90_3m$byClass[1]*100,2),
+                                    round(CM_KO_fun_3m$byClass[1]*100,2))),
+              speci3m=as.numeric(c(round(CM_KO_30_3m$byClass[2]*100,2),
+                                    round(CM_KO_60_3m$byClass[2]*100,2),
+                                    round(CM_KO_90_3m$byClass[2]*100,2),
+                                    round(CM_KO_fun_3m$byClass[2]*100,2)))
+              
+              
+              
+              ) 
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+kable(a, "latex") %>%
+  add_header_above(c(" ", "Predicción 1 mes" = 3, "Predicción 2 meses" = 3,"Predicción 3 meses"=3)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+
+```
+  \captionof{table}{Coca Cola CO.: Metricas de rendimiento sobre muestra test}
+  
+\setlength\parskip{5ex}
+
+```{r ConfusionMatrixAAPL}
+CM_AAPL_30_1m<-confusionMatrix(predict(model_AAPL_30_1m_target_feature,test_AAPL_30_1m_target_feature),test_AAPL_30_1m_target_feature$target)
+CM_AAPL_60_1m<-confusionMatrix(predict(model_AAPL_60_1m_target_feature,test_AAPL_60_1m_target_feature),test_AAPL_60_1m_target_feature$target)
+CM_AAPL_90_1m<-confusionMatrix(predict(model_AAPL_90_1m_target_feature,test_AAPL_90_1m_target_feature),test_AAPL_90_1m_target_feature$target)
+CM_AAPL_fun_1m<-confusionMatrix(predict(model_AAPL_fun_1m_target_feature,test_AAPL_fun_1m_target_feature),test_AAPL_fun_1m_target_feature$target)
+
+
+CM_AAPL_30_2m<-confusionMatrix(predict(model_AAPL_30_2m_target_feature,test_AAPL_30_2m_target_feature),test_AAPL_30_2m_target_feature$target)
+CM_AAPL_60_2m<-confusionMatrix(predict(model_AAPL_60_2m_target_feature,test_AAPL_60_2m_target_feature),test_AAPL_60_2m_target_feature$target)
+CM_AAPL_90_2m<-confusionMatrix(predict(model_AAPL_90_2m_target_feature,test_AAPL_90_2m_target_feature),test_AAPL_90_2m_target_feature$target)
+CM_AAPL_fun_2m<-confusionMatrix(predict(model_AAPL_fun_2m_target_feature,test_AAPL_fun_2m_target_feature),test_AAPL_fun_2m_target_feature$target)
+
+CM_AAPL_30_3m<-confusionMatrix(predict(model_AAPL_30_3m_target_feature,test_AAPL_30_3m_target_feature),test_AAPL_30_3m_target_feature$target)
+CM_AAPL_60_3m<-confusionMatrix(predict(model_AAPL_60_3m_target_feature,test_AAPL_60_3m_target_feature),test_AAPL_60_3m_target_feature$target)
+CM_AAPL_90_3m<-confusionMatrix(predict(model_AAPL_90_3m_target_feature,test_AAPL_90_3m_target_feature),test_AAPL_90_3m_target_feature$target)
+CM_AAPL_fun_3m<-confusionMatrix(predict(model_AAPL_fun_3m_target_feature,test_AAPL_fun_3m_target_feature),test_AAPL_fun_3m_target_feature$target)
+
+
+a<-data.frame(acc1m=as.numeric(c(round(CM_AAPL_30_1m$overall[1]*100,2),
+                                    round(CM_AAPL_60_1m$overall[1]*100,2),
+                                   round(CM_AAPL_90_1m$overall[1]*100,2),
+                                   round(CM_AAPL_fun_1m$overall[1]*100,2))),
+              sensi1m=as.numeric(c(round(CM_AAPL_30_1m$byClass[1]*100,2),
+                                    round(CM_AAPL_60_1m$byClass[1]*100,2),
+                                    round(CM_AAPL_90_1m$byClass[1]*100,2),
+                                    round(CM_AAPL_fun_1m$byClass[1]*100,2))),
+              speci1m=as.numeric(c(round(CM_AAPL_30_1m$byClass[2]*100,2),
+                                    round(CM_AAPL_60_1m$byClass[2]*100,2),
+                                    round(CM_AAPL_90_1m$byClass[2]*100,2),
+                                    round(CM_AAPL_fun_1m$byClass[2]*100,2))),
+              
+              acc2m=as.numeric(c(round(CM_AAPL_30_2m$overall[1]*100,2),
+                                    round(CM_AAPL_60_2m$overall[1]*100,2),
+                                   round(CM_AAPL_90_2m$overall[1]*100,2),
+                                   round(CM_AAPL_fun_2m$overall[1]*100,2))),
+              sensi2m=as.numeric(c(round(CM_AAPL_30_2m$byClass[1]*100,2),
+                                    round(CM_AAPL_60_2m$byClass[1]*100,2),
+                                    round(CM_AAPL_90_2m$byClass[1]*100,2),
+                                    round(CM_AAPL_fun_2m$byClass[1]*100,2))),
+              speci2m=as.numeric(c(round(CM_AAPL_30_2m$byClass[2]*100,2),
+                                    round(CM_AAPL_60_2m$byClass[2]*100,2),
+                                    round(CM_AAPL_90_2m$byClass[2]*100,2),
+                                    round(CM_AAPL_fun_2m$byClass[2]*100,2))),
+              
+              acc3m=as.numeric(c(round(CM_AAPL_30_3m$overall[1]*100,2),
+                                    round(CM_AAPL_60_3m$overall[1]*100,2),
+                                   round(CM_AAPL_90_3m$overall[1]*100,2),
+                                   round(CM_AAPL_fun_3m$overall[1]*100,2))),
+              sensi3m=as.numeric(c(round(CM_AAPL_30_3m$byClass[1]*100,2),
+                                    round(CM_AAPL_60_3m$byClass[1]*100,2),
+                                    round(CM_AAPL_90_3m$byClass[1]*100,2),
+                                    round(CM_AAPL_fun_3m$byClass[1]*100,2))),
+              speci3m=as.numeric(c(round(CM_AAPL_30_3m$byClass[2]*100,2),
+                                    round(CM_AAPL_60_3m$byClass[2]*100,2),
+                                    round(CM_AAPL_90_3m$byClass[2]*100,2),
+                                    round(CM_AAPL_fun_3m$byClass[2]*100,2)))
+              
+              
+              
+              ) 
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+kable(a, "latex") %>%
+  add_header_above(c(" ", "Predicción 1 mes" = 3, "Predicción 2 meses" = 3,"Predicción 3 meses"=3)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+```
+  \captionof{table}{Apple Inc.: Metricas de rendimiento sobre muestra test}
+  
+\setlength\parskip{5ex}
+
+```{r ConfusionMatrixAXP}
+confusionMatrix(predict(model_AXP_30_1m_target_feature,test_AXP_30_1m_target_feature),test_AXP_30_1m_target_feature$target)
+confusionMatrix(predict(model_AXP_60_1m_target_feature,test_AXP_60_1m_target_feature),test_AXP_60_1m_target_feature$target)
+confusionMatrix(predict(model_AXP_90_1m_target_feature,test_AXP_90_1m_target_feature),test_AXP_90_1m_target_feature$target)
+confusionMatrix(predict(model_AXP_fun_1m_target_feature,test_AXP_fun_1m_target_feature),test_AXP_fun_1m_target_feature$target)
+
+
+confusionMatrix(predict(model_AXP_30_2m_target_feature,test_AXP_30_2m_target_feature),test_AXP_30_2m_target_feature$target)
+confusionMatrix(predict(model_AXP_60_2m_target_feature,test_AXP_60_2m_target_feature),test_AXP_60_2m_target_feature$target)
+confusionMatrix(predict(model_AXP_90_2m_target_feature,test_AXP_90_2m_target_feature),test_AXP_90_2m_target_feature$target)
+confusionMatrix(predict(model_AXP_fun_2m_target_feature,test_AXP_fun_2m_target_feature),test_AXP_fun_2m_target_feature$target)
+
+confusionMatrix(predict(model_AXP_30_3m_target_feature,test_AXP_30_3m_target_feature),test_AXP_30_3m_target_feature$target)
+confusionMatrix(predict(model_AXP_60_3m_target_feature,test_AXP_60_3m_target_feature),test_AXP_60_3m_target_feature$target)
+confusionMatrix(predict(model_AXP_90_3m_target_feature,test_AXP_90_3m_target_feature),test_AXP_90_3m_target_feature$target)
+confusionMatrix(predict(model_AXP_fun_3m_target_feature,test_AXP_fun_3m_target_feature),test_AXP_fun_3m_target_feature$target)
+```
+  \captionof{table}{American Express CO.: Metricas de rendimiento sobre muestra test}
+  
+\setlength\parskip{5ex}
+
+```{r}
+confusionMatrix(predict(model_WFC_30_1m_target_feature,test_WFC_30_1m_target_feature),test_WFC_30_1m_target_feature$target)
+confusionMatrix(predict(model_WFC_60_1m_target_feature,test_WFC_60_1m_target_feature),test_WFC_60_1m_target_feature$target)
+confusionMatrix(predict(model_WFC_90_1m_target_feature,test_WFC_90_1m_target_feature),test_WFC_90_1m_target_feature$target)
+confusionMatrix(predict(model_WFC_fun_1m_target_feature,test_WFC_fun_1m_target_feature),test_WFC_fun_1m_target_feature$target)
+
+
+confusionMatrix(predict(model_WFC_30_2m_target_feature,test_WFC_30_2m_target_feature),test_WFC_30_2m_target_feature$target)
+confusionMatrix(predict(model_WFC_60_2m_target_feature,test_WFC_60_2m_target_feature),test_WFC_60_2m_target_feature$target)
+confusionMatrix(predict(model_WFC_90_2m_target_feature,test_WFC_90_2m_target_feature),test_WFC_90_2m_target_feature$target)
+confusionMatrix(predict(model_WFC_fun_2m_target_feature,test_WFC_fun_2m_target_feature),test_WFC_fun_2m_target_feature$target)
+
+confusionMatrix(predict(model_WFC_30_3m_target_feature,test_WFC_30_3m_target_feature),test_WFC_30_3m_target_feature$target)->a
+confusionMatrix(predict(model_WFC_60_3m_target_feature,test_WFC_60_3m_target_feature),test_WFC_60_3m_target_feature$target)
+confusionMatrix(predict(model_WFC_90_3m_target_feature,test_WFC_90_3m_target_feature),test_WFC_90_3m_target_feature$target)
+confusionMatrix(predict(model_WFC_fun_3m_target_feature,test_WFC_fun_3m_target_feature),test_WFC_fun_3m_target_feature$target)
+```
+  \captionof{table}{Wells and Fargo CO.: Metricas de rendimiento sobre muestra test}
+  
+\setlength\parskip{5ex}
+
+
+PONER LAS TABLAS CON LA MEDIA DE ACCURACY OBTENIDA ENTRE TODOS LOS ALISADOS. CREAR REGLA: SI COMO MINIMO 3 ALISADOS DICEN QUE SUBIRA, ES MAS ROBUSTO...
+
+*Importancia de las variables*
+```{r}
+
+sort(model_AAPL_30_1m_target_feature$importance[,1],decreasing = T)
+```
+
+
+
+*Experimentos con los datos sin alisar*
+
+*poner aqui los precios reales para poder comparar... si se predice con la ema90 que subira, es verdad que en ese momento el precio estava mas alto que cuando se hizo la predicción?

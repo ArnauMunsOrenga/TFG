@@ -1,0 +1,17 @@
+---
+output: pdf_document
+---
+\justifying
+La inteligencia artificial, comúnmente llamada AI por sus siglas en inglés...
+
+\setlength\parskip{5ex}
+Intentar predecir el precio de un stock ha sido una materia objeto de estudio desde los últimos años. Debido a la complejidad de las series temporales de los precios una nueva rama de investigación se está desarrollando rápidamente. Ésta rama de investigación gira en torno a la idea de intentar predecir la *dirección* del stock en cuestión en vez de intentar predecir el precio exacto. Estos modelos de predicción de la dirección del movimiento de los stocks, llamados SMD por sus siglas en inglés (Stock Movement Direction), consiguen alcanzar un rendimiento predictivo suficiente como para utilizarlos como complemento al análisi fundamental a la hora de tomar una decisión de inversión. 
+
+<!-- \centering -->
+<!-- ```{r} -->
+<!-- plot(iris$Sepal.Length,iris$Sepal.Width) -->
+<!-- ``` -->
+<!--   \captionof{figure}{iris example} -->
+
+\justifying
+siempre tenemos que poner un justifying despues de un center o nos va a centrar todo el documento

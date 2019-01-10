@@ -1,0 +1,964 @@
+---
+output: pdf_document
+---
+
+```{r}
+
+library(quantmod)
+library(dplyr)
+library(ggplot2)
+library(kableExtra)
+source("C:/Users/i0386388/Desktop/tesis/Tesis/load.R")
+
+source("C:/Users/i0386388/Desktop/TFG-master/functions/smooth_target.R")
+
+source("C:/Users/i0386388/Desktop/tesis/Tesis/target_feature_extraction.R")
+#Distintos data.frame con los distintos alisados que se aplican a los datos: Exp smoothing and EMA 30, 60, 90
+KO_30<-EMA_finance(KO,30)
+KO_60<-EMA_finance(KO,60)
+KO_90<-EMA_finance(KO,90)
+
+
+AAPL_30<-EMA_finance(AAPL,30)
+AAPL_60<-EMA_finance(AAPL,60)
+AAPL_90<-EMA_finance(AAPL,90)
+
+WFC_30<-EMA_finance(WFC,30)
+WFC_60<-EMA_finance(WFC,60)
+WFC_90<-EMA_finance(WFC,90)
+
+AXP_30<-EMA_finance(AXP,30)
+AXP_60<-EMA_finance(AXP,60)
+AXP_90<-EMA_finance(AXP,90)
+
+KO_formula<-smooth_formula(KO)
+AAPL_formula<-smooth_formula(AAPL)
+WFC_formula<-smooth_formula(WFC)
+AXP_formula<-smooth_formula(AXP)
+
+
+```
+
+```{r}
+#target variable
+
+####################################################################################
+#########COCA COLA COMPANY
+  ####### 30 day EMA
+    KO_30_1m<-KO_30 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(KO_30,20))
+
+rownames(KO_30_1m)<-rownames(KO_30)[c(1:(nrow(KO_30)-20))]
+KO_30_1m$target<-factor(KO_30_1m$target)
+    
+    KO_30_2m<-KO_30 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(KO_30,40))
+
+        
+    KO_30_3m<-KO_30 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(KO_30,60))
+
+        rownames(KO_30_2m)<-rownames(KO_30)[c(1:(nrow(KO_30)-40))]    
+KO_30_2m$target<-factor(KO_30_2m$target)
+
+rownames(KO_30_3m)<-rownames(KO_30)[c(1:(nrow(KO_30)-60))]    
+KO_30_3m$target<-factor(KO_30_3m$target)
+
+    # KO_30_target<-list(KO_30_1m = KO_30_1m,
+    #                    KO_30_2m = KO_30_2m,
+    #                    KO_30_3m = KO_30_3m)
+    #rm(KO_30_1m,KO_30_2m,KO_30_3m)
+#######################
+  ####### 60 day EMA
+    KO_60_1m<-KO_60 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(KO_60,20))
+    
+    
+    KO_60_2m<-KO_60 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(KO_60,40))
+
+    
+    
+    KO_60_3m<-KO_60 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(KO_60,60))
+
+        rownames(KO_60_1m)<-rownames(KO_60)[c(1:(nrow(KO_60)-20))]
+KO_60_1m$target<-factor(KO_60_1m$target)    
+
+rownames(KO_60_2m)<-rownames(KO_60)[c(1:(nrow(KO_60)-40))]
+KO_60_2m$target<-factor(KO_60_2m$target)    
+    
+rownames(KO_60_3m)<-rownames(KO_60)[c(1:(nrow(KO_60)-60))]
+KO_60_3m$target<-factor(KO_60_3m$target)    
+
+    
+    # KO_60_target<-list(KO_60_1m = KO_60_1m,
+    #                    KO_60_2m = KO_60_2m,
+    #                    KO_60_3m = KO_60_3m)
+    #rm(KO_60_1m,KO_60_2m,KO_60_3m)
+##############################################3
+  ####### 90 day EMA
+    KO_90_1m<-KO_90 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(KO_90,20))
+
+
+    KO_90_2m<-KO_90 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(KO_90,40))
+
+    
+    
+        
+    KO_90_3m<-KO_90 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(KO_90,60))
+
+    rownames(KO_90_1m)<-rownames(KO_90)[c(1:(nrow(KO_90)-20))]
+KO_90_1m$target<-factor(KO_90_1m$target)    
+rownames(KO_90_2m)<-rownames(KO_90)[c(1:(nrow(KO_90)-40))]
+KO_90_2m$target<-factor(KO_90_2m$target)    
+    
+rownames(KO_90_3m)<-rownames(KO_90)[c(1:(nrow(KO_90)-60))]
+KO_90_3m$target<-factor(KO_90_3m$target)    
+    
+    # KO_90_target<-list(KO_90_1m = KO_90_1m,
+    #                    KO_90_2m = KO_90_2m,
+    #                    KO_90_3m = KO_90_3m)
+    #rm(KO_90_1m,KO_90_2m,KO_90_3m)
+#####################################
+    #target on formula smoothed data
+    KO_fun_1m<-KO_formula %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(KO_formula,20))
+
+    KO_fun_2m<-KO_formula %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(KO_formula,40))
+        
+    KO_fun_3m<-KO_formula %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(KO_formula,60))
+    
+  rownames(KO_fun_1m)<-index(KO)[c(1:(nrow(KO)-20))]
+KO_fun_1m$target<-factor(KO_fun_1m$target)
+
+rownames(KO_fun_2m)<-index(KO)[c(1:(nrow(KO)-40))]
+KO_fun_2m$target<-factor(KO_fun_2m$target)    
+    
+rownames(KO_fun_3m)<-index(KO)[c(1:(nrow(KO)-60))]
+KO_fun_3m$target<-factor(KO_fun_3m$target)  
+    
+    
+    # KO_fun_target<-list(KO_fun_1m = KO_fun_1m,
+    #                    KO_fun_2m = KO_fun_2m,
+    #                    KO_fun_3m = KO_fun_3m)
+    #rm(KO_fun_1m,KO_fun_2m,KO_fun_3m)    
+
+####################################################################################
+######### AAPL COMPANY
+  ####### 30 day EMA
+    AAPL_30_1m<-AAPL_30 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(AAPL_30,20))
+    
+    
+    
+    AAPL_30_2m<-AAPL_30 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(AAPL_30,40))
+    
+    AAPL_30_3m<-AAPL_30 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(AAPL_30,60))
+
+    rownames(AAPL_30_1m)<-rownames(AAPL_30)[c(1:(nrow(AAPL_30)-20))]
+AAPL_30_1m$target<-factor(AAPL_30_1m$target)
+            rownames(AAPL_30_2m)<-rownames(AAPL_30)[c(1:(nrow(AAPL_30)-40))]    
+AAPL_30_2m$target<-factor(AAPL_30_2m$target)
+
+rownames(AAPL_30_3m)<-rownames(AAPL_30)[c(1:(nrow(AAPL_30)-60))]    
+AAPL_30_3m$target<-factor(AAPL_30_3m$target)
+    
+    # AAPL_30_target<-list(AAPL_30_1m = AAPL_30_1m,
+    #                    AAPL_30_2m = AAPL_30_2m,
+    #                    AAPL_30_3m = AAPL_30_3m)
+    #rm(AAPL_30_1m,AAPL_30_2m,AAPL_30_3m)
+#######################
+  ####### 60 day EMA
+    AAPL_60_1m<-AAPL_60 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(AAPL_60,20))
+    
+    AAPL_60_2m<-AAPL_60 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(AAPL_60,40))
+    
+    
+    AAPL_60_3m<-AAPL_60 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(AAPL_60,60))
+ 
+    
+        rownames(AAPL_60_1m)<-rownames(AAPL_60)[c(1:(nrow(AAPL_60)-20))]
+AAPL_60_1m$target<-factor(AAPL_60_1m$target)    
+
+rownames(AAPL_60_2m)<-rownames(AAPL_60)[c(1:(nrow(AAPL_60)-40))]
+AAPL_60_2m$target<-factor(AAPL_60_2m$target)    
+    
+rownames(AAPL_60_3m)<-rownames(AAPL_60)[c(1:(nrow(AAPL_60)-60))]
+AAPL_60_3m$target<-factor(AAPL_60_3m$target)    
+
+    
+       
+    # AAPL_60_target<-list(AAPL_60_1m = AAPL_60_1m,
+    #                    AAPL_60_2m = AAPL_60_2m,
+    #                    AAPL_60_3m = AAPL_60_3m)
+    #rm(AAPL_60_1m,AAPL_60_2m,AAPL_60_3m)
+##############################################3
+  ####### 90 day EMA
+    AAPL_90_1m<-AAPL_90 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(AAPL_90,20))
+    
+    AAPL_90_2m<-AAPL_90 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(AAPL_90,40))
+    
+    AAPL_90_3m<-AAPL_90 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(AAPL_90,60))
+
+        rownames(AAPL_90_1m)<-rownames(AAPL_90)[c(1:(nrow(AAPL_90)-20))]
+AAPL_90_1m$target<-factor(AAPL_90_1m$target)    
+rownames(AAPL_90_2m)<-rownames(AAPL_90)[c(1:(nrow(AAPL_90)-40))]
+AAPL_90_2m$target<-factor(AAPL_90_2m$target)    
+    
+rownames(AAPL_90_3m)<-rownames(AAPL_90)[c(1:(nrow(AAPL_90)-60))]
+AAPL_90_3m$target<-factor(AAPL_90_3m$target)    
+
+        
+    # AAPL_90_target<-list(AAPL_90_1m = AAPL_90_1m,
+    #                    AAPL_90_2m = AAPL_90_2m,
+    #                    AAPL_90_3m = AAPL_90_3m)
+    #rm(AAPL_90_1m,AAPL_90_2m,AAPL_90_3m)
+#####################################
+
+AAPL_fun_1m<-AAPL_formula %>%
+  slice(1:(nrow(.)-20)) %>% 
+  bind_cols(target=target_calc(AAPL_formula,20))
+
+AAPL_fun_2m<-AAPL_formula %>%
+  slice(1:(nrow(.)-40)) %>% 
+  bind_cols(target=target_calc(AAPL_formula,40))
+
+AAPL_fun_3m<-AAPL_formula %>%
+  slice(1:(nrow(.)-60)) %>% 
+  bind_cols(target=target_calc(AAPL_formula,60))    
+    
+
+  rownames(AAPL_fun_1m)<-index(AAPL)[c(1:(nrow(AAPL)-20))]
+AAPL_fun_1m$target<-factor(AAPL_fun_1m$target)
+
+rownames(AAPL_fun_2m)<-index(AAPL)[c(1:(nrow(AAPL)-40))]
+AAPL_fun_2m$target<-factor(AAPL_fun_2m$target)    
+    
+rownames(AAPL_fun_3m)<-index(AAPL)[c(1:(nrow(AAPL)-60))]
+AAPL_fun_3m$target<-factor(AAPL_fun_3m$target)  
+
+# AAPL_fun_target<-list(AAPL_fun_1m = AAPL_fun_1m,
+#                        AAPL_fun_2m = AAPL_fun_2m,
+#                        AAPL_fun_3m = AAPL_fun_3m)
+    #rm(AAPL_fun_1m,AAPL_fun_2m,AAPL_fun_3m)    
+####################################################################################
+######### AXP COMPANY
+  ####### 30 day EMA
+    AXP_30_1m<-AXP_30 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(AXP_30,20))
+    
+    AXP_30_2m<-AXP_30 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(AXP_30,40))
+    
+    AXP_30_3m<-AXP_30 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(AXP_30,60))
+    
+    
+        rownames(AXP_30_1m)<-rownames(AXP_30)[c(1:(nrow(AXP_30)-20))]
+AXP_30_1m$target<-factor(AXP_30_1m$target)
+            rownames(AXP_30_2m)<-rownames(AXP_30)[c(1:(nrow(AXP_30)-40))]    
+AXP_30_2m$target<-factor(AXP_30_2m$target)
+
+rownames(AXP_30_3m)<-rownames(AXP_30)[c(1:(nrow(AXP_30)-60))]    
+AXP_30_3m$target<-factor(AXP_30_3m$target)
+
+    # AXP_30_target<-list(AXP_30_1m = AXP_30_1m,
+    #                    AXP_30_2m = AXP_30_2m,
+    #                    AXP_30_3m = AXP_30_3m)
+   #rm(AXP_30_1m,AXP_30_2m,AXP_30_3m)
+#######################
+  ####### 60 day EMA
+    AXP_60_1m<-AXP_60 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(AXP_60,20))
+    
+    AXP_60_2m<-AXP_60 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(AXP_60,40))
+    
+    
+    AXP_60_3m<-AXP_60 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(AXP_60,60))
+
+            rownames(AXP_60_1m)<-rownames(AXP_60)[c(1:(nrow(AXP_60)-20))]
+AXP_60_1m$target<-factor(AXP_60_1m$target)    
+
+rownames(AXP_60_2m)<-rownames(AXP_60)[c(1:(nrow(AXP_60)-40))]
+AXP_60_2m$target<-factor(AXP_60_2m$target)    
+    
+rownames(AXP_60_3m)<-rownames(AXP_60)[c(1:(nrow(AXP_60)-60))]
+AXP_60_3m$target<-factor(AXP_60_3m$target)
+        
+    # AXP_60_target<-list(AXP_60_1m = AXP_60_1m,
+    #                    AXP_60_2m = AXP_60_2m,
+    #                    AXP_60_3m = AXP_60_3m)
+    #rm(AXP_60_1m,AXP_60_2m,AXP_60_3m)
+##############################################3
+  ####### 90 day EMA
+    AXP_90_1m<-AXP_90 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(AXP_90,20))
+    
+    AXP_90_2m<-AXP_90 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(AXP_90,40))
+    
+    AXP_90_3m<-AXP_90 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(AXP_90,60))
+    
+    rownames(AXP_90_1m)<-rownames(AXP_90)[c(1:(nrow(AXP_90)-20))]
+AXP_90_1m$target<-factor(AXP_90_1m$target)    
+rownames(AXP_90_2m)<-rownames(AXP_90)[c(1:(nrow(AXP_90)-40))]
+AXP_90_2m$target<-factor(AXP_90_2m$target)    
+    
+rownames(AXP_90_3m)<-rownames(AXP_90)[c(1:(nrow(AXP_90)-60))]
+AXP_90_3m$target<-factor(AXP_90_3m$target)    
+
+    
+    # AXP_90_target<-list(AXP_90_1m = AXP_90_1m,
+    #                    AXP_90_2m = AXP_90_2m,
+    #                    AXP_90_3m = AXP_90_3m)
+    #rm(AXP_90_1m,AXP_90_2m,AXP_90_3m)
+#####################################
+AXP_fun_1m<-AXP_formula %>%
+  slice(1:(nrow(.)-20)) %>% 
+  bind_cols(target=target_calc(AXP_formula,20))
+
+AXP_fun_2m<-AXP_formula %>%
+  slice(1:(nrow(.)-40)) %>% 
+  bind_cols(target=target_calc(AXP_formula,40))
+
+AXP_fun_3m<-AXP_formula %>%
+  slice(1:(nrow(.)-60)) %>% 
+  bind_cols(target=target_calc(AXP_formula,60))    
+
+
+  rownames(AXP_fun_1m)<-index(AXP)[c(1:(nrow(AXP)-20))]
+AXP_fun_1m$target<-factor(AXP_fun_1m$target)
+
+rownames(AXP_fun_2m)<-index(AXP)[c(1:(nrow(AXP)-40))]
+AXP_fun_2m$target<-factor(AXP_fun_2m$target)    
+    
+rownames(AXP_fun_3m)<-index(AXP)[c(1:(nrow(AXP)-60))]
+AXP_fun_3m$target<-factor(AXP_fun_3m$target)  
+
+
+
+    # AXP_fun_target<-list(AXP_fun_1m = AXP_fun_1m,
+    #                    AXP_fun_2m = AXP_fun_2m,
+    #                    AXP_fun_3m = AXP_fun_3m)
+    #rm(AXP_fun_1m,AXP_fun_2m,AXP_fun_3m)    
+####################################################################################
+######### WFC COMPANY
+  ####### 30 day EMA
+    WFC_30_1m<-WFC_30 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(WFC_30,20))
+    
+    WFC_30_2m<-WFC_30 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(WFC_30,40))
+    
+    WFC_30_3m<-WFC_30 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(WFC_30,60))
+    
+            rownames(WFC_30_1m)<-rownames(WFC_30)[c(1:(nrow(WFC_30)-20))]
+WFC_30_1m$target<-factor(WFC_30_1m$target)
+            rownames(WFC_30_2m)<-rownames(WFC_30)[c(1:(nrow(WFC_30)-40))]    
+WFC_30_2m$target<-factor(WFC_30_2m$target)
+
+rownames(WFC_30_3m)<-rownames(WFC_30)[c(1:(nrow(WFC_30)-60))]    
+WFC_30_3m$target<-factor(WFC_30_3m$target)
+    
+    # WFC_30_target<-list(WFC_30_1m = WFC_30_1m,
+    #                    WFC_30_2m = WFC_30_2m,
+    #                    WFC_30_3m = WFC_30_3m)
+    #rm(WFC_30_1m,WFC_30_2m,WFC_30_3m)
+#######################
+  ####### 60 day EMA
+    WFC_60_1m<-WFC_60 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(WFC_60,20))
+    
+    WFC_60_2m<-WFC_60 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(WFC_60,40))
+    
+    
+    WFC_60_3m<-WFC_60 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(WFC_60,60))
+
+         rownames(WFC_60_1m)<-rownames(WFC_60)[c(1:(nrow(WFC_60)-20))]
+WFC_60_1m$target<-factor(WFC_60_1m$target)    
+
+rownames(WFC_60_2m)<-rownames(WFC_60)[c(1:(nrow(WFC_60)-40))]
+WFC_60_2m$target<-factor(WFC_60_2m$target)    
+    
+rownames(WFC_60_3m)<-rownames(WFC_60)[c(1:(nrow(WFC_60)-60))]
+WFC_60_3m$target<-factor(WFC_60_3m$target)
+        
+    # WFC_60_target<-list(WFC_60_1m = WFC_60_1m,
+    #                    WFC_60_2m = WFC_60_2m,
+    #                    WFC_60_3m = WFC_60_3m)
+    #rm(WFC_60_1m,WFC_60_2m,WFC_60_3m)
+##############################################3
+  ####### 90 day EMA
+    WFC_90_1m<-WFC_90 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(WFC_90,20))
+    
+    WFC_90_2m<-WFC_90 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(WFC_90,40))
+    
+    WFC_90_3m<-WFC_90 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(WFC_90,60))
+    
+        rownames(WFC_90_1m)<-rownames(WFC_90)[c(1:(nrow(WFC_90)-20))]
+WFC_90_1m$target<-factor(WFC_90_1m$target)    
+rownames(WFC_90_2m)<-rownames(WFC_90)[c(1:(nrow(WFC_90)-40))]
+WFC_90_2m$target<-factor(WFC_90_2m$target)    
+    
+rownames(WFC_90_3m)<-rownames(WFC_90)[c(1:(nrow(WFC_90)-60))]
+WFC_90_3m$target<-factor(WFC_90_3m$target)   
+    
+    # WFC_90_target<-list(WFC_90_1m = WFC_90_1m,
+    #                    WFC_90_2m = WFC_90_2m,
+    #                    WFC_90_3m = WFC_90_3m)
+    #rm(WFC_90_1m,WFC_90_2m,WFC_90_3m)
+#####################################
+
+WFC_fun_1m<-WFC_formula %>%
+  slice(1:(nrow(.)-20)) %>% 
+  bind_cols(target=target_calc(WFC_formula,20))
+
+WFC_fun_2m<-WFC_formula %>%
+  slice(1:(nrow(.)-40)) %>% 
+  bind_cols(target=target_calc(WFC_formula,40))
+
+WFC_fun_3m<-WFC_formula %>%
+  slice(1:(nrow(.)-60)) %>% 
+  bind_cols(target=target_calc(WFC_formula,60))
+
+  rownames(WFC_fun_1m)<-index(WFC)[c(1:(nrow(WFC)-20))]
+WFC_fun_1m$target<-factor(WFC_fun_1m$target)
+
+rownames(WFC_fun_2m)<-index(WFC)[c(1:(nrow(WFC)-40))]
+WFC_fun_2m$target<-factor(WFC_fun_2m$target)    
+    
+rownames(WFC_fun_3m)<-index(WFC)[c(1:(nrow(WFC)-60))]
+WFC_fun_3m$target<-factor(WFC_fun_3m$target)  
+
+
+    # WFC_fun_target<-list(WFC_fun_1m = WFC_fun_1m,
+    #                    WFC_fun_2m = WFC_fun_2m,
+    #                    WFC_fun_3m = WFC_fun_3m)
+    #rm(WFC_fun_1m,WFC_fun_2m,WFC_fun_3m)
+
+###########################################################################################
+
+
+
+```
+
+####Variable respuesta
+
+Después de aplicar ambos tipos de alisado sobre los datos se obtienen 4 bases de datos para cada una de las empresas, las cuales hacen referencia a los precios transformados con las medias móviles exponenciales de 30, 60 y 90 días y utilizando la formula del alisado exponencial. En total la base de datos contiene ahora 16 tablas, 4 para cada empresa. 
+
+\setlength\parskip{5ex}
+En este momento se define la variabe respuesta a partir de las distintas transformaciones del precio de cierre de siguiendo la fórmula siguiente:
+
+$$ Target_t =\begin{cases}Up & Close_{t+d} > Close_{t} \\Down & Close_{t+d} < Close_{t}\end{cases} \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (2)$$
+donde:
+
+* Close_t es el precio de cierre del activo en el día "t". 
+
+\setlength\parskip{5ex}
+La variable respuesta en $t$ toma el valor $Up$ si el precio de cierre a día $t+d$ es superior al precio de cierre del día actual $t$. Del mismo modo, la variable respuesta  en $t$ toma el valor $Down$ si el precio de cierre  en $t+d$ es inferior al precio de cierre del día actual $t$.
+
+\setlength\parskip{5ex}
+\justifying
+En la mayoría de la literatura revisada se construye la variable respuesta para la observación correspondiente al día $t$ comparando el precio de cierre de se día con el precio de cierre de un día anterior $t-d$ [véase @yakupkara p. 5313, @najeb p. 610]. Económicamente esta variable está midiendo si el precio actual ha tenido una evolución positiva, o no, respecto al valor que presentaba, por ejemplo, hace un mes. Posteriormente se calculan las variables predictoras, esto es, los indicadores técnicos, a partir de los precios OHLC medidos el día $t$.  En este caso los modelos de aprendizaje automático obtienen, en general, buenos rendimientos y son capaces de clasificar una nueva observación. Sin embargo este modo de calcular la variable respuesta no brinda al inversor una herramienta útil para argumentar sus decisiones de compra o venta ya que para predecir la variable respuesta en $t$, que está calculada a partir del precio de cierre, se utilizan indicadores técnicos calculados, a su vez, con el precio de cierre (revisar poner indicadores solo utilizann precio de cierre). Es decir en el momento en el que se pueden obtener los directamente con el precio de cierre anterior para ver si el precio ha subido o no. Es por eso que en el presente trabajo se ha decidido construir la variable respuesta de una manera distinta, al ser el objetivo del mismo el de construir un modelo predictivo que sea útil a la hora de tomar una decisión de inversión. Por eso se ha decidido construir la variable respuesta como la construida en [@saha2016, p. 4, @zichao p. 16 y @kim2003 p. 4]. Creando la variable a predecir de este modo, el inversor puede utilizar los precios en $t$ para predecir la dirección que tomará el precio de ese *stock* al cabo de 1, 2 y/o 3 meses.
+
+\setlength\parskip{5ex}
+En el presente trabajo se ha decidido definir 3 valores para $d$ a la hora de calcular la variable respuesta. Así se obtienen 3 tipos de variable respuesta a predecir para cada tipo de alisado aplicado a los precios de cada empresa. Estos 3 tipos hacen referencia a los distintos momentos en el futuro para los que se hace la predicción. En este caso, pues, se van a realizar predicciones sobre la dirección que tomará el precio a 1, 2 y 3 meses vista.
+De este modo se consigue una tabla 4x3 de combinaciones posibles para la definición del modelo entre el periodo de alisado exponencial y el número de días en el futuro sobre el que se quiere predecir. Teniendo en cuenta que en la base de datos sólo se tienen datos de los días laborables, se ha decidido establecer el valor de $d$ acorde con la tabla siguiente para aproximar la predicción extactamente a 1, 2 y 3 meses:
+
+```{r}
+a<-data.frame(Prediccion=c("1 mes","2 meses","3 meses"),d=c(20,40,60))
+
+knitr::kable(a,format = "latex",row.names = F) %>% 
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+```
+  \captionof{table}{Periodos de predicción}
+
+\setlength\parskip{5ex}
+\justifying
+Las tablas siguientes muestran la proporción de observaciones que representan cada una de las dos clases de la variable respuesta en las distintas empresas para los distintos tipos de alisado aplicados:
+
+*Coca Cola CO.*
+
+\setlength\parskip{5ex}
+```{r}
+# a<-data.frame(EMA30=c("EMA30 & pred1","EMA30 & pred2","EMA30 & pred3"),
+#            EMA60=c("EMA60 & pred1","EMA60 & pred2","EMA60 & pred3"),
+#            EMA90=c("EMA90 & pred1","EMA90 & pred2","EMA90 & pred3"))
+# rownames(a)<-c("predicción 1 mes","predicción 2 meses","predicción 3 meses")
+
+a<-data.frame(EMA30=c(r1=(table(KO_30_1m$target)/sum(table(KO_30_1m$target))),
+                      r2=(table(KO_30_2m$target)/sum(table(KO_30_2m$target))),
+                      r3=(table(KO_30_3m$target)/sum(table(KO_30_3m$target)))),
+              EMA60=c(r1=(table(KO_60_1m$target)/sum(table(KO_60_1m$target))),
+                      r2=(table(KO_60_2m$target)/sum(table(KO_60_2m$target))),
+                      r3=(table(KO_60_3m$target)/sum(table(KO_60_3m$target)))),
+              EMA90=c(r1=(table(KO_90_1m$target)/sum(table(KO_90_1m$target))),
+                      r2=(table(KO_90_2m$target)/sum(table(KO_90_2m$target))),
+                      r3=(table(KO_90_3m$target)/sum(table(KO_90_3m$target)))),
+              exp.smooth=c(r1=(table(KO_fun_1m$target)/sum(table(KO_fun_1m$target))),
+                           r2=(table(KO_fun_2m$target)/sum(table(KO_fun_2m$target))),
+                           r3=(table(KO_fun_3m$target)/sum(table(KO_fun_3m$target))))) %>% 
+  t(.) %>% as_tibble() %>% 
+  mutate_all(.funs = function(x) x*100)
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+kable(a, "latex") %>%
+add_header_above(c(" ", "Predicción 1 mes" = 2, "Predicción 2 meses" = 2,"Predicción 3 meses"=2)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+```
+  \captionof{table}{Proporción de la variable respuesta Coca-Cola CO.}
+  
+\setlength\parskip{5ex}
+Como se puede observar en la tabla anterior la variable respuesta está relativamente bien balanceada en la mayoría de los casos. Cuanto más lisos són los datos, es decir, mayor el periodo de cálculo de las medias móviles exponenciales, mayor es la proporción de días en los que el precio al cabo de 1, 2 y 3 meses ha sido superior (Up). A su vez, para un mismo tipo de alisado sobre los datos, se observa que cuanto más lejos se predice la dirección del precio de cierre, mayor es el porcentage de días en los que el precio de cierre ha sido más elevado. En este caso, esto significa que si el *stock* presenta una tendencia creciente, como es el caso para esta empresa, el hecho de predecir su dirección en un futuro más lejano hace que se la variable respuesta se desbalancee a favor de los días con dirección Up.
+
+\setlength\parskip{5ex}
+
+*Apple Inc.*
+\setlength\parskip{5ex}
+```{r}
+# a<-data.frame(EMA30=c("EMA30 & pred1","EMA30 & pred2","EMA30 & pred3"),
+#            EMA60=c("EMA60 & pred1","EMA60 & pred2","EMA60 & pred3"),
+#            EMA90=c("EMA90 & pred1","EMA90 & pred2","EMA90 & pred3"))
+# rownames(a)<-c("predicción 1 mes","predicción 2 meses","predicción 3 meses")
+
+a<-data.frame(EMA30=c(r1=(table(AAPL_30_1m$target)/sum(table(AAPL_30_1m$target))),
+                      r2=(table(AAPL_30_2m$target)/sum(table(AAPL_30_2m$target))),
+                      r3=(table(AAPL_30_3m$target)/sum(table(AAPL_30_3m$target)))),
+              EMA60=c(r1=(table(AAPL_60_1m$target)/sum(table(AAPL_60_1m$target))),
+                      r2=(table(AAPL_60_2m$target)/sum(table(AAPL_60_2m$target))),
+                      r3=(table(AAPL_60_3m$target)/sum(table(AAPL_60_3m$target)))),
+              EMA90=c(r1=(table(AAPL_90_1m$target)/sum(table(AAPL_90_1m$target))),
+                      r2=(table(AAPL_90_2m$target)/sum(table(AAPL_90_2m$target))),
+                      r3=(table(AAPL_90_3m$target)/sum(table(AAPL_90_3m$target)))),
+              exp.smooth=c(r1=(table(AAPL_fun_1m$target)/sum(table(AAPL_fun_1m$target))),
+                           r2=(table(AAPL_fun_2m$target)/sum(table(AAPL_fun_2m$target))),
+                           r3=(table(AAPL_fun_3m$target)/sum(table(AAPL_fun_3m$target))))) %>% 
+  t(.) %>% as_tibble() %>% 
+  mutate_all(.funs = function(x) x*100)
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+kable(a, "latex") %>%
+add_header_above(c(" ", "Predicción 1 mes" = 2, "Predicción 2 meses" = 2,"Predicción 3 meses"=2)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+```
+  \captionof{table}{Proporción de la variable respuesta Apple Inc.}
+
+\setlength\parskip{5ex}
+En el caso de la empresa Apple Inc. la variable respuesta no está balanceada en ninguno de los casos. En la tabla $5.13$ se puede observar que cuanto menor sea el nivel de alisado en los datos, correspondiente a la EMA de 30 días, más cerca estará la variable respuesta de estar balanceada (34% Down - 66% Up). Esto significa que cuanto más alisados sean los datos y más elevada sea $d$ en la fórmula $2$ más desbalanceada estará la variable respuesta para esta empresa, alcanzado un máximo de 27.3% Down - 72.7% Up. Esta proporción tan desbalanceada se explica por la fuerte tendencia creciente de los precios de cierre de AAPL dentro del período de estudio.
+
+*American Express CO.*
+\setlength\parskip{5ex}
+```{r}
+# a<-data.frame(EMA30=c("EMA30 & pred1","EMA30 & pred2","EMA30 & pred3"),
+#            EMA60=c("EMA60 & pred1","EMA60 & pred2","EMA60 & pred3"),
+#            EMA90=c("EMA90 & pred1","EMA90 & pred2","EMA90 & pred3"))
+# rownames(a)<-c("predicción 1 mes","predicción 2 meses","predicción 3 meses")
+
+a<-data.frame(EMA30=c(r1=(table(AXP_30_1m$target)/sum(table(AXP_30_1m$target))),
+                      r2=(table(AXP_30_2m$target)/sum(table(AXP_30_2m$target))),
+                      r3=(table(AXP_30_3m$target)/sum(table(AXP_30_3m$target)))),
+              EMA60=c(r1=(table(AXP_60_1m$target)/sum(table(AXP_60_1m$target))),
+                      r2=(table(AXP_60_2m$target)/sum(table(AXP_60_2m$target))),
+                      r3=(table(AXP_60_3m$target)/sum(table(AXP_60_3m$target)))),
+              EMA90=c(r1=(table(AXP_90_1m$target)/sum(table(AXP_90_1m$target))),
+                      r2=(table(AXP_90_2m$target)/sum(table(AXP_90_2m$target))),
+                      r3=(table(AXP_90_3m$target)/sum(table(AXP_90_3m$target)))),
+              exp.smooth=c(r1=(table(AXP_fun_1m$target)/sum(table(AXP_fun_1m$target))),
+                           r2=(table(AXP_fun_2m$target)/sum(table(AXP_fun_2m$target))),
+                           r3=(table(AXP_fun_3m$target)/sum(table(AXP_fun_3m$target))))) %>% 
+  t(.) %>% as_tibble() %>% 
+  mutate_all(.funs = function(x) x*100)
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+kable(a, "latex") %>%
+add_header_above(c(" ", "Predicción 1 mes" = 2, "Predicción 2 meses" = 2,"Predicción 3 meses"=2)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+```
+  \captionof{table}{Proporción de la variable respuesta American Express CO.}
+
+\setlength\parskip{5ex}
+En el caso de la empresa American Express CO. la variable respuesta está en general ligeramente desbalanceada y presenta el mismo patrón de crecimiento del desbalanceo que las empresas Coca Cola CO. y Apple Inc, alcanzando el máximo balanceo entre las clases de la variable respuesta con la combinación de alisado con EMA 30 días y predicción a un mes vista (41% Down - 59% Up).
+
+*Wells Fargo & CO.*
+\setlength\parskip{5ex}
+```{r}
+# a<-data.frame(EMA30=c("EMA30 & pred1","EMA30 & pred2","EMA30 & pred3"),
+#            EMA60=c("EMA60 & pred1","EMA60 & pred2","EMA60 & pred3"),
+#            EMA90=c("EMA90 & pred1","EMA90 & pred2","EMA90 & pred3"))
+# rownames(a)<-c("predicción 1 mes","predicción 2 meses","predicción 3 meses")
+
+a<-data.frame(EMA30=c(r1=(table(WFC_30_1m$target)/sum(table(WFC_30_1m$target))),
+                      r2=(table(WFC_30_2m$target)/sum(table(WFC_30_2m$target))),
+                      r3=(table(WFC_30_3m$target)/sum(table(WFC_30_3m$target)))),
+              EMA60=c(r1=(table(WFC_60_1m$target)/sum(table(WFC_60_1m$target))),
+                      r2=(table(WFC_60_2m$target)/sum(table(WFC_60_2m$target))),
+                      r3=(table(WFC_60_3m$target)/sum(table(WFC_60_3m$target)))),
+              EMA90=c(r1=(table(WFC_90_1m$target)/sum(table(WFC_90_1m$target))),
+                      r2=(table(WFC_90_2m$target)/sum(table(WFC_90_2m$target))),
+                      r3=(table(WFC_90_3m$target)/sum(table(WFC_90_3m$target)))),
+              exp.smooth=c(r1=(table(WFC_fun_1m$target)/sum(table(WFC_fun_1m$target))),
+                           r2=(table(WFC_fun_2m$target)/sum(table(WFC_fun_2m$target))),
+                           r3=(table(WFC_fun_3m$target)/sum(table(WFC_fun_3m$target))))) %>% 
+  t(.) %>% as_tibble() %>% 
+  mutate_all(.funs = function(x) x*100)
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+kable(a, "latex") %>%
+add_header_above(c(" ", "Predicción 1 mes" = 2, "Predicción 2 meses" = 2,"Predicción 3 meses"=2)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+```
+  \captionof{table}{Proporción de la variable respuesta Wells Fargo and CO.}
+
+\setlength\parskip{5ex}
+En el caso de la empresa Wells Fargo & CO. la variable respuesta está, en general, ligeramente desbalanceada y presenta el mismo patrón de crecimiento del desbalanceo que las empresas Coca Cola CO., Apple Inc y American Express CO.. La variable respuesta calculada para este *stock* presenta un máximo balanceo con la combinación de alisado con EMA 30 días y predicción a un mes vista (40.8% Down - 59.2% Up). El caso de esta empresa es distinto al de las anteriores en el hecho de que el balanceo entre las clases de la variable respuesta aumenta conforme se predice más en futuro para el caso de alisado exponencial de los datos. Cuando se analiza este tipo de alisado, la variable respuesta está más balanceada cuando se predice a 3 meses vista que cuando se predice a 1 mes vista.
+
+
+\setlength\parskip{5ex}
+\justifying
+
+####Variables predictoras / explicativas
+
+En el presente trabajo se utilizan distintos indicadores técnicos como variables predictoras de los modelos que se construyen posteriormente. Los indicadores técnicos son estadísticos que se calculan a partir de los precios OHLC que presenta un *stock*. Muchos managers de inversión e inversores en el mercado de *stocks* aceptan y utilizan generalmente ciertos indicadores técnicos como señales de las tendencias futuras del mercado [véase @kim2003].  Algunos indicadores técnicos son efectivos en mercados con tendencia y otros rinden mejor en mercados no cíclicos y sin tendencia [véase @Tsaih1998]. En mucha de la literatura revisada en torno a la previsión del precio de los *stocks* con indicadores técnicos queda probada la utilidad de éstos como variables predictoras en modelos de predicción tanto del precio como de la dirección de movimiento de los mismos [@Chen]. En el presente trabajo se han seleccionado distintos indicadores técnicos para utilizarlos como variables predictoras a partir de la revisión de artículos de expertos en la materia [@kim2003, @zichao, @yakupkara, @Huang, @ManishKumar, @Huang2]. Seguidamente se detallan los indicadores técnicos utilizados y las fórmulas necesarias para calcularlos.
+
+\setlength\parskip{5ex}
+Para facilitar el cálculo de los siguientes indicadores se ha creado una función de `R` llamada `feature_extraction_finance`. Esta función recibe un `data.frame` con los precios OHLC y el volúmen de un *stock* y devuelve otro `data.frame` en el cual cada observación representa una fecha y cada columna una variable, siendo la primera de ellas la variable respuesta.
+
+*Aroon*
+
+Aroon es un indicador que puede descubrir el inicio de tendencias. Consiste en tres índices entre los cuales se escogen los dos primeros para utilizarlos como variables predictoras. Éstos están definidos en las fórmulas TI.1 y TI.2.
+
+$$ AroonUp = 100*(\frac{n-PeriodSinceHighestHigh}{n}) \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.1)$$
+$$ AroonDown = 100*(\frac{n-PeriodSinceLowestLow}{n}) \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.2)$$
+
+*Media móbil simple 10 días*
+
+La media móbil simple, SMA por sus siglas en inglés, calcula la media de los precios en un período de tiempo. 
+
+$$ SMA_{10}=\frac{Close_t+Close_{t-1}+...+Close_{t-10}}{10} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.3)$$
+
+*Momentum*
+
+Este indicador técnico mide la cantidad que el precio de un *stock* ha variado respecto $d$ días en el pasado. En el presente trabajo se utilizan como variables predictoras los indicadores Momentum con $d=1,2,3,4,5,10 \ y \ 15$ calculados a partir de la fórmula (IT.4).
+
+$$Mom_d = Close_t - Close_{t-d} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.4)$$
+
+*Rate of Change*
+
+El ratio de cambio, ROC por sus siglas en inglés, calcula la variación de un precio respecto $d$ días en el pasado expresado en porcentage [véase ROC en @TTR]. En este trabajo se calcula el ratio de cambio respecto $d=1 \ y \ 9$ días en el pasado utilizando la fórmula (IT.5).
+
+$$ROC_d = (\frac{Close_t - Close_{t-d}}{Close_{t-d}})*100 \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.5)$$
+
+*Stochastic oscillator: fast %K, fast %D & slow %D*
+
+El indicador técnico llamado Stochastic oscillator relaciona la localización del precio de cierre de cada día en relación con el rango de valores que ha tomado en los últimos $d$ días. En el presente trabajo se utilizan como variables predictoras los estadísticos fast %K, fast %D y slow %D. El hecho de que el indicador sea llamado *fast* hace referencia a que los precios con los que se han calculado esos indicadores no han sido alisados. De manera contraria, el hecho de que el indicador sea llamado *slow* se refiere a que se ha calculado a partir de precios alisados. En este caso, al calcular los distintos indicadores a partir de precios ya alisados, el hecho de que un indicador sea *slow* significa que se ha calculado a partir de precios doblemente alisados. 
+Los períodos utilizados para el cálculo de estos indicadores técnicos son $dFastK = 14, nFastD = 3, nSlowD = 3$, correspondientes a los valores por defecto de la función `stoch` del paquete `TTR`. Para el cálculo de estos indicadores se han utilizado las fórmulas siguientes:
+
+$$fast \ K = (\frac{Close_t\\-LowestLow_{t-d}}{HighestHigh_{t-d}\\-LowestLow_{t-d}})*100 \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.6)$$
+
+Dónde $LowestLow_{t-d}$ y $HighestHigh_{t-d}$ hacen referencia al precio de cierre mínimo más pequeño y al máximo más grande de los últimos $t-d$ días.
+
+$$fast \ D = MovingAverage(fastK)=\frac{\sum_{i=0}^{n-1}fastK_{t-i}}{n} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.7)$$
+$$slow \ D = MovingAverage(slowK)=\frac{\sum_{i=0}^{n-1}slowK_{t-i}}{n} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.8)$$
+
+*Stochastic Momentum Index*
+
+Este indicador técnico calcula el valor relativo del precio de cierre respecto el punto medio del rango de precios de los pasados $d$. Es parecido al oscilador estocástico pero con respecto al punto medio del rango de precios y no respecto al rango total. En otras palabras mide cuán cerca está el precio de cierre respecto el centro del rango de precios de los pasados $d$ días. El cálculo de este indicador se desarrolla en las fórmulas siguientes:
+
+$$cm = Close_t - \frac{(HighestHigh\\-LowestLow)}{2}$$
+$$hl = HighestHigh\\-LowestLow$$
+$$cmMA = EMA(EMA(cm))$$
+$$hlMA = EMA(EMA(hl))$$
+$$SMI = 100 * \frac{cmMA}{\frac{hlMA}{2}} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.9)$$
+En la presente disertación se utilizado como característica de los datos el estadístico calculado con la fórmula (IT.9). Los períodos utilizados para el cálculo de las medias móbiles exponenciales son los valores por defecto [véase SMI en @TTR].
+
+*Relative Strenght Index*
+
+El índice de fuerza relativa, llamado RSI por sus siglas en inglés, es un indicador que pretende medir la fuerza del *stock* en el movimiento que presenta actualmente. Calcula la ratio de los recientes precios crecientes respecto el movimiento absoluto de los precios [véase RSI en @TTR]. Se ha calculado a partir de la fórmula siguiente:
+
+$$RSI=100 - \frac{100}{1+RS} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.10)$$
+$$RS=\frac{ganancias \ medias}{pérdidas \ medias}=\frac{\frac{\sum_{i=0}^{n-1}Up_{t-i}}{n}}{\frac{\sum_{i=0}^{n-1}Dw_{t-i}}{n}}$$
+Dónde $Up_t$ representa el cambio de los precios al alza y $Dw_t$ el cambio de los precios a la baja en el momento $t$ 
+
+*Indicador Williams Accumulation/Distribution*
+
+Este indicador técnico pretende identificar la tendencia del mercado y medir la presión del mismo. Es llamado Williams AD por sus siglas en inglés y se calcula utilizando las fórmulas (IT.11), (IT.12) y (IT.13) [véase williamsAD en @TTR]:
+
+$Si \ Close_t > Close_{t-1}\ entonces$
+
+$AD_t = AD_{t-1}+Close_t- min(Low_t, Close_{t-1}) \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.11)$
+
+$Si \  C_t < C_{t-1} \ entonces$
+$$AD_t = AD_{t-1} + max(High_t, Close_{t-1}\\-Close_t) \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.12)$$
+$Si \  C_t = C_{t-1} \ entonces$
+$$AD_t = AD_{t-1} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.13)$$
+
+*Indicador Williams Percentage Range*
+
+Este indicador técnico se calcula de un modo parecido al indicador estocástico fast %K. Es un indicador *momentum* que mide niveles de sobreventa y sobrecompre. Se ha calculado a partir de la fórmula (IT.14).
+
+$$WPR = \frac{HighestHigh_n - Close_t}{HighestHigh_{n}-LowestLow_{n}}*100 \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.14)$$
+
+*Indicador Moving Average convergence divergence*
+
+Este indicador es más conocido por sus siglas en inglés: MACD. Este indicador es un oscilador que calcula la diferencia entre dos medial móbiles exponenciales, una "rápida" (n=12) y un "lenta" (n=26), las cuales pueden reflejar tendencias en el movimiento de los precios [véase MACD en @TTR]. Ha sido calculado a partir de la fórmula (IT.15)
+
+MACD = EMA(stockPrices,12) − EMA(stockPrices,26)                        (IT.15)
+
+*Indicador Commodity Channel Index*
+
+Este indicador es comúnmente conocido como CCI por sus siglas en inglés. Se utiliza para descubrir los principios y finales de tendencias en *securities* [véase @comodities]. Se calcula a partir de las fórmulas siguientes. El valor utilizado como variable predictora en este trabajo es el calculado con la fórmula (IT.16)
+
+$$TP_t=\frac{High_t+Low_t+Close_t}{3}$$
+$$MATP_t = MovingAverage(TP,n)$$
+
+$$MDTP= \frac{\sum_{i=1}^{n}|TP_{t-i+1}-MATP_t|}{n}$$
+
+$$CCI=\frac{TP_t-MATP_t}{0.015MDTP_t} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.16)$$
+
+*Indicador On Balance Volume*
+
+Este indicador se llama OBV por sus siglas en inglés y mide el flujo de dinero dentro y fuera de un *stock*. Es una medida del flujo monetario que presenta un *stock*. Su cálculo viene dado por las fórmulas (IT.17), (IT.18) y (IT.19):
+
+$Si \  Close_t > Close_{t-1} \ entonces$
+$$OBV_t = OBV_{t-1} + Volume_t \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.17)$$
+$De \ otro \ modo \ si \  Close_t < Close_{t-1} \ entonces$
+$$OBV_t = OBV_{t-1} - Volume_t \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.18)$$
+$De \ otro \ modo$
+$$OBV_t = OBV_{t-1} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.19)$$ 
+
+*Indicador Average True Range*
+
+El indicador rango medio verdadero, ATR por sus siglas en inglés, es un grupo de estadísticos que estima la volatilidad de una serie temporal [@ATR]. Su cálculo viene dado por las fórmulas siguientes:
+
+$$TrueHigh = max(High_t, Close_{t-1})$$
+$$TrueLow = min(Low_t, Close_{t-1})$$
+TR_t= TrueHigh_t − TrueLow_t (IT.20)
+
+$$ATR =\frac{TR_{t-1} * (n \ menos \ {1}) + TR_t}{n} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.21)$$
+
+En el presente trabajo se utilizan como variables predictoras las fórmulas del verdadero rango y el verdadero rango medio definidas en las ecuaciones (IT.20) y (IT.21). Además se utiliza también una variante del verdadero rango calculada en la fórmula (IT.22)
+
+ TR2_t = (Close_t − TrueLow_t)/(TrueHigh_t − TrueLow_t)  (IT.22)
+
+*Indicador Trend Detection Index*
+
+Este índice de detección de tendencias se llama TDI por sus siglas en inglés. Se utiliza para descubrir el inicio y el final de tendencias móbiles [véase TDI en @TTR]. Su cálculo viene dado por las ecuaciones siguientes:
+
+\centering
+Mom = precio − precio_{periodo}
+
+\justifying
+$$MomAbs = |Mom|$$
+$$DI = \sum_{i=1}^{n}Mom_i \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.23)$$
+$$DIAbs = |DI|$$
+$$DIAbsSum=\sum_{i=1}^{n}DIAbs$$
+$$DIAbsSum2=\sum_{i=1}^{2n}DIAbs$$
+\setlength\parskip{5ex}
+TDI = DIAbs−(DIAbsSum2−DIAbsSum)                     (IT.24)
+
+En la presente disertación se utilizan como variables predictoras los indicadores DI y TDI definidos en las ecuaciones (IT.23) y (IT.24)
+
+*Indicador Welles Wilder's Directional Movement Index*
+
+Este indicador se conoce generalmente como ADX. ADX consiste en 4 indicadores llamados Índice Direccional Poisitvo (DIp),
+Índice Direccional Negativo (DIn), Índice Direccional (DI) y el Índice direccional Medio (ADX) [véase @ATR].
+
+HiDiff = High_{t-1} − High_t
+
+\setlength\parskip{5ex}
+LoDiff = Low_{t} − Low_{t-1}
+
+$Si \  HiDiff < 0 \ y \ LoDiff < 0 \ \ o \ \ HiDiff = LoDiff \ entonces$
+
+$$DIp = 0$$
+$$DIn = 0$$
+$Si \ HiDi f f > LoDiff \ \ entonces$
+
+$$DIp = HiDiff$$
+
+$$DIn = 0$$
+$Si \ HiDiff < LoDiff \ \ entonces$
+
+$$DIp = 0$$
+
+$$DIn = LoDiff$$
+
+$$DX = \frac{DIp \\ − DIn}{DIp +DIn} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.25)$$
+$$ADX =\frac{ADX_{t-1} * (n \ menos\  1) + DX_t}{n} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.26)$$
+En el presente trabajo se utilizan las ecuaciones (IT.25) y (IT.26) como variables predictoras en el modelo. Por añadidura también se utiliza como variable predictora la ratio dada en la ecuación (IT.27)
+
+$$PN_{ratio}=\frac{DI_p}{DI_n} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.27)$$
+
+*Indicador Bollinger Bands*
+
+Este indicador llamado Bandas de Bollinger, más conocido por sus siglas en inglés BB, es utilizado para medir la volatilidad de un *stock* y compararla con el nivel para un período de tiempo [véase BBands en @TTR]. Se ha calculado a partir de la fórmula siguiente (IT.28).
+
+$$TP_t=\frac{High_t+Low_t+Close_t}{3}$$
+
+$$BandWidth_t = 2*F *σ(T P_t) \ \ \ \ \ \ \ \ \ \ \ \ \ \ (IT.28)$$
+En este trabajo se utiliza la ecuación IT.28 como variable. Las bandas superior e inferior están a F desviaciones típicas por encima y por debajo de la banda intermedia. En este caso $F=2$.
+
+En todos los casos:
+
+* $Close_t$ es el precio de cierre del stock en el momento $t$
+
+* $Low_t$ es el precio mínimo del stock en el momento $t$
+
+* $High_t$ es el precio máximo del stock en el momento $t$
+
+
+CUANDO HACEMOS EL ALISADO EXPONENCIAL DE LOS DATOS CON LA MEDIA EXPONENCIAL LO QUE ESTAMOS HACIENDO ES INTENTAR PREDECIR LA DIRECCIÓN QUE TOMARÁ ESA MEDIA AL CABO DE 1, 2, 3 MESES. ES DECIR ESTMOS MIRANDO DE PREDECIR SI LA MEDIA A 30, 60,90 DIAS  ESTARÁ MÁS ALTA EN 1, 2, 3 MESES
+
+CUANDO MIRAMOS INTENTAMOS PREDECIR QUE LA MEDIA EXP 30 DIAS ESTARÁ MÁS ALTA EN 30 DÍAS SIGNIFICA QUE INTENTAMOS PREDECIR SI EN UN MES HABRÁ UN INCREMENTO DE LA MEDIA DEL PRECIO DE CIERRE DE ESE MES AND SO ON
+
+NO SE REALIZA NINGUNA NORMALIZACIÓN PARA EL RANDOM FOREST YA QUE ESTE MODELO NO ES SENSIBLE A TRANSFORMACIONES MONÓTONAS DE LOS DATOS
+
+\justifying
+```{r}
+# #load
+# source("C:/Users/i0386388/Desktop/tesis/Tesis/target_feature_extraction.R")
+# #feature extraction
+# 
+# ################## KO
+# KO_30_1m_target_feature<-feature_extraction_finance(KO_30_1m)
+# KO_30_2m_target_feature<-feature_extraction_finance(KO_30_2m)
+# KO_30_3m_target_feature<-feature_extraction_finance(KO_30_3m)
+# 
+# KO_60_1m_target_feature<-feature_extraction_finance(KO_60_1m)
+# KO_60_2m_target_feature<-feature_extraction_finance(KO_60_2m)
+# KO_60_3m_target_feature<-feature_extraction_finance(KO_60_3m)
+# 
+# KO_90_1m_target_feature<-feature_extraction_finance(KO_90_1m)
+# KO_90_2m_target_feature<-feature_extraction_finance(KO_90_2m)
+# KO_90_3m_target_feature<-feature_extraction_finance(KO_90_3m)
+# 
+# KO_fun_1m_target_feature<-feature_extraction_finance(KO_fun_1m)
+# KO_fun_2m_target_feature<-feature_extraction_finance(KO_fun_2m)
+# KO_fun_3m_target_feature<-feature_extraction_finance(KO_fun_3m)
+# 
+# #AAPL
+# AAPL_30_1m_target_feature<-feature_extraction_finance(AAPL_30_1m)
+# AAPL_30_2m_target_feature<-feature_extraction_finance(AAPL_30_2m)
+# AAPL_30_3m_target_feature<-feature_extraction_finance(AAPL_30_3m)
+# 
+# AAPL_60_1m_target_feature<-feature_extraction_finance(AAPL_60_1m)
+# AAPL_60_2m_target_feature<-feature_extraction_finance(AAPL_60_2m)
+# AAPL_60_3m_target_feature<-feature_extraction_finance(AAPL_60_3m)
+# 
+# AAPL_90_1m_target_feature<-feature_extraction_finance(AAPL_90_1m)
+# AAPL_90_2m_target_feature<-feature_extraction_finance(AAPL_90_2m)
+# AAPL_90_3m_target_feature<-feature_extraction_finance(AAPL_90_3m)
+# 
+# AAPL_fun_1m_target_feature<-feature_extraction_finance(AAPL_fun_1m)
+# AAPL_fun_2m_target_feature<-feature_extraction_finance(AAPL_fun_2m)
+# AAPL_fun_3m_target_feature<-feature_extraction_finance(AAPL_fun_3m)
+# 
+# #AXP
+# AXP_30_1m_target_feature<-feature_extraction_finance(AXP_30_1m)
+# AXP_30_2m_target_feature<-feature_extraction_finance(AXP_30_2m)
+# AXP_30_3m_target_feature<-feature_extraction_finance(AXP_30_3m)
+# 
+# AXP_60_1m_target_feature<-feature_extraction_finance(AXP_60_1m)
+# AXP_60_2m_target_feature<-feature_extraction_finance(AXP_60_2m)
+# AXP_60_3m_target_feature<-feature_extraction_finance(AXP_60_3m)
+# 
+# AXP_90_1m_target_feature<-feature_extraction_finance(AXP_90_1m)
+# AXP_90_2m_target_feature<-feature_extraction_finance(AXP_90_2m)
+# AXP_90_3m_target_feature<-feature_extraction_finance(AXP_90_3m)
+# 
+# AXP_fun_1m_target_feature<-feature_extraction_finance(AXP_fun_1m)
+# AXP_fun_2m_target_feature<-feature_extraction_finance(AXP_fun_2m)
+# AXP_fun_3m_target_feature<-feature_extraction_finance(AXP_fun_3m)
+# 
+# #WFC
+# WFC_30_1m_target_feature<-feature_extraction_finance(WFC_30_1m)
+# WFC_30_2m_target_feature<-feature_extraction_finance(WFC_30_2m)
+# WFC_30_3m_target_feature<-feature_extraction_finance(WFC_30_3m)
+# 
+# WFC_60_1m_target_feature<-feature_extraction_finance(WFC_60_1m)
+# WFC_60_2m_target_feature<-feature_extraction_finance(WFC_60_2m)
+# WFC_60_3m_target_feature<-feature_extraction_finance(WFC_60_3m)
+# 
+# WFC_90_1m_target_feature<-feature_extraction_finance(WFC_90_1m)
+# WFC_90_2m_target_feature<-feature_extraction_finance(WFC_90_2m)
+# WFC_90_3m_target_feature<-feature_extraction_finance(WFC_90_3m)
+# 
+# WFC_fun_1m_target_feature<-feature_extraction_finance(WFC_fun_1m)
+# WFC_fun_2m_target_feature<-feature_extraction_finance(WFC_fun_2m)
+# WFC_fun_3m_target_feature<-feature_extraction_finance(WFC_fun_3m)
+# 
+# save.image("C:/Users/i0386388/Desktop/tesis/data_model_ready.RData")
+
+```
+
