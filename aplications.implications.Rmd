@@ -1,0 +1,116 @@
+---
+output: pdf_document
+---
+
+<!-- aplications.implications -->
+
+Éstos son: (3.2.1) centrados en el cliente (o *front office*), que incluyen el *credit scoring*, aplicaciones en el campo de los seguros de vida y no vida, y los chat-bots encargados de interactuar con el cliente; (3.2.2) centrados en las operaciones (o *back office*), con casos como los modelos de gestión del riesgo y modelos de impacto de mercado; (3.2.3) gestión de carteras y inversión en mercados financieros; (3.2.4) casos en los que instituciones financieras y empresas privadas aplican la IA y el aprendizaje automático en regulación y supervisión; y (3.2.5) otras aplicaciones.
+
+**(3.2.1) Aplicaciones front office: centradas en el cliente**
+
+**Credit scoring**
+
+La evaluación del crédito ha sido un método lárgamente usado por los prestamistas a la hora de prestar o no un crédito. La capacidad de evalúar el potencial riesgo del préstamo, otorgándole un valor, de un determinado cliente es esencial para las compañías financieras. La aplicación de técnicas de aprendizaje automático en este sector se está estableciendo lárgamente entre las distintas instituciones encargadas de prestar dinero. Tradicionalmente se han utilizado datos estructurados como transacciones y el historial de pagos para crear modelos tales como regresiones lineales o árboles de decisión para generar un ránking o valoración de crédito. Sin embargo en la actualidad los prestamistas, ya sean bancos o otras comañías, están utilizando ya otras fuentes de datos no estructurados o semi estructurados tales como la actividad en las redes sociales, uso del teléfono móvil o mensajes de texto. Este tipo de datos permite a estas empresas obtener una visión más matizada de la fiabilidad potencial que tendría un préstamo. La aplicación de modelos de IA y ML sobre esta gran variedad de tipos de datos ha permitido a las empresas prestamistas analizar factores cualitativos como el comportamiento del consumo de los clientes o la valoración de la voluntad de pagar el préstamo.
+
+\setlength\parskip{5ex}
+Una de las principales consecuencias de la capacidad de manejar distintas fuentes de información ha sido el hecho de que actualmente es que la segmentación de la calidad de los prestatarios se hace a mayor escala, de una manera más rápida y más barata. En definitiva esto radica en una *decisión de crédito más rápida y acurada* [@creditscoring1]. Otra de las consecuencias de la aplicación del machine learning en este sector es el hecho de que puede ayudar a garantizar un mayor acceso al crédito. Esto es así ya que los sistemas de evaluación de crédito tradicionales necesitan una cantidad suficiente de datos históricos sobre crédito de esa persona para poder considerarla apta para la evaluación. Si esta información no está disponible, el valor de la evaluación del crédito no puede ser generado y el cliente puede ser potencialmente incapaz de obtener un crédito. Con el uso de fuentes de datos alternativas y la aplicación de modelos de aprendizaje automático los prestamistas son capaces de llevar a decisiones de crédito que hubieran sido imposibles anteriormente [@AIboard].
+
+\setlength\parskip{5ex}
+En general se pueden observar ventajas e inconvenientes de utilizar inteligencia artificial o machine learning en el sector de la evaluación del credito. Como ventaja se encuentra el hecho de que la IA permite analizar una cantidad enorme de datos de una manera rápida. Esto implica que el coste de evaluar los riesgos de los potenciales clientes se verá reducido. Además, el hecho de introducir nuevos tipos de datos puede permitir a las compañías el evaluar el riesgo de crédito de individuos para los cuales no se podía evaluar utilizando los datos tradicionales (historial de crédito). Es decir, la falta de historial de crédito o una valoración anterior de crédito ya no serán más un impedimento a la obtención de un crédito ya que otros indicadores de la verosimilitud del pago están siendo utilizados por las compañías.
+
+\setlength\parskip{5ex}
+Sin embargo, el uso de complejos algoritmos de machine learning puede conducir a una falta de transparencia con el consumidor. Cuando se utilizan modelos de machine learning para construir una valoración o puntuación de crédito, es generalmente más difícil el poder ofrecer una explicación sobre esa valoración y la posterior decisión a los clientes, auditores y supervisores. La faceta *black box* que tienen normalmente estos algoritmos lo complica. Además, ciertos autores argumentan que la utilización de fuentes de datos alternaticvas, tales como comportamiento online o fuentes de información financiera no tradicionales, puede introducir **sesgo** en las decisiones de crédito [@biascredit]. En este sentido ciertas asociaciones de consumidores han levantado la voz en cuanto al aspecto moral. Los modelos de machine learning pueden llevar perfiles de prestatario que tengan en consideración la raza o el género. Por ejemplo, estos modelos pueden puntuar a un prestatario de una minoría étnica con un mayor riesgo por defecto sólo porque prestatarios similares han tenido tradicionalmente unas condiciones menos favorables de crédito.
+
+\setlength\parskip{5ex}
+
+**Servicios de seguros**
+
+El sector de los seguros es uno de los sectores que más confía en el análisis de datos y la inteligencia artificial para llevar a cabo su negocio. De hecho, el análisi estadístico representa el núcleo fundamental de este tipo de negocio. La capacidad de evalúar el precio de un producto asegurador es esencial para este sector para poder ser rentable. Todas estas técnicas se basan en un análisis masivo de grandes bases de datos que las empresas aseguradoras han venido recolectando desde hace años para evaluar el riesgo de un potencial cliente. De esta manera consiguen ofrecer servicios más baratos a aquellas personas con un menor riesgo potencial o inrcementarlo para aquellas personas con más riesgo. Un claro ejemplo que el lector es posible que haya experimentado es el hecho de ver como incrementa la cuota de su seguro de automóvil después de tener un accidente de tráfico.
+
+\setlength\parskip{5ex}
+Sin embargo, muchas de las aplicaciones actuales de técnicas de machine learning incorporan el análisis de datos desestructurados para mejorar el proceso de suscripción de los seguros, apoyando la asignación de un precio en función de las características del potencial cliente, o para fortalecer estrategias de márketing hacia determinados clientes (segmentación). Ejemplos de estos nuevos tipos de datos son los datos en tiempo real y los datos con alta granularidad. Ejemplos de estos últimos son datos relacionados con el comportamiento de compra online o datos telemétricos provinientes de sensores en aparatos electrónicos. En este sentido, estas empresas empiezan a explorar cómo pueden aplicar la IA y el machine learning sobre datos de sensores remotos, conectados a través del *Internet of Things (IoT)*, para detectar e intentar prevenir accidentes susceptibles de ser asegurados (como accidentes de coche).
+
+\setlength\parskip{5ex}
+
+**Chat Bots**
+
+Otra de las aplicaciones actuales de la inteligencia artificial en el campo del *front end* son los llamados ChatBots que se encargan de interactuar con el cliente. Los Chat Bots son programas automáticos que se encargan de asistir y/o ayudar a los clientes en sus transacciones diarias o para resolver problemas. Estos programas utilizan una rama del machine learning llamada NLP (procesamiento del lenguaje natural) para interactuar con los clientes en lenguajes naturales, ya sea por texto o por voz. Este tipo de programas están siendo introducidos por numerosas compañías de servicios financieros, especialmente en sus aplicaciones móviles o las redes sociales, con el fin de agilizar la relación con el cliente y captar nuevas generaciones de clientes. 
+
+Actualmente los algortimos Chat Bot que se están utilizando son relativamente sencillos y se centran en informar al cliente y resolver cuestiones sencillas. Sin embargo, los Chat Bots se están moviendo cada vez más hacia las recomendaciones, especialmente en las decisiones financieras importantes. Además, este tipo de modelos permiten a las compañías obtener información de sus clientes gracias a la interacción con estos programas. Ejemplos de sectores que utilizan actualmente los Chat Bots en el mundo financiero son las instituciones financieras y las compañías de seguros. Éstas utilizan los Chat Bots para dar consejos sobre seguros en tiempo real.
+
+\setlength\parskip{5ex}
+
+**(3.2.2) Aplicaciones back office: centradas en las operaciones**
+
+**Modelos de gestión de riesgo: validación y stress-tests**
+
+El llamado back-testing, o validación de modelos de gestión de riesgo, es importante para el secto bancario porque ha sido utilizado tradicionalmente para evaluar si los modelos de riesgo de los bancos funcionan bien o no. Este tipo de modelos agrupa por ejemplo modelos de gestión de riesgo de crédito, de liquidez, de mercado (tipo de cambio, tipo de interés, cotización...) o riesgo operacional. La validación de modelos se define como el conjunto de procesos y actividades que tienen como objetivo el verificar que los modelos, en este caso de riesgo, están rindiendo como se esperaba, en línea con los objetivos por los cuales se diseñaron y para evaluar su posible impacto [@modeldef]. En este sentido, los bancos están empezando a considerar el machine learning para poder utilizar y hacer que tenga sentido grandes bases de datos estructurados y no estructurados y para analizar el output de los modelos primarios. El hecho de utilizar este gran conjunto de herramientas financieras para realizar el back-testing o validación de modelos permite considerar cambios en el comportamiento de los mercados y otras tendencias, con el objetivo bienintencionado de reducir la potencial infravaloración del riesgo en distintos escenarios financieros [@modeldef].
+
+\setlength\parskip{5ex}
+
+Existen algunos ejemplos actuales de bancos que utilizan modelos de aprendizaje automático no supervisados en sus validaciones de modelos. Este tipo de modelos ayudan a los agentes validadores en el monitoreo constante de los test de stress llevados a cabo internamente y de una manera regulatoria, al ser éstos una ayuda para determinar si los modelos de riesgo están rindiendo dentro de los límites aceptables o si se están desviando de su objetivo principal. Además, pueden ofrecer características o variables extra para los modelos de riesgo operacional, tales como la vulnerabilidad de las distintas organizaciones a los ciber ataques [@AIboard].
+
+\setlength\parskip{5ex}
+
+A su vez, se está empezando a utilizar la inteligencia artificial y técnicas de machine learning en el campo de los test de estrés bancarios. Estas pruebas de resistencia bancaria consisten en técnicas de simulación que tienen como objeivo determinar la capacidad de estabilidad de una entidad bancaria. Consisten en exponer tanto las carteras de activos como las de pasivos a diferentes situaciones para evaluar las posibles reacciones o consecuencias. Este tipo de pruebas se ha venido utilizando cada vez más después de la crisis financiera global del año 2008. En este caso se utilizan modelos no supervisados de aprendizaje automático para revisar grandes volúmenes de datos con el objetivo de analizar cualquier sesgo en la selección de variables de estos modelos de estrés. La consecuencia directa de la aplicación de la IA en este tipo de pruebas es que conducen inevitablemente a mejores modelos con mayor transparencia.
+
+**Modelización del impacto de mercado**
+
+El análisis de impacto de mercado consiste en evaluar el efecto que tiene sobre los precios de mercado las acciones de compra/venta (*trading*) que hace una empresa. Para las compañías de *trading* es importante el poder evaluar el impacto que tienen sobre los precios de mercado las operaciones que ejecutan, en especial aquellas operaciones de gran volúmen. En este sentido es esencial para ellas tener una estimación más precisa del impacto que tienen las operaciones que ejecutan de manera que se pueda ajustar la periodicidad de las mismas y minimizar los costes de ejecución de las operaciones. Las compañías financieras están utilizando ya la IA para obtener más información de los modelos que han utilizado históricamente, haciéndolos más fuertes y potentes, así como para ayudar a identificar relaciones no lineales entre las ordenes de compra y venta. Los modelos de machine leaning que se están creando, llamados *trading robots*, se entrenan a ellos mismos para saber cómo reaccionar a los cambios en el mercado [@marketimpact]. 
+
+\setlength\parskip{5ex}
+
+Algunos de los ejemplos concretos de herramientas que utilizan el machine learning para modelizar el impacto de mercado son los siguientes. Actualmente se utiliza la IA para identificar grupos de bonos que se comportan de manera similar. De esta manera, las compañías pueden agrupar distintos bonos o activos financieros en grupos utilizando técnicas de *cluster* con el objetivo de poder medir y valorar la liquidez de los bonos de manera individual. Otro de los ejemplos de aplicación de la IA en este campo es el uso que se hace de ella para identificar cómo la sincronización de las operaciones puede minimizar el impacto de mercado. Estos modelos intentar evitar el hecho de programar operaciones muy cercanas en el tiempo con el objetivo de esquivar tener un impacto de mercado mayor que la suma de los impactos individuales. Estos modelos se utilizan para decidir la mejor programación de las operaciones (temporalmente hablando) y para modificar esta programación temporal a medida que la compra venta se va produciendo a tiempo real. Para modelizar estos cambios de utilizan técnincas de aprendizaje automático supervisado
+
+**(3.2.3) gestión de carteras e inversión en mercados financieros**
+
+**Inversión y trading algorítmico**
+
+Otro de los campos en los que se aplica actualmente la IA es en el del *trading algorítmico*. Estos sistemas de machine learning son entrenados con información de grandes bases de datos relacionadas con las condiciones cambiantes del mercado en cuestión y el precio para extraer una decisión de inversión, compra o venta de una posición, y colocarla en el mercado. Aquí entra en juego de nuevo el gran potencial del big data y el machine learning a la hora de procesar un gran volúmen de información de una manera muy rápida, potencialmente en tiempo real. Estos algoritmos están constantemente analizando el mercado y posteando acciones de compra o venta de una posición con una frecuencia muy elevada. Es a causa de la gran velocidad en las interacciones con el mercado generada con este tipo de sistemas que se los mercados tradicionales se están adaptando al llamado *High-Frequency Trading (HFT)*. El *trading* de alta frecuencia se soporta sobre este tipo de algoritmos de *trading* automático, que permiten alcanzar niveles donde el ser humano no sería nunca capaz de llegar ya que no podemos procesar tal cantidad de información de una manera tan rápida.
+
+Las consecuencias de la implantación de las transacciones bursátiles de alta fracuencia han sido, como en la mayoría de las veces en el mundo, positivas y negativas (revisar, finalizar pequeña intro)
+Una de las principales consecuencias de la aplicación del *trading* algorítmico y la creación del llamado HFT ya ha sido nombrada. Es el hecho de que las transacciones aumentan de velocidad. Al ser transacciones automatizadas que se hacen de una manera rápida en cuanto hay un cambio favorable en el mercado, también aumenta en consecuencia el número de transacciones totales que se realizan en ese mercado, a la par que disminuyen el número de transacciones con un mayor volúmen. En otras palabras, transacciones de menor volúmen y más rápidas. Otra de las consecuencias generales que se pueden apreciar es que el hecho de introducir HFT, y la algorítmica en general, en los mercados financieros de *trading* es que se ha reducido el coste de las transacciones. La razón es sencilla: es más barato hacer *trading* o negociación bursátil con máquinas que con humanos, por eso el coste el coste de las transacciones se ha venido reduciendo a medida que los mercados se han ido automatizando. En tercer lugar, existen estudios que demuestran que la diferencia entre el precio de compra/oferta y de venta/demanda en un mercado financiero, también conocido como *bid-ask spread*, se ha reducido a causa de la implantación del HFT. Por consecuencia la liquidez, definida como el valor disponible para comprar y vender dentro del rango de precios Bid-Ask, se ha incrementado a lo largo del tiempo [@HFT p. 13]
+
+PRICE EFFICIENCY
+Önd that high frequency traders play a positive role in price
+efficiency by trading in the direction of permanent price changes and in the opposite direction of transitory
+pricing errors on average days and the days of highest volatility
+There is a variety of evidence suggesting that price e¢ ciency has generally improved with the growth of
+computer-based trading
+
+negativas
+
+mayor volatilidad
+1) Flash Crash risk
+
+
+\setlength\parskip{5ex}
+
+
+**(3.2.4) Regulación y supervisión**
+
+**Detección de fraude**
+
+Otra de las aplicaciones actuales es en el campo de la detección de fraudes o anomaías. Los modelos y técnicas de inteligencia artificial ayudan a identificar conductas o comportamientos que se alejan de los patrones regulares. Estos modelos se utilizan por ejemplo para detectar patrones complejos y para hacer hincapié en las transacciones sospechosas que son potencialmente más serias y peligrosas y que por lo tanto requieren una mayor atención y cuidado. Utilizando estas técnicas junto con distintos métodos de machine learning para analizar datos de una manera más desagregada de transacciones, perfiles de clientes y distintos tipos de datos desestructurados, el mundo de la inteligencia artificial se está utilizando para descubrir relaciones no lineales entre los diferentes atributos o características (variables), y para detectar patrones complejos que reflejen potencialmente un blanqueo de capitales [@AIboard]. En este sentido ayuda a agilizar el trabajo de los agentes institucionales encargados de velar por la seguridad financiera. Estos modelos están entrenados con una información que se genera a tiempo real y su utilidad real está en ser capaces de detectar y bloquear una transacción potencialmente sospechosa de fraude para su posterior revisión. Este tipo de sistemas ha permitido ahorrar a las autoridades y empresas un gran volúmen de masa monetaria. 
+
+\setlength\parskip{5ex}
+En la actualidad existen numerosos ejemplos de empresas aplicando tecnologías de machine learning. Casos como los de deepsense.ai o feedzai.com son bastante habituales a día de hoy. Estas empresas se dedican a ofrecer soluciones en relación a la detección del fraude a otras empresas. En este modelo B2B (empresa-empresa) permite a los clientes obtener soluciones personalizadas basadas en modelos y técnicas de análisis de datos e inteligencia artificial para poderlos utilizar en su día a día. También existen otros casos de empresas multinacionales que ya han incorporado este tipo de técnicas. Es el caso de Mastercard que lanzó en 2016 su nuevo sistema llamado "Decision Intelligence". Este sistema intenta resolver la problemática de los falsos positivos de fraude en transacciones genuinas, es decir, verdaderas, utilizando algoritmos y técnicas de machine learning. 
+
+**(3.2.5) Otras aplicaciones** 
+
+
+**consecuencias**
+
+Faster and cheaper financial decisions
+
+chatbots--> give less human relation in financial sector
+
+the use of personal data raises other
+policy issues, including those related to data privacy and data protections
+
+While the use of machine learning has the potential to produce more
+accurate pricing and risk assessment for insurance companies, there may be consumer
+protection concerns that stem from potential data errors or the exclusion of some groups (see
+section 5).
+
+Mayor seguridad financiera, mayor control

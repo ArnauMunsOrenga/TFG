@@ -962,3 +962,18 @@ NO SE REALIZA NINGUNA NORMALIZACIÓN PARA EL RANDOM FOREST YA QUE ESTE MODELO NO
 
 ```
 
+
+HACER EL PCA DE TODOS LOS INDICADORES TECNICOS Y MIRAR LA VARIABLE RESPUESTA PROYECTADA, ASÍ COMO ELAÑO
+
+```{r}
+
+# PCA(train_vali_AAPL_30_1m,quali.sup = c(1),graph = T)
+# 
+# 
+# PCA1<-PCA(train_vali_AAPL_30_1m %>% 
+#       mutate(yearfactor=factor(year(rownames(.)))),
+#     quali.sup = c(1,34),graph = T)
+
+```
+
+HACER EXPERIMENTO USANDO COMPONENTES PRINCIPALES COMO VARIBLES EXPLICATIVAS

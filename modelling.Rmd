@@ -3,14 +3,15 @@ output: pdf_document
 ---
 
 ```{r}
-library(dplyr)
+library(tidyverse)
 library(randomForest)
 library(caret)
 set.seed(420)
 library(kableExtra)
+
 ```
 
-##Partición muestras de entrenamiento, validación y test
+*Partición muestras de entrenamiento, validación y test*
 
 Una vez calculada la variable respuesta y las variablex explicativas/predictoras se procede a construir los modelos predictivos. En primer lugar se particionan los conjuntos de datos en las muestras de entrenamiento, validación y test. En la muestra de entrenamiento se encuentran los datos con los que se entrarán los modelos, es decir, son los datos a partir de los cuales los modelos van observar el fenómeno de estudio y van a aprender sobre él. La muestra de validación se utiliza para obtener una optimización de los hyper parámetros. En inglés este proceso se llama *hyper-parameter fine tunning*. Finalmente, la muestra test la forman los datos sobre los cuales se va a evaluar el rendimiento de los modelos entrenados con los datos *train + validation* después de tunear los hyper parámetros. 
 
@@ -36,7 +37,7 @@ PONER AQUÍ EL NÚMERO TOTAL DE EXPERIMENTOS: CUANTOS MODELOS SE HACEN DE CADA T
 
 *Modelización y resultados*
 
-##Random Forest
+*Random Forest*
 
 \setlength\parskip{5ex}
 Para realizar los experimentos utilizando este modelo descrito en el apartado 6.1 del presente trabajo se optimiza el parámetro `mtry` [véase @tuningRF]. Acorde con la documentación de la función `randomForest` que se puede consultar en [@RF], el parámetro `mtry` controla el número de variables aleatóriamente muestreadas que son candidatas en cada *split* del árbol. Es decir, es el número de variables a tener en cuenta en cada *split* a partir de las cuales se selecciona la que mejor particiona los datos. Esta optimización se hace sobre la muestra de validación utilizando como métrica el % de casos mal clasificados. Esto significa que se selecciona el valor de `mtry` que propocione un menor porcentage de casos mal clasificados (1-accuracy).  
@@ -247,6 +248,8 @@ kable(a, "latex") %>%
   
 \setlength\parskip{5ex}
 En el caso de Wells Fargo & CO. los resultados sobre la muestra de validación se pueden observar en la tabla 6.4. Son, en general, peores que los resultados obtenidos con la empresa Apple Inc. y American Express CO.. Para la predicción hecha a 1 mes el mejor resultado se obtiene utilizando la fórmula de alisado exponencial (2) con una *accuracy* de 69.84% (mejor resultado global para esta empresa). Esto significa que sobre la muestra de validación aproximadamente el 70% de los casos queda bien clasificado. En el caso de la predicción a 2 meses el mejor resultado obtenido es de 58.33% de *accuracy* obtenido alisando los datos con la fórmula de alisado exponencial (2). El mejor resultadao cuando la predicción se hace a 3 meses vista es del 64.28% de *accuracy*.
+
+HACER AQUI EL HEATMAP DE LOS ERRORES OBTENIDOS DE CROSSVALIDACION
 
 
 *Resultados sobre muestra test*
@@ -600,6 +603,11 @@ a<-data.frame(acc1m=as.numeric(c(round(CM_KO_30_1m$overall[1]*100,2),
 
 rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
 
+ConfusionKO<-a
+SensiKO<-ConfusionKO[,grep(x=names(ConfusionKO), pattern="sensi")]
+SpeciKO<-ConfusionKO[,grep(x=names(ConfusionKO), pattern="speci")]
+ConfusionKO<-ConfusionKO[,grep(x=names(ConfusionKO), pattern="acc")]
+
 kable(a, "latex") %>%
   add_header_above(c(" ", "Predicción 1 mes" = 3, "Predicción 2 meses" = 3,"Predicción 3 meses"=3)) %>%
   kable_styling(font_size = 10,latex_options = c("basic"))
@@ -672,6 +680,11 @@ a<-data.frame(acc1m=as.numeric(c(round(CM_AAPL_30_1m$overall[1]*100,2),
               ) 
 
 rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+ConfusionAAPL<-a
+SensiAAPL<-ConfusionAAPL[,grep(x=names(ConfusionAAPL), pattern="sensi")]
+SpeciAAPL<-ConfusionAAPL[,grep(x=names(ConfusionAAPL), pattern="speci")]
+ConfusionAAPL<-ConfusionAAPL[,grep(x=names(ConfusionAAPL), pattern="acc")]
+
 
 kable(a, "latex") %>%
   add_header_above(c(" ", "Predicción 1 mes" = 3, "Predicción 2 meses" = 3,"Predicción 3 meses"=3)) %>%
@@ -682,54 +695,924 @@ kable(a, "latex") %>%
 \setlength\parskip{5ex}
 
 ```{r ConfusionMatrixAXP}
-confusionMatrix(predict(model_AXP_30_1m_target_feature,test_AXP_30_1m_target_feature),test_AXP_30_1m_target_feature$target)
-confusionMatrix(predict(model_AXP_60_1m_target_feature,test_AXP_60_1m_target_feature),test_AXP_60_1m_target_feature$target)
-confusionMatrix(predict(model_AXP_90_1m_target_feature,test_AXP_90_1m_target_feature),test_AXP_90_1m_target_feature$target)
-confusionMatrix(predict(model_AXP_fun_1m_target_feature,test_AXP_fun_1m_target_feature),test_AXP_fun_1m_target_feature$target)
+CM_AXP_30_1m<-confusionMatrix(predict(model_AXP_30_1m_target_feature,test_AXP_30_1m_target_feature),test_AXP_30_1m_target_feature$target)
+CM_AXP_60_1m<-confusionMatrix(predict(model_AXP_60_1m_target_feature,test_AXP_60_1m_target_feature),test_AXP_60_1m_target_feature$target)
+CM_AXP_90_1m<-confusionMatrix(predict(model_AXP_90_1m_target_feature,test_AXP_90_1m_target_feature),test_AXP_90_1m_target_feature$target)
+CM_AXP_fun_1m<-confusionMatrix(predict(model_AXP_fun_1m_target_feature,test_AXP_fun_1m_target_feature),test_AXP_fun_1m_target_feature$target)
 
 
-confusionMatrix(predict(model_AXP_30_2m_target_feature,test_AXP_30_2m_target_feature),test_AXP_30_2m_target_feature$target)
-confusionMatrix(predict(model_AXP_60_2m_target_feature,test_AXP_60_2m_target_feature),test_AXP_60_2m_target_feature$target)
-confusionMatrix(predict(model_AXP_90_2m_target_feature,test_AXP_90_2m_target_feature),test_AXP_90_2m_target_feature$target)
-confusionMatrix(predict(model_AXP_fun_2m_target_feature,test_AXP_fun_2m_target_feature),test_AXP_fun_2m_target_feature$target)
+CM_AXP_30_2m<-confusionMatrix(predict(model_AXP_30_2m_target_feature,test_AXP_30_2m_target_feature),test_AXP_30_2m_target_feature$target)
+CM_AXP_60_2m<-confusionMatrix(predict(model_AXP_60_2m_target_feature,test_AXP_60_2m_target_feature),test_AXP_60_2m_target_feature$target)
+CM_AXP_90_2m<-confusionMatrix(predict(model_AXP_90_2m_target_feature,test_AXP_90_2m_target_feature),test_AXP_90_2m_target_feature$target)
+CM_AXP_fun_2m<-confusionMatrix(predict(model_AXP_fun_2m_target_feature,test_AXP_fun_2m_target_feature),test_AXP_fun_2m_target_feature$target)
 
-confusionMatrix(predict(model_AXP_30_3m_target_feature,test_AXP_30_3m_target_feature),test_AXP_30_3m_target_feature$target)
-confusionMatrix(predict(model_AXP_60_3m_target_feature,test_AXP_60_3m_target_feature),test_AXP_60_3m_target_feature$target)
-confusionMatrix(predict(model_AXP_90_3m_target_feature,test_AXP_90_3m_target_feature),test_AXP_90_3m_target_feature$target)
-confusionMatrix(predict(model_AXP_fun_3m_target_feature,test_AXP_fun_3m_target_feature),test_AXP_fun_3m_target_feature$target)
+CM_AXP_30_3m<-confusionMatrix(predict(model_AXP_30_3m_target_feature,test_AXP_30_3m_target_feature),test_AXP_30_3m_target_feature$target)
+CM_AXP_60_3m<-confusionMatrix(predict(model_AXP_60_3m_target_feature,test_AXP_60_3m_target_feature),test_AXP_60_3m_target_feature$target)
+CM_AXP_90_3m<-confusionMatrix(predict(model_AXP_90_3m_target_feature,test_AXP_90_3m_target_feature),test_AXP_90_3m_target_feature$target)
+CM_AXP_fun_3m<-confusionMatrix(predict(model_AXP_fun_3m_target_feature,test_AXP_fun_3m_target_feature),test_AXP_fun_3m_target_feature$target)
+
+
+
+a<-data.frame(acc1m=as.numeric(c(round(CM_AXP_30_1m$overall[1]*100,2),
+                                    round(CM_AXP_60_1m$overall[1]*100,2),
+                                   round(CM_AXP_90_1m$overall[1]*100,2),
+                                   round(CM_AXP_fun_1m$overall[1]*100,2))),
+              sensi1m=as.numeric(c(round(CM_AXP_30_1m$byClass[1]*100,2),
+                                    round(CM_AXP_60_1m$byClass[1]*100,2),
+                                    round(CM_AXP_90_1m$byClass[1]*100,2),
+                                    round(CM_AXP_fun_1m$byClass[1]*100,2))),
+              speci1m=as.numeric(c(round(CM_AXP_30_1m$byClass[2]*100,2),
+                                    round(CM_AXP_60_1m$byClass[2]*100,2),
+                                    round(CM_AXP_90_1m$byClass[2]*100,2),
+                                    round(CM_AXP_fun_1m$byClass[2]*100,2))),
+              
+              acc2m=as.numeric(c(round(CM_AXP_30_2m$overall[1]*100,2),
+                                    round(CM_AXP_60_2m$overall[1]*100,2),
+                                   round(CM_AXP_90_2m$overall[1]*100,2),
+                                   round(CM_AXP_fun_2m$overall[1]*100,2))),
+              sensi2m=as.numeric(c(round(CM_AXP_30_2m$byClass[1]*100,2),
+                                    round(CM_AXP_60_2m$byClass[1]*100,2),
+                                    round(CM_AXP_90_2m$byClass[1]*100,2),
+                                    round(CM_AXP_fun_2m$byClass[1]*100,2))),
+              speci2m=as.numeric(c(round(CM_AXP_30_2m$byClass[2]*100,2),
+                                    round(CM_AXP_60_2m$byClass[2]*100,2),
+                                    round(CM_AXP_90_2m$byClass[2]*100,2),
+                                    round(CM_AXP_fun_2m$byClass[2]*100,2))),
+              
+              acc3m=as.numeric(c(round(CM_AXP_30_3m$overall[1]*100,2),
+                                    round(CM_AXP_60_3m$overall[1]*100,2),
+                                   round(CM_AXP_90_3m$overall[1]*100,2),
+                                   round(CM_AXP_fun_3m$overall[1]*100,2))),
+              sensi3m=as.numeric(c(round(CM_AXP_30_3m$byClass[1]*100,2),
+                                    round(CM_AXP_60_3m$byClass[1]*100,2),
+                                    round(CM_AXP_90_3m$byClass[1]*100,2),
+                                    round(CM_AXP_fun_3m$byClass[1]*100,2))),
+              speci3m=as.numeric(c(round(CM_AXP_30_3m$byClass[2]*100,2),
+                                    round(CM_AXP_60_3m$byClass[2]*100,2),
+                                    round(CM_AXP_90_3m$byClass[2]*100,2),
+                                    round(CM_AXP_fun_3m$byClass[2]*100,2)))
+              
+              
+              
+              ) 
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+ConfusionAXP<-a
+SensiAXP<-ConfusionAXP[,grep(x=names(ConfusionAXP), pattern="sensi")]
+SpeciAXP<-ConfusionAXP[,grep(x=names(ConfusionAXP), pattern="speci")]
+ConfusionAXP<-ConfusionAXP[,grep(x=names(ConfusionAXP), pattern="acc")]
+
+
+kable(a, "latex") %>%
+  add_header_above(c(" ", "Predicción 1 mes" = 3, "Predicción 2 meses" = 3,"Predicción 3 meses"=3)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
 ```
   \captionof{table}{American Express CO.: Metricas de rendimiento sobre muestra test}
   
 \setlength\parskip{5ex}
 
-```{r}
-confusionMatrix(predict(model_WFC_30_1m_target_feature,test_WFC_30_1m_target_feature),test_WFC_30_1m_target_feature$target)
-confusionMatrix(predict(model_WFC_60_1m_target_feature,test_WFC_60_1m_target_feature),test_WFC_60_1m_target_feature$target)
-confusionMatrix(predict(model_WFC_90_1m_target_feature,test_WFC_90_1m_target_feature),test_WFC_90_1m_target_feature$target)
-confusionMatrix(predict(model_WFC_fun_1m_target_feature,test_WFC_fun_1m_target_feature),test_WFC_fun_1m_target_feature$target)
+```{r ConfusionMatrixWFC}
+CM_WFC_30_1m<-confusionMatrix(predict(model_WFC_30_1m_target_feature,test_WFC_30_1m_target_feature),test_WFC_30_1m_target_feature$target)
+CM_WFC_60_1m<-confusionMatrix(predict(model_WFC_60_1m_target_feature,test_WFC_60_1m_target_feature),test_WFC_60_1m_target_feature$target)
+CM_WFC_90_1m<-confusionMatrix(predict(model_WFC_90_1m_target_feature,test_WFC_90_1m_target_feature),test_WFC_90_1m_target_feature$target)
+CM_WFC_fun_1m<-confusionMatrix(predict(model_WFC_fun_1m_target_feature,test_WFC_fun_1m_target_feature),test_WFC_fun_1m_target_feature$target)
 
 
-confusionMatrix(predict(model_WFC_30_2m_target_feature,test_WFC_30_2m_target_feature),test_WFC_30_2m_target_feature$target)
-confusionMatrix(predict(model_WFC_60_2m_target_feature,test_WFC_60_2m_target_feature),test_WFC_60_2m_target_feature$target)
-confusionMatrix(predict(model_WFC_90_2m_target_feature,test_WFC_90_2m_target_feature),test_WFC_90_2m_target_feature$target)
-confusionMatrix(predict(model_WFC_fun_2m_target_feature,test_WFC_fun_2m_target_feature),test_WFC_fun_2m_target_feature$target)
+CM_WFC_30_2m<-confusionMatrix(predict(model_WFC_30_2m_target_feature,test_WFC_30_2m_target_feature),test_WFC_30_2m_target_feature$target)
+CM_WFC_60_2m<-confusionMatrix(predict(model_WFC_60_2m_target_feature,test_WFC_60_2m_target_feature),test_WFC_60_2m_target_feature$target)
+CM_WFC_90_2m<-confusionMatrix(predict(model_WFC_90_2m_target_feature,test_WFC_90_2m_target_feature),test_WFC_90_2m_target_feature$target)
+CM_WFC_fun_2m<-confusionMatrix(predict(model_WFC_fun_2m_target_feature,test_WFC_fun_2m_target_feature),test_WFC_fun_2m_target_feature$target)
 
-confusionMatrix(predict(model_WFC_30_3m_target_feature,test_WFC_30_3m_target_feature),test_WFC_30_3m_target_feature$target)->a
-confusionMatrix(predict(model_WFC_60_3m_target_feature,test_WFC_60_3m_target_feature),test_WFC_60_3m_target_feature$target)
-confusionMatrix(predict(model_WFC_90_3m_target_feature,test_WFC_90_3m_target_feature),test_WFC_90_3m_target_feature$target)
-confusionMatrix(predict(model_WFC_fun_3m_target_feature,test_WFC_fun_3m_target_feature),test_WFC_fun_3m_target_feature$target)
+CM_WFC_30_3m<-confusionMatrix(predict(model_WFC_30_3m_target_feature,test_WFC_30_3m_target_feature),test_WFC_30_3m_target_feature$target)
+CM_WFC_60_3m<-confusionMatrix(predict(model_WFC_60_3m_target_feature,test_WFC_60_3m_target_feature),test_WFC_60_3m_target_feature$target)
+CM_WFC_90_3m<-confusionMatrix(predict(model_WFC_90_3m_target_feature,test_WFC_90_3m_target_feature),test_WFC_90_3m_target_feature$target)
+CM_WFC_fun_3m<-confusionMatrix(predict(model_WFC_fun_3m_target_feature,test_WFC_fun_3m_target_feature),test_WFC_fun_3m_target_feature$target)
+
+a<-data.frame(acc1m=as.numeric(c(round(CM_WFC_30_1m$overall[1]*100,2),
+                                    round(CM_WFC_60_1m$overall[1]*100,2),
+                                   round(CM_WFC_90_1m$overall[1]*100,2),
+                                   round(CM_WFC_fun_1m$overall[1]*100,2))),
+              sensi1m=as.numeric(c(round(CM_WFC_30_1m$byClass[1]*100,2),
+                                    round(CM_WFC_60_1m$byClass[1]*100,2),
+                                    round(CM_WFC_90_1m$byClass[1]*100,2),
+                                    round(CM_WFC_fun_1m$byClass[1]*100,2))),
+              speci1m=as.numeric(c(round(CM_WFC_30_1m$byClass[2]*100,2),
+                                    round(CM_WFC_60_1m$byClass[2]*100,2),
+                                    round(CM_WFC_90_1m$byClass[2]*100,2),
+                                    round(CM_WFC_fun_1m$byClass[2]*100,2))),
+              
+              acc2m=as.numeric(c(round(CM_WFC_30_2m$overall[1]*100,2),
+                                    round(CM_WFC_60_2m$overall[1]*100,2),
+                                   round(CM_WFC_90_2m$overall[1]*100,2),
+                                   round(CM_WFC_fun_2m$overall[1]*100,2))),
+              sensi2m=as.numeric(c(round(CM_WFC_30_2m$byClass[1]*100,2),
+                                    round(CM_WFC_60_2m$byClass[1]*100,2),
+                                    round(CM_WFC_90_2m$byClass[1]*100,2),
+                                    round(CM_WFC_fun_2m$byClass[1]*100,2))),
+              speci2m=as.numeric(c(round(CM_WFC_30_2m$byClass[2]*100,2),
+                                    round(CM_WFC_60_2m$byClass[2]*100,2),
+                                    round(CM_WFC_90_2m$byClass[2]*100,2),
+                                    round(CM_WFC_fun_2m$byClass[2]*100,2))),
+              
+              acc3m=as.numeric(c(round(CM_WFC_30_3m$overall[1]*100,2),
+                                    round(CM_WFC_60_3m$overall[1]*100,2),
+                                   round(CM_WFC_90_3m$overall[1]*100,2),
+                                   round(CM_WFC_fun_3m$overall[1]*100,2))),
+              sensi3m=as.numeric(c(round(CM_WFC_30_3m$byClass[1]*100,2),
+                                    round(CM_WFC_60_3m$byClass[1]*100,2),
+                                    round(CM_WFC_90_3m$byClass[1]*100,2),
+                                    round(CM_WFC_fun_3m$byClass[1]*100,2))),
+              speci3m=as.numeric(c(round(CM_WFC_30_3m$byClass[2]*100,2),
+                                    round(CM_WFC_60_3m$byClass[2]*100,2),
+                                    round(CM_WFC_90_3m$byClass[2]*100,2),
+                                    round(CM_WFC_fun_3m$byClass[2]*100,2)))
+              
+              
+              
+              ) 
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+ConfusionWFC<-a
+SensiWFC<-ConfusionWFC[,grep(x=names(ConfusionWFC), pattern="sensi")]
+SpeciWFC<-ConfusionWFC[,grep(x=names(ConfusionWFC), pattern="speci")]
+ConfusionWFC<-ConfusionWFC[,grep(x=names(ConfusionWFC), pattern="acc")]
+
+
+kable(a, "latex") %>%
+  add_header_above(c(" ", "Predicción 1 mes" = 3, "Predicción 2 meses" = 3,"Predicción 3 meses"=3)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
 ```
   \captionof{table}{Wells and Fargo CO.: Metricas de rendimiento sobre muestra test}
   
 \setlength\parskip{5ex}
+\justifying 
+```{r}
+#poner el heatmap en el markdown a modo de report useful para hacer investment
+acc.heatmap<-ConfusionKO %>% rbind(ConfusionAAPL)%>% rbind(ConfusionAXP)%>% rbind(ConfusionWFC)
+
+rownames(acc.heatmap)<-apply(expand.grid(c("EMA30","EMA60","EMA90","smooth f"), c("KO", "AAPL", "AXP", "WFC")), 1, paste, collapse=".")
+
+acc.heatmap$comb<-rownames(acc.heatmap);rownames(acc.heatmap)<-NULL;acc.heatmap$comb<-rep(c("EMA30","EMA60","EMA90","smooth f"),4)
+
+stock.heatmap <- acc.heatmap %>% 
+  select(comb,acc1m,acc2m,acc3m)%>% 
+  gather("forecast.window","test.acc", 2:4) %>%          
+  cbind(company=rep(c("KO","AAPL","AXP","WFC"),each=4),
+        test.acc.label=as.character(.$test.acc)) %>% 
+  
+  ggplot(mapping = aes(x = comb, y = forecast.window,fill = test.acc)) +
+  geom_tile() +
+  geom_text(aes(label=test.acc.label),size=2)+
+  xlab(label = "Smooth type")+
+  facet_grid(~ company, switch = "x", scales = "free_x", space = "free_x")+
+scale_fill_gradient2('test.acc', low = "blue", mid = "white", high = "red", midpoint = 50)+
+theme_bw()+
+  theme(
+    axis.text.x = element_text(angle=90, hjust = 0.5 )
+  )
+
+stock.heatmap
+#https://jcoliver.github.io/learn-r/006-heatmaps.html
+```
+  \captionof{figure}{Heatmap de la accuracy obtenida con los modelos Random Forest sobre muestra test}
+
+\setlength\parskip{5ex}
+\justifying 
+
+La representación de la accuracy obtenida sobre la muestra de prueba con los distintos modelos Random Forest permite visualizar de una manera más global. En general los mejores resultados se obtienen prediciendo si el precio de cierre será superior o inferior al cabo de un mes. Este resultado se puede observar de manera general para las 4 empresas estudiadas. Otro resultado que se puede apreciar fácilmente para las 4 empresas es el hecho de que el mejor rendimiento se obtiene a corto plazo (prediciendo a 1 mes) utilizando los datos alisados con una EMA 90 días. Este resultado tiene una fácil interpretación: este tipo de alisado es el más agresivo en cuanto a la fuerza del mismo. Esto significa que se remueven de una manera más clara los movimientos día a día y se conserva de una manera más fuerte la tendencia general.
+
+\setlength\parskip{5ex}
+\justifying 
+Sin embargo cuando se analiza el resultado para cada una de las empresas, se puede apreciar que el resultado es totalmente distinto. Para el caso de AAPL se puede observar que el rendimiento del modelo predictivo se reduce a medida que se aleja en el tiempo la predicción. Cuando se intenta predecir si el precio será superior o inferior al cabo de tres meses, el rendimiento que se obtiene es inferior al 50% de accuracy
+
+
+```{r}
+#poner el heatmap en el markdown a modo de report useful para hacer investment
+sensi.heatmap<-SensiKO %>% rbind(SensiAAPL)%>% rbind(SensiAAPL)%>% rbind(SensiWFC)
+
+rownames(sensi.heatmap)<-apply(expand.grid(c("EMA30","EMA60","EMA90","smooth f"), c("KO", "AAPL", "AXP", "WFC")), 1, paste, collapse=".")
+
+sensi.heatmap$comb<-rownames(sensi.heatmap);rownames(sensi.heatmap)<-NULL;sensi.heatmap$comb<-rep(c("EMA30","EMA60","EMA90","smooth f"),4)
+
+stock.heatmap.sensi <- sensi.heatmap %>% 
+  select(comb,sensi1m,sensi2m,sensi3m)%>% 
+  gather("forecast.window","test.sensi", 2:4) %>%          
+  cbind(company=rep(c("KO","AAPL","AXP","WFC"),each=4),
+        test.sensi.label=as.character(.$test.sensi)) %>% 
+  
+  ggplot(mapping = aes(x = comb, y = forecast.window,fill = test.sensi)) +
+  geom_tile() +
+  geom_text(aes(label=test.sensi.label),size=2)+
+  xlab(label = "Smooth type")+
+  facet_grid(~ company, switch = "x", scales = "free_x", space = "free_x")+
+scale_fill_gradient2('test.sensi', low = "blue", mid = "white", high = "red", midpoint = 50)+
+theme_bw()+
+  theme(
+    axis.text.x = element_text(angle=90, hjust = 0.5 )
+  )
+
+stock.heatmap.sensi
+#https://jcoliver.github.io/learn-r/006-heatmaps.html
+```
+  \captionof{figure}{Heatmap de la sensitividad obtenida con los modelos Random Forest sobre muestra test}
+
+\setlength\parskip{5ex}
+\justifying 
+
+
+\setlength\parskip{5ex}
+\justifying 
+
+```{r}
+#poner el heatmap en el markdown a modo de report useful para hacer investment
+speci.heatmap<-SpeciKO %>% rbind(SpeciAAPL)%>% rbind(SpeciAAPL)%>% rbind(SpeciWFC)
+
+rownames(speci.heatmap)<-apply(expand.grid(c("EMA30","EMA60","EMA90","smooth f"), c("KO", "AAPL", "AXP", "WFC")), 1, paste, collapse=".")
+
+speci.heatmap$comb<-rownames(speci.heatmap);rownames(speci.heatmap)<-NULL;speci.heatmap$comb<-rep(c("EMA30","EMA60","EMA90","smooth f"),4)
+
+stock.heatmap.speci <- speci.heatmap %>% 
+  select(comb,speci1m,speci2m,speci3m)%>% 
+  gather("forecast.window","test.speci", 2:4) %>%          
+  cbind(company=rep(c("KO","AAPL","AXP","WFC"),each=4),
+        test.speci.label=as.character(.$test.speci)) %>% 
+  
+  ggplot(mapping = aes(x = comb, y = forecast.window,fill = test.speci)) +
+  geom_tile() +
+  geom_text(aes(label=test.speci.label),size=2)+
+  xlab(label = "Smooth type")+
+  facet_grid(~ company, switch = "x", scales = "free_x", space = "free_x")+
+scale_fill_gradient2('test.speci', low = "blue", mid = "white", high = "red", midpoint = 50)+
+theme_bw()+
+  theme(
+    axis.text.x = element_text(angle=90, hjust = 0.5 )
+  )
+
+stock.heatmap.speci
+#https://jcoliver.github.io/learn-r/006-heatmaps.html
+```
+  \captionof{figure}{Heatmap de la especificidad obtenida con los modelos Random Forest sobre muestra test}
+
+\setlength\parskip{5ex}
+\justifying 
 
 
 PONER LAS TABLAS CON LA MEDIA DE ACCURACY OBTENIDA ENTRE TODOS LOS ALISADOS. CREAR REGLA: SI COMO MINIMO 3 ALISADOS DICEN QUE SUBIRA, ES MAS ROBUSTO...
 
 *Importancia de las variables*
-```{r}
+A la hora de construir los árboles que conforman el bosque aleatorio ciertas variables son más importantes que otras. Éstas son las variables que consiguen partir mejor la base de datos, es decir, son las que consiguen que los nodos hijos sean los más puros posibles. En otras palabras: las variables más importantes a la hora de crear las particiones son aquellas que consiguen una mayor reducción de la impureza. En este sentido en las tablas siguientes se muestran las 4 variables más importantes para cada modelo construido con un alisado distinto. Dichas variables estan ordenadas de mayor a menor decrecimiento medio en la medida de impureza de Gini [@RF].
 
-sort(model_AAPL_30_1m_target_feature$importance[,1],decreasing = T)
+```{r}
+a<-data.frame(Var1=c(sort(model_KO_30_1m_target_feature$importance[,1],decreasing = T)[1],
+                     sort(model_KO_30_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_KO_30_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_KO_60_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_KO_60_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_KO_60_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_KO_90_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_KO_90_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_KO_90_3m_target_feature$importance[,1],decreasing = T)[1],
+                     
+                     sort(model_KO_fun_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_KO_fun_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_KO_fun_3m_target_feature$importance[,1],decreasing = T)[1]
+                    ),
+              Var1.n=names(c(sort(model_KO_30_1m_target_feature$importance[,1],decreasing = T)[1],
+                     sort(model_KO_30_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_KO_30_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_KO_60_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_KO_60_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_KO_60_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_KO_90_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_KO_90_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_KO_90_3m_target_feature$importance[,1],decreasing = T)[1],
+                     
+                     sort(model_KO_fun_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_KO_fun_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_KO_fun_3m_target_feature$importance[,1],decreasing = T)[1]
+                    )),
+              Var2=c(sort(model_KO_30_1m_target_feature$importance[,1],decreasing = T)[2],
+                     sort(model_KO_30_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_KO_30_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_KO_60_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_KO_60_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_KO_60_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_KO_90_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_KO_90_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_KO_90_3m_target_feature$importance[,1],decreasing = T)[2],
+                     
+                     sort(model_KO_fun_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_KO_fun_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_KO_fun_3m_target_feature$importance[,1],decreasing = T)[2]
+                    ),
+              Var2.n=names(c(sort(model_KO_30_1m_target_feature$importance[,1],decreasing = T)[2],
+                     sort(model_KO_30_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_KO_30_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_KO_60_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_KO_60_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_KO_60_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_KO_90_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_KO_90_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_KO_90_3m_target_feature$importance[,1],decreasing = T)[2],
+                     
+                     sort(model_KO_fun_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_KO_fun_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_KO_fun_3m_target_feature$importance[,1],decreasing = T)[2]
+                    )),
+              Var3=c(sort(model_KO_30_1m_target_feature$importance[,1],decreasing = T)[3],
+                     sort(model_KO_30_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_KO_30_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_KO_60_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_KO_60_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_KO_60_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_KO_90_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_KO_90_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_KO_90_3m_target_feature$importance[,1],decreasing = T)[3],
+                     
+                     sort(model_KO_fun_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_KO_fun_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_KO_fun_3m_target_feature$importance[,1],decreasing = T)[3]
+                    ),
+              Var3.n=names(c(sort(model_KO_30_1m_target_feature$importance[,1],decreasing = T)[3],
+                     sort(model_KO_30_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_KO_30_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_KO_60_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_KO_60_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_KO_60_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_KO_90_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_KO_90_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_KO_90_3m_target_feature$importance[,1],decreasing = T)[3],
+                     
+                     sort(model_KO_fun_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_KO_fun_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_KO_fun_3m_target_feature$importance[,1],decreasing = T)[3]
+                    )),
+              Var4=c(sort(model_KO_30_1m_target_feature$importance[,1],decreasing = T)[4],
+                     sort(model_KO_30_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_KO_30_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_KO_60_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_KO_60_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_KO_60_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_KO_90_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_KO_90_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_KO_90_3m_target_feature$importance[,1],decreasing = T)[4],
+                     
+                     sort(model_KO_fun_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_KO_fun_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_KO_fun_3m_target_feature$importance[,1],decreasing = T)[4]
+                    ),
+              Var4.n=names(c(sort(model_KO_30_1m_target_feature$importance[,1],decreasing = T)[4],
+                     sort(model_KO_30_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_KO_30_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_KO_60_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_KO_60_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_KO_60_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_KO_90_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_KO_90_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_KO_90_3m_target_feature$importance[,1],decreasing = T)[4],
+                     
+                     sort(model_KO_fun_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_KO_fun_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_KO_fun_3m_target_feature$importance[,1],decreasing = T)[4]
+                    ))
+              )
+rownames(a)<-c("EMA30 + target 1mes","EMA30 + target 2mes","EMA30 + target 3mes",
+               "EMA60 + target 1mes","EMA60 + target 2mes","EMA60 + target 3mes",
+               "EMA90 + target 1mes","EMA90 + target 2mes","EMA90 + target 3mes",
+               "exp smooth + target 1mes","exp smooth + target 2mes","exp smooth + target 3mes")
+
+imp_KO<-a
+
+kable(a, "latex") %>%
+add_header_above(c(" ", "Variables ordenadas de mayor a menor importancia de izq. a dcha." = 8)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+# sort(model_KO_30_1m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_KO_30_2m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_KO_30_3m_target_feature$importance[,1],decreasing = T)[1:5]
+# 
+# sort(model_KO_60_1m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_KO_60_2m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_KO_60_3m_target_feature$importance[,1],decreasing = T)[1:5]
+# 
+# sort(model_KO_90_1m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_KO_90_2m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_KO_90_3m_target_feature$importance[,1],decreasing = T)[1:5]
+
+```
+  \captionof{table}{Coca Cola CO.: Importancia de las variables en los modelos Random Forest}
+  
+\setlength\parskip{5ex}
+
+```{r}
+a<-data.frame(Var1=c(sort(model_AAPL_30_1m_target_feature$importance[,1],decreasing = T)[1],
+                     sort(model_AAPL_30_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AAPL_30_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_AAPL_60_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AAPL_60_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AAPL_60_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_AAPL_90_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AAPL_90_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AAPL_90_3m_target_feature$importance[,1],decreasing = T)[1],
+                     
+                     sort(model_AAPL_fun_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AAPL_fun_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AAPL_fun_3m_target_feature$importance[,1],decreasing = T)[1]
+                    ),
+              Var1.n=names(c(sort(model_AAPL_30_1m_target_feature$importance[,1],decreasing = T)[1],
+                     sort(model_AAPL_30_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AAPL_30_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_AAPL_60_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AAPL_60_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AAPL_60_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_AAPL_90_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AAPL_90_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AAPL_90_3m_target_feature$importance[,1],decreasing = T)[1],
+                     
+                     sort(model_AAPL_fun_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AAPL_fun_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AAPL_fun_3m_target_feature$importance[,1],decreasing = T)[1]
+                    )),
+              Var2=c(sort(model_AAPL_30_1m_target_feature$importance[,1],decreasing = T)[2],
+                     sort(model_AAPL_30_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AAPL_30_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_AAPL_60_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AAPL_60_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AAPL_60_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_AAPL_90_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AAPL_90_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AAPL_90_3m_target_feature$importance[,1],decreasing = T)[2],
+                     
+                     sort(model_AAPL_fun_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AAPL_fun_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AAPL_fun_3m_target_feature$importance[,1],decreasing = T)[2]
+                    ),
+              Var2.n=names(c(sort(model_AAPL_30_1m_target_feature$importance[,1],decreasing = T)[2],
+                     sort(model_AAPL_30_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AAPL_30_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_AAPL_60_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AAPL_60_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AAPL_60_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_AAPL_90_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AAPL_90_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AAPL_90_3m_target_feature$importance[,1],decreasing = T)[2],
+                     
+                     sort(model_AAPL_fun_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AAPL_fun_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AAPL_fun_3m_target_feature$importance[,1],decreasing = T)[2]
+                    )),
+              Var3=c(sort(model_AAPL_30_1m_target_feature$importance[,1],decreasing = T)[3],
+                     sort(model_AAPL_30_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AAPL_30_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_AAPL_60_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AAPL_60_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AAPL_60_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_AAPL_90_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AAPL_90_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AAPL_90_3m_target_feature$importance[,1],decreasing = T)[3],
+                     
+                     sort(model_AAPL_fun_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AAPL_fun_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AAPL_fun_3m_target_feature$importance[,1],decreasing = T)[3]
+                    ),
+              Var3.n=names(c(sort(model_AAPL_30_1m_target_feature$importance[,1],decreasing = T)[3],
+                     sort(model_AAPL_30_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AAPL_30_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_AAPL_60_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AAPL_60_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AAPL_60_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_AAPL_90_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AAPL_90_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AAPL_90_3m_target_feature$importance[,1],decreasing = T)[3],
+                     
+                     sort(model_AAPL_fun_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AAPL_fun_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AAPL_fun_3m_target_feature$importance[,1],decreasing = T)[3]
+                    )),
+              Var4=c(sort(model_AAPL_30_1m_target_feature$importance[,1],decreasing = T)[4],
+                     sort(model_AAPL_30_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AAPL_30_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_AAPL_60_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AAPL_60_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AAPL_60_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_AAPL_90_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AAPL_90_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AAPL_90_3m_target_feature$importance[,1],decreasing = T)[4],
+                     
+                     sort(model_AAPL_fun_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AAPL_fun_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AAPL_fun_3m_target_feature$importance[,1],decreasing = T)[4]
+                    ),
+              Var4.n=names(c(sort(model_AAPL_30_1m_target_feature$importance[,1],decreasing = T)[4],
+                     sort(model_AAPL_30_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AAPL_30_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_AAPL_60_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AAPL_60_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AAPL_60_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_AAPL_90_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AAPL_90_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AAPL_90_3m_target_feature$importance[,1],decreasing = T)[4],
+                     
+                     sort(model_AAPL_fun_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AAPL_fun_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AAPL_fun_3m_target_feature$importance[,1],decreasing = T)[4]
+                    ))
+              )
+rownames(a)<-c("EMA30 + target 1mes","EMA30 + target 2mes","EMA30 + target 3mes",
+               "EMA60 + target 1mes","EMA60 + target 2mes","EMA60 + target 3mes",
+               "EMA90 + target 1mes","EMA90 + target 2mes","EMA90 + target 3mes",
+               "exp smooth + target 1mes","exp smooth + target 2mes","exp smooth + target 3mes")
+
+imp_AAPL<-a
+
+kable(a, "latex") %>%
+add_header_above(c(" ", "Variables ordenadas de mayor a menor importancia de izq. a dcha." = 8)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+# sort(model_AAPL_30_1m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_AAPL_30_2m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_AAPL_30_3m_target_feature$importance[,1],decreasing = T)[1:5]
+# 
+# sort(model_AAPL_60_1m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_AAPL_60_2m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_AAPL_60_3m_target_feature$importance[,1],decreasing = T)[1:5]
+# 
+# sort(model_AAPL_90_1m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_AAPL_90_2m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_AAPL_90_3m_target_feature$importance[,1],decreasing = T)[1:5]
+
+```
+  \captionof{table}{Apple Inc.: Importancia de las variables en los modelos Random Forest}
+  
+\setlength\parskip{5ex}
+
+```{r}
+a<-data.frame(Var1=c(sort(model_AXP_30_1m_target_feature$importance[,1],decreasing = T)[1],
+                     sort(model_AXP_30_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AXP_30_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_AXP_60_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AXP_60_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AXP_60_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_AXP_90_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AXP_90_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AXP_90_3m_target_feature$importance[,1],decreasing = T)[1],
+                     
+                     sort(model_AXP_fun_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AXP_fun_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AXP_fun_3m_target_feature$importance[,1],decreasing = T)[1]
+                    ),
+              Var1.n=names(c(sort(model_AXP_30_1m_target_feature$importance[,1],decreasing = T)[1],
+                     sort(model_AXP_30_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AXP_30_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_AXP_60_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AXP_60_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AXP_60_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_AXP_90_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AXP_90_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AXP_90_3m_target_feature$importance[,1],decreasing = T)[1],
+                     
+                     sort(model_AXP_fun_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AXP_fun_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_AXP_fun_3m_target_feature$importance[,1],decreasing = T)[1]
+                    )),
+              Var2=c(sort(model_AXP_30_1m_target_feature$importance[,1],decreasing = T)[2],
+                     sort(model_AXP_30_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AXP_30_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_AXP_60_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AXP_60_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AXP_60_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_AXP_90_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AXP_90_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AXP_90_3m_target_feature$importance[,1],decreasing = T)[2],
+                     
+                     sort(model_AXP_fun_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AXP_fun_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AXP_fun_3m_target_feature$importance[,1],decreasing = T)[2]
+                    ),
+              Var2.n=names(c(sort(model_AXP_30_1m_target_feature$importance[,1],decreasing = T)[2],
+                     sort(model_AXP_30_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AXP_30_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_AXP_60_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AXP_60_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AXP_60_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_AXP_90_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AXP_90_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AXP_90_3m_target_feature$importance[,1],decreasing = T)[2],
+                     
+                     sort(model_AXP_fun_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AXP_fun_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_AXP_fun_3m_target_feature$importance[,1],decreasing = T)[2]
+                    )),
+              Var3=c(sort(model_AXP_30_1m_target_feature$importance[,1],decreasing = T)[3],
+                     sort(model_AXP_30_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AXP_30_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_AXP_60_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AXP_60_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AXP_60_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_AXP_90_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AXP_90_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AXP_90_3m_target_feature$importance[,1],decreasing = T)[3],
+                     
+                     sort(model_AXP_fun_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AXP_fun_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AXP_fun_3m_target_feature$importance[,1],decreasing = T)[3]
+                    ),
+              Var3.n=names(c(sort(model_AXP_30_1m_target_feature$importance[,1],decreasing = T)[3],
+                     sort(model_AXP_30_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AXP_30_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_AXP_60_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AXP_60_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AXP_60_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_AXP_90_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AXP_90_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AXP_90_3m_target_feature$importance[,1],decreasing = T)[3],
+                     
+                     sort(model_AXP_fun_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AXP_fun_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_AXP_fun_3m_target_feature$importance[,1],decreasing = T)[3]
+                    )),
+              Var4=c(sort(model_AXP_30_1m_target_feature$importance[,1],decreasing = T)[4],
+                     sort(model_AXP_30_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AXP_30_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_AXP_60_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AXP_60_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AXP_60_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_AXP_90_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AXP_90_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AXP_90_3m_target_feature$importance[,1],decreasing = T)[4],
+                     
+                     sort(model_AXP_fun_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AXP_fun_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AXP_fun_3m_target_feature$importance[,1],decreasing = T)[4]
+                    ),
+              Var4.n=names(c(sort(model_AXP_30_1m_target_feature$importance[,1],decreasing = T)[4],
+                     sort(model_AXP_30_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AXP_30_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_AXP_60_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AXP_60_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AXP_60_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_AXP_90_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AXP_90_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AXP_90_3m_target_feature$importance[,1],decreasing = T)[4],
+                     
+                     sort(model_AXP_fun_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AXP_fun_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_AXP_fun_3m_target_feature$importance[,1],decreasing = T)[4]
+                    ))
+              )
+rownames(a)<-c("EMA30 + target 1mes","EMA30 + target 2mes","EMA30 + target 3mes",
+               "EMA60 + target 1mes","EMA60 + target 2mes","EMA60 + target 3mes",
+               "EMA90 + target 1mes","EMA90 + target 2mes","EMA90 + target 3mes",
+               "exp smooth + target 1mes","exp smooth + target 2mes","exp smooth + target 3mes")
+
+imp_AXP<-a
+
+kable(a, "latex") %>%
+add_header_above(c(" ", "Variables ordenadas de mayor a menor importancia de izq. a dcha." = 8)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+# sort(model_AXP_30_1m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_AXP_30_2m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_AXP_30_3m_target_feature$importance[,1],decreasing = T)[1:5]
+# 
+# sort(model_AXP_60_1m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_AXP_60_2m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_AXP_60_3m_target_feature$importance[,1],decreasing = T)[1:5]
+# 
+# sort(model_AXP_90_1m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_AXP_90_2m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_AXP_90_3m_target_feature$importance[,1],decreasing = T)[1:5]
+
+```
+  \captionof{table}{American Express CO.: Importancia de las variables en los modelos Random Forest}
+  
+\setlength\parskip{5ex}
+
+```{r}
+a<-data.frame(Var1=c(sort(model_WFC_30_1m_target_feature$importance[,1],decreasing = T)[1],
+                     sort(model_WFC_30_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_WFC_30_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_WFC_60_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_WFC_60_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_WFC_60_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_WFC_90_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_WFC_90_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_WFC_90_3m_target_feature$importance[,1],decreasing = T)[1],
+                     
+                     sort(model_WFC_fun_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_WFC_fun_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_WFC_fun_3m_target_feature$importance[,1],decreasing = T)[1]
+                    ),
+              Var1.n=names(c(sort(model_WFC_30_1m_target_feature$importance[,1],decreasing = T)[1],
+                     sort(model_WFC_30_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_WFC_30_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_WFC_60_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_WFC_60_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_WFC_60_3m_target_feature$importance[,1],decreasing = T)[1],
+                      
+                      sort(model_WFC_90_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_WFC_90_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_WFC_90_3m_target_feature$importance[,1],decreasing = T)[1],
+                     
+                     sort(model_WFC_fun_1m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_WFC_fun_2m_target_feature$importance[,1],decreasing = T)[1],
+                      sort(model_WFC_fun_3m_target_feature$importance[,1],decreasing = T)[1]
+                    )),
+              Var2=c(sort(model_WFC_30_1m_target_feature$importance[,1],decreasing = T)[2],
+                     sort(model_WFC_30_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_WFC_30_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_WFC_60_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_WFC_60_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_WFC_60_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_WFC_90_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_WFC_90_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_WFC_90_3m_target_feature$importance[,1],decreasing = T)[2],
+                     
+                     sort(model_WFC_fun_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_WFC_fun_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_WFC_fun_3m_target_feature$importance[,1],decreasing = T)[2]
+                    ),
+              Var2.n=names(c(sort(model_WFC_30_1m_target_feature$importance[,1],decreasing = T)[2],
+                     sort(model_WFC_30_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_WFC_30_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_WFC_60_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_WFC_60_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_WFC_60_3m_target_feature$importance[,1],decreasing = T)[2],
+                      
+                      sort(model_WFC_90_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_WFC_90_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_WFC_90_3m_target_feature$importance[,1],decreasing = T)[2],
+                     
+                     sort(model_WFC_fun_1m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_WFC_fun_2m_target_feature$importance[,1],decreasing = T)[2],
+                      sort(model_WFC_fun_3m_target_feature$importance[,1],decreasing = T)[2]
+                    )),
+              Var3=c(sort(model_WFC_30_1m_target_feature$importance[,1],decreasing = T)[3],
+                     sort(model_WFC_30_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_WFC_30_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_WFC_60_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_WFC_60_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_WFC_60_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_WFC_90_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_WFC_90_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_WFC_90_3m_target_feature$importance[,1],decreasing = T)[3],
+                     
+                     sort(model_WFC_fun_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_WFC_fun_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_WFC_fun_3m_target_feature$importance[,1],decreasing = T)[3]
+                    ),
+              Var3.n=names(c(sort(model_WFC_30_1m_target_feature$importance[,1],decreasing = T)[3],
+                     sort(model_WFC_30_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_WFC_30_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_WFC_60_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_WFC_60_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_WFC_60_3m_target_feature$importance[,1],decreasing = T)[3],
+                      
+                      sort(model_WFC_90_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_WFC_90_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_WFC_90_3m_target_feature$importance[,1],decreasing = T)[3],
+                     
+                     sort(model_WFC_fun_1m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_WFC_fun_2m_target_feature$importance[,1],decreasing = T)[3],
+                      sort(model_WFC_fun_3m_target_feature$importance[,1],decreasing = T)[3]
+                    )),
+              Var4=c(sort(model_WFC_30_1m_target_feature$importance[,1],decreasing = T)[4],
+                     sort(model_WFC_30_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_WFC_30_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_WFC_60_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_WFC_60_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_WFC_60_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_WFC_90_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_WFC_90_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_WFC_90_3m_target_feature$importance[,1],decreasing = T)[4],
+                     
+                     sort(model_WFC_fun_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_WFC_fun_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_WFC_fun_3m_target_feature$importance[,1],decreasing = T)[4]
+                    ),
+              Var4.n=names(c(sort(model_WFC_30_1m_target_feature$importance[,1],decreasing = T)[4],
+                     sort(model_WFC_30_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_WFC_30_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_WFC_60_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_WFC_60_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_WFC_60_3m_target_feature$importance[,1],decreasing = T)[4],
+                      
+                      sort(model_WFC_90_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_WFC_90_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_WFC_90_3m_target_feature$importance[,1],decreasing = T)[4],
+                     
+                     sort(model_WFC_fun_1m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_WFC_fun_2m_target_feature$importance[,1],decreasing = T)[4],
+                      sort(model_WFC_fun_3m_target_feature$importance[,1],decreasing = T)[4]
+                    ))
+              )
+rownames(a)<-c("EMA30 + target 1mes","EMA30 + target 2mes","EMA30 + target 3mes",
+               "EMA60 + target 1mes","EMA60 + target 2mes","EMA60 + target 3mes",
+               "EMA90 + target 1mes","EMA90 + target 2mes","EMA90 + target 3mes",
+               "exp smooth + target 1mes","exp smooth + target 2mes","exp smooth + target 3mes")
+
+imp_WFC<-a
+
+kable(a, "latex") %>%
+add_header_above(c(" ", "Variables ordenadas de mayor a menor importancia de izq. a dcha." = 8)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+
+# sort(model_WFC_30_1m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_WFC_30_2m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_WFC_30_3m_target_feature$importance[,1],decreasing = T)[1:5]
+# 
+# sort(model_WFC_60_1m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_WFC_60_2m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_WFC_60_3m_target_feature$importance[,1],decreasing = T)[1:5]
+# 
+# sort(model_WFC_90_1m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_WFC_90_2m_target_feature$importance[,1],decreasing = T)[1:5]
+# sort(model_WFC_90_3m_target_feature$importance[,1],decreasing = T)[1:5]
+
+```
+  \captionof{table}{Wells and Fargo CO.: Importancia de las variables en los modelos Random Forest}
+  
+\setlength\parskip{5ex}
+
+```{r}
+#Cuál ha sido la variable más importante en el split con la freq absoluta más alta de entre todos los modelos de todas las empresas?
+table(c(as.character(imp_KO[,2]),as.character(imp_AAPL[,2]),as.character(imp_AXP[,2]),as.character(imp_WFC[,2])))
+
+#El indicador técnico aparece un 39.58% de las veces como variable más importante para un modelo, seguida de atr 20.83 y sma10 20.83 empatadas 
+round(table(c(as.character(imp_KO[,2]),as.character(imp_AAPL[,2]),as.character(imp_AXP[,2]),as.character(imp_WFC[,2])))/sum(table(c(as.character(imp_KO[,2]),as.character(imp_AAPL[,2]),as.character(imp_AXP[,2]),as.character(imp_WFC[,2]))))*100,2)
+
+#Cuál ha sido la variable más importante en el split con la freq absoluta más alta de entre todos los modelos para cada empresa??
+sort(round(table(c(as.character(imp_KO[,2])))/sum(table(c(as.character(imp_KO[,2]))))*100,2),decreasing = T)
+sort(round(table(c(as.character(imp_AAPL[,2])))/sum(table(c(as.character(imp_AAPL[,2]))))*100,2),decreasing = T)
+sort(round(table(c(as.character(imp_AXP[,2])))/sum(table(c(as.character(imp_AXP[,2]))))*100,2),decreasing = T)
+sort(round(table(c(as.character(imp_WFC[,2])))/sum(table(c(as.character(imp_WFC[,2]))))*100,2),decreasing = T)
+
+#Para cada tipo de modelo cuales son las variables que más aparecen en el top 4 de más importantes
+# table(c(as.character(t(imp_KO[1,c(2,4,6,8)])),as.character(t(imp_AAPL[1,c(2,4,6,8)])),as.character(t(imp_AXP[1,c(2,4,6,8)])),as.character(t(imp_WFC[1,c(2,4,6,8)]))))
+
+
 ```
 
 

@@ -5,6 +5,10 @@ output: pdf_document
 La inteligencia artificial, comúnmente llamada AI por sus siglas en inglés...
 
 \setlength\parskip{5ex}
+Hoy en día palabras como machine learning o inteligencia artificial nos suenan relativamente familiares porque forman parte del mundo actual. Vienen teniendo un auge muy grande en la última decada, apoyadas por el hecho que los problemas computacionales derivados a los cuales no se podía hacer frente en la epoca en la que se inventaron ya no existen. Las máquinas son mas baratas = más IA
+El objetivo del presente trabajo es el de analizar las el contexto actual de la IA en el mundo de las finanzas, empezando con la evolución histórica que viene teniendo la implantación de la IA en el sector financiero hasta la actual situación y aplicaciones. En ese sentido se analiza la situación actual para poder analizar cuales han sido las consecuencias de la implantación de la inteligencia artificial en los mercados financieros (HFT) En una fase posterior se proceden a estudiar posibles aplicaciones de IA en el mundo de las finanzas, con el objetivo de ayudar/mejorar el trabajo de un inversor no profesional.
+
+
 Intentar predecir el precio de un stock ha sido una materia objeto de estudio desde los últimos años. Debido a la complejidad de las series temporales de los precios una nueva rama de investigación se está desarrollando rápidamente. Ésta rama de investigación gira en torno a la idea de intentar predecir la *dirección* del stock en cuestión en vez de intentar predecir el precio exacto. Estos modelos de predicción de la dirección del movimiento de los stocks, llamados SMD por sus siglas en inglés (Stock Movement Direction), consiguen alcanzar un rendimiento predictivo suficiente como para utilizarlos como complemento al análisi fundamental a la hora de tomar una decisión de inversión. 
 
 <!-- \centering -->

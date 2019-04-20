@@ -65,7 +65,7 @@ Resumen
 \fancyfoot[C]{}
 \chapter*{\textbf{Palabras clave}}
 
-**Stock**, Inteligencia artificial, Aprendizaje automático, Modelo predictivo, precios OHLC 
+**Stock**, Inteligencia artificial, Aprendizaje automático, Machine Learning, Sector financiero, aprendizaje automático supervisado, aprendizaje automático no supervisado, modelo predictivo, Trading automático (negociación bursátil) precio de apertura, precio de cierre, precio máximo y mínimo.
 
 <!-- Front Matter -->
 \newpage
@@ -122,36 +122,47 @@ Resumen
 
 \chapter{\textbf{Consecuencias de la implantación de la IA en los mercados financieros}}
 
-Tells us more.
+En el presente capítulo se procede a analizar las consecuencias de la implantación de la inteligencia artificial en los mercados y el sector financiero. En primer lugar se analiza la proyección histórica y la evolución de la inteligencia artificial como campo de estudio, así como el desarrollo paralelo a lo largo de la historia de las aplicaciones sobre el mundo de las finanzas de la misma. Posteriormente se estudian las aplicaciones actuales de los modelos de machine learning e IA para observar las consecuencias actuales y discutir las posibles consecuencias futuras.
 
-<!-- contextualizacion -->
-\FloatBarrier
-\newpage
-\fancyhead[L]{Contextualización}
-\fancyhead[R]{Capítulo \thechapter}
-\fancyfoot[C]{\thepage}
+<!-- <!-- contextualizacion -->
+<!-- \FloatBarrier -->
+<!-- \newpage -->
+<!-- \fancyhead[L]{Contextualización} -->
+<!-- \fancyhead[R]{Capítulo \thechapter} -->
+<!-- \fancyfoot[C]{\thepage} -->
 
-\section{3.1 \textbf{Contextualización}}
+<!-- \section{3.1 \textbf{Contextualización}} -->
 
-no se que pasa pero el titulo no sale bien
+<!-- no se que pasa pero el titulo no sale bien -->
+
 
 <!-- evolucion historica -->
 \FloatBarrier
 \newpage
-\fancyhead[L]{Evolución histórica}
+\fancyhead[L]{Evolución histórica y contexto actual}
 \fancyhead[R]{Capítulo \thechapter}
 \fancyfoot[C]{\thepage}
 
-\section{3.2 \textbf{Evolución histórica}}
+\section{3.1 \textbf{Evolución histórica y contexto actual}}
+
+\justifying
+```{r child="Current.Situation.rmd"}
+```
 
 <!-- consecuencias economias -->
 \FloatBarrier
 \newpage
-\fancyhead[L]{Consecuencias económicas}
+\fancyhead[L]{Aplicaciones y consecuencias económicas}
 \fancyhead[R]{Capítulo \thechapter}
 \fancyfoot[C]{\thepage}
 
-\section{3.3 \textbf{Consecuencias económicas}}
+\section{3.2 \textbf{Aplicaciones y consecuencias económicas}}
+
+En un mundo donde los datos juegan un papel fundamental (hay quién incluso los llama el petróleo del siglo XXI) y el tratamiento de la información está totalmente implantado, todos los ámbitos de la realidad se ven afectados. En el caso del mundo de las finanzas el impacto ha sido profundo. En los últimos años el campo de la inteligencia artificial ha sido capaz de crear sistemas computacionales y aplicaciones en el campo de las finanzas. En la sección siguiente se examinan los distintos campos del sector financiero en los cuales se aplican actualmente técnicas de machine learning e inteligencia artificial con el objetivo de poder examinar con detalle las consecuencias actuales de su implantación así como las posibles implicaciones futuras.
+
+\justifying
+```{r child="aplications.implications.rmd"}
+```
 
 \FloatBarrier
 
@@ -284,7 +295,16 @@ Keep it going.
 
 \chapter{\textbf{Conclusiones}}
 
+El aumento en la generación de datos, tanto en volumen como en velocidad, junto con el aumento de la capacidad computacional ha hehco que la inteligencia artificial forme parte de nuestros días...muchas empresas trabajndo en  esto
+
+Los indicadores técnicos sirven para poder predecir el cambio de los precios. queda demostrado que hacen que la prediccion sea superior a 0.5 en muchos casos
+
+Algunas empresas se predicen mejor que las otras --> que tienen en comun las que se predicen mejor
+
+posibles resultados distintos si hacemos rolling origin cross validation para los parámetros y rolling origin test para la muestra test...
 Well done.
+
+
 
 \FloatBarrier
 
