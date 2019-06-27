@@ -1,0 +1,1757 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{}
+    \pretitle{\vspace{\droptitle}}
+  \posttitle{}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages ----------------------------------------------------------------------------------------------------------- tidyverse 1.2.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v tibble  1.4.2     v purrr   0.2.5
+## v tidyr   0.8.1     v dplyr   0.7.6
+## v readr   1.1.1     v stringr 1.3.1
+## v tibble  1.4.2     v forcats 0.3.0
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts -------------------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
+## x lubridate::as.difftime() masks base::as.difftime()
+## x lubridate::date()        masks base::date()
+## x dplyr::filter()          masks stats::filter()
+## x lubridate::intersect()   masks base::intersect()
+## x dplyr::lag()             masks stats::lag()
+## x lubridate::setdiff()     masks base::setdiff()
+## x lubridate::union()       masks base::union()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(randomForest)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## randomForest 4.6-14
+\end{verbatim}
+
+\begin{verbatim}
+## Type rfNews() to see new features/changes/bug fixes.
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'randomForest'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     combine
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:ggplot2':
+## 
+##     margin
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(caret)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: lattice
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'caret'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:purrr':
+## 
+##     lift
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{420}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(kableExtra)}
+\end{Highlighting}
+\end{Shaded}
+
+\emph{Partición muestras de entrenamiento, validación y test}
+
+Una vez calculada la variable respuesta y las variablex
+explicativas/predictoras se procede a construir los modelos predictivos.
+En primer lugar se particionan los conjuntos de datos en las muestras de
+entrenamiento, validación y test. En la muestra de entrenamiento se
+encuentran los datos con los que se entrarán los modelos, es decir, son
+los datos a partir de los cuales los modelos van observar el fenómeno de
+estudio y van a aprender sobre él. La muestra de validación se utiliza
+para obtener una optimización de los hyper parámetros. En inglés este
+proceso se llama \emph{hyper-parameter fine tunning}. Finalmente, la
+muestra test la forman los datos sobre los cuales se va a evaluar el
+rendimiento de los modelos entrenados con los datos \emph{train +
+validation} después de tunear los hyper parámetros.
+
+\setlength\parskip{5ex} Las series temporales de precios necesitan un
+tratamiento especial al momento de hacer las particiones entre muestras
+de entrenamiento, validación y test ya que se debe mantener la
+estructura temporal inherente en los datos.
+
+\begin{itemize}
+\tightlist
+\item
+  Muestra de entrenamiento: 2000-2015
+\item
+  Muestra de validación: 2016
+\item
+  Muestra de test: 2017-2018
+\end{itemize}
+
+\setlength\parskip{5ex} Los modelos que se construyen requieren una
+muestra de entrenamiento considerable al tener que captar largas
+tendencias en los precios. Además los hyper parámetros que se deben
+optimizar, en el caso del Random Forest, no son demasiados y por eso se
+decide utilizar 17 años de entrenamiento y sólo 6 meses para la muestra
+de validación y test.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{load}\NormalTok{(}\StringTok{"C:/Users/i0386388/Desktop/tesis/data_model_ready.RData"}\NormalTok{,.GlobalEnv)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{source}\NormalTok{(}\StringTok{"C:/Users/i0386388/Desktop/tesis/Tesis/partitioning2.R"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+PONER AQUÍ EL NÚMERO TOTAL DE EXPERIMENTOS: CUANTOS MODELOS SE HACEN DE
+CADA TIPO, CONTANDO PARAMETER FINE TUNING Y TEST PERFORMANCE
+
+\emph{Modelización y resultados}
+
+\emph{Random Forest}
+
+\setlength\parskip{5ex} Para realizar los experimentos utilizando este
+modelo descrito en el apartado 6.1 del presente trabajo se optimiza el
+parámetro \texttt{mtry} {[}véase @tuningRF{]}. Acorde con la
+documentación de la función \texttt{randomForest} que se puede consultar
+en {[}@RF{]}, el parámetro \texttt{mtry} controla el número de variables
+aleatóriamente muestreadas que son candidatas en cada \emph{split} del
+árbol. Es decir, es el número de variables a tener en cuenta en cada
+\emph{split} a partir de las cuales se selecciona la que mejor
+particiona los datos. Esta optimización se hace sobre la muestra de
+validación utilizando como métrica el \% de casos mal clasificados. Esto
+significa que se selecciona el valor de \texttt{mtry} que propocione un
+menor porcentage de casos mal clasificados (1-accuracy).
+
+\setlength\parskip{5ex} Seguidamente se muestra una tabla resumen con el
+valor óptimo del hyper parámtero \texttt{mtry} para cada tipo de alisado
+de cada empresa. Además se incluye en la tabla el valor de
+\emph{accuracy} obtenido con cada modelo sobre la muestra de validación
+utilizando el parámetro óptimo \texttt{mtry} para cada tipo de alisado.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{load}\NormalTok{(}\StringTok{"C:/Users/i0386388/Desktop/tesis/mtry_errors_datasplit.RData"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#KO}
+
+\NormalTok{a<-}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{mtry1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_KO_30_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_KO_30_1m_target_feature))[}\DecValTok{1}\NormalTok{],}
+                                    \KeywordTok{which}\NormalTok{(errors_KO_60_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_KO_60_1m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_KO_90_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_KO_90_1m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_KO_fun_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_KO_fun_1m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{])),}
+              \DataTypeTok{accuracy1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_KO_30_1m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_KO_60_1m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_KO_90_1m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_KO_fun_1m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{)),}
+              
+              
+              \DataTypeTok{mtry2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_KO_30_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_KO_30_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                    \KeywordTok{which}\NormalTok{(errors_KO_60_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_KO_60_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_KO_90_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_KO_90_2m_target_feature))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_KO_fun_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_KO_fun_2m_target_feature))[}\DecValTok{1}\NormalTok{])),}
+              
+                 \DataTypeTok{accuracy2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_KO_30_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_KO_60_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_KO_90_2m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_KO_fun_2m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{)),}
+              
+              
+              \DataTypeTok{mtry3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_KO_30_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_KO_30_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                    \KeywordTok{which}\NormalTok{(errors_KO_60_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_KO_60_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_KO_90_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_KO_90_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_KO_fun_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_KO_fun_3m_target_feature))[}\DecValTok{1}\NormalTok{])),}
+              
+              \DataTypeTok{accuracy3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_KO_30_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_KO_60_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_KO_90_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_KO_fun_3m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{))}
+              
+\NormalTok{              ) }
+
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"EMA30"}\NormalTok{,}\StringTok{"EMA60"}\NormalTok{,}\StringTok{"EMA90"}\NormalTok{,}\StringTok{"Alisado exponencial"}\NormalTok{)}
+
+\KeywordTok{kable}\NormalTok{(a, }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }\StringTok{"Predicción 1 mes"}\NormalTok{ =}\StringTok{ }\DecValTok{2}\NormalTok{, }\StringTok{"Predicción 2 meses"}\NormalTok{ =}\StringTok{ }\DecValTok{2}\NormalTok{,}\StringTok{"Predicción 3 meses"}\NormalTok{=}\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|r|r|r|r|r}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{2}{|c|}{Predicción 1 mes} & \multicolumn{2}{|c|}{Predicción 2 meses} & \multicolumn{2}{|c}{Predicción 3 meses} \\
+\cline{2-3} \cline{4-5} \cline{6-7}
+  & mtry1m & accuracy1m & mtry2m & accuracy2m & mtry3m & accuracy3m\\
+\hline
+EMA30 & 13 & 63.09524 & 2 & 54.76190 & 2 & 60.71429\\
+\hline
+EMA60 & 2 & 63.49206 & 2 & 56.34921 & 2 & 49.60317\\
+\hline
+EMA90 & 2 & 58.33333 & 4 & 75.00000 & 2 & 67.46032\\
+\hline
+Alisado exponencial & 2 & 63.09524 & 16 & 66.26984 & 3 & 63.49206\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+
+\captionof{table}{Coca Cola CO.: valores optimizados para mtry y accuracy obtenida}
+
+\setlength\parskip{5ex}
+
+Como se puede observar para la empresa Coca-Cola CO. el mejor resultado,
+es decir la \emph{accuracy} obtenida más alta, para la predicción a 1
+mes se obtiene con el alisado correspondiente a una media móbil
+exponencial a 30 días con un valor de 63.5\%. Para la predicción a 2
+meses el mejor resultado es de 75\% de accuracy y se obtiene alisando
+los datos con una EMA de 90 días (el mejor resultado global para la
+muestra de validación). Por lo que respecta a la predicción a 3 meses el
+mejor resultado se obtiene alisando los datos con una EMA 90 días con un
+valor de 67.46\%. Para esta empresa no se aprecia un patrón de
+crecimiento de la \emph{accuracy} sino más bien unos resultados
+repartidos más o menos uniformente entre los distintos experimentos
+realizados.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#APPLE}
+
+
+\NormalTok{a<-}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{mtry1m=}\KeywordTok{c}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_AAPL_30_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AAPL_30_1m_target_feature))[}\DecValTok{1}\NormalTok{]),}
+                                    \KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_AAPL_60_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AAPL_60_1m_target_feature))[}\DecValTok{1}\NormalTok{]),}
+                                   \KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_AAPL_90_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AAPL_90_1m_target_feature))[}\DecValTok{1}\NormalTok{]),}
+                                   \KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_AAPL_fun_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AAPL_fun_1m_target_feature))[}\DecValTok{1}\NormalTok{])),}
+              \DataTypeTok{accuracy1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AAPL_30_1m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AAPL_60_1m_target_feature[}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{35}\OperatorTok{:}\DecValTok{37}\NormalTok{)]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AAPL_90_1m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AAPL_fun_1m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{)),}
+              
+              
+              \DataTypeTok{mtry2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_AAPL_30_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AAPL_30_2m_target_feature))[}\DecValTok{1}\NormalTok{],}
+                                    \KeywordTok{which}\NormalTok{(errors_AAPL_60_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AAPL_60_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_AAPL_90_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AAPL_90_2m_target_feature))[}\DecValTok{2}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_AAPL_fun_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AAPL_fun_2m_target_feature))[}\DecValTok{1}\NormalTok{])),}
+              
+                 \DataTypeTok{accuracy2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AAPL_30_2m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AAPL_60_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AAPL_90_2m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AAPL_fun_2m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{)),}
+              
+              
+              \DataTypeTok{mtry3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_AAPL_30_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AAPL_30_3m_target_feature))[}\DecValTok{1}\NormalTok{],}
+                                    \KeywordTok{which}\NormalTok{(errors_AAPL_60_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AAPL_60_3m_target_feature))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_AAPL_90_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AAPL_90_3m_target_feature))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_AAPL_fun_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AAPL_fun_3m_target_feature))[}\DecValTok{1}\NormalTok{])),}
+              
+              \DataTypeTok{accuracy3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AAPL_30_3m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AAPL_60_3m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AAPL_90_3m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AAPL_fun_3m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{))}
+              
+\NormalTok{              ) }
+
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"EMA30"}\NormalTok{,}\StringTok{"EMA60"}\NormalTok{,}\StringTok{"EMA90"}\NormalTok{,}\StringTok{"Alisado exponencial"}\NormalTok{)}
+
+\KeywordTok{kable}\NormalTok{(a, }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }\StringTok{"Predicción 1 mes"}\NormalTok{ =}\StringTok{ }\DecValTok{2}\NormalTok{, }\StringTok{"Predicción 2 meses"}\NormalTok{ =}\StringTok{ }\DecValTok{2}\NormalTok{,}\StringTok{"Predicción 3 meses"}\NormalTok{=}\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|r|r|r|r|r}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{2}{|c|}{Predicción 1 mes} & \multicolumn{2}{|c|}{Predicción 2 meses} & \multicolumn{2}{|c}{Predicción 3 meses} \\
+\cline{2-3} \cline{4-5} \cline{6-7}
+  & mtry1m & accuracy1m & mtry2m & accuracy2m & mtry3m & accuracy3m\\
+\hline
+EMA30 & 29 & 79.36508 & 11 & 67.46032 & 14 & 66.66667\\
+\hline
+EMA60 & 26 & 80.15873 & 2 & 66.66667 & 23 & 72.22222\\
+\hline
+EMA90 & 28 & 87.30159 & 2 & 69.84127 & 18 & 73.80952\\
+\hline
+Alisado exponencial & 27 & 78.96825 & 11 & 68.65079 & 11 & 63.09524\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+
+\captionof{table}{Apple Inc.: valores optimizados para mtry y accuracy obtenida}
+
+\setlength\parskip{5ex}
+
+Como se puede apreciar en la tabla 6.2, para la empresa Apple Inc. la
+situación es diferente. Se obtienen, en general, mejores resultados que
+en el caso de la empresa Coca Cola. Para la predicción a 1 mes el mejor
+resultado se obtiene con un alisado utilizando EMA de 90 días con una
+\emph{accuracy} del 87.30\%. Para la predicción hecha a 2 meses el mejor
+resultado es un 69.84\% de accuracy obtenido con un alisado EMA 90 días.
+Para el caso en el que la predicción es a 3 meses el mejor resultado es
+de un 73.81\% de \emph{accuracy} con un alisado de EMA 90 días. Es
+decir, en el caso de la empresa Apple Inc el mejor resultado global se
+obtiene prediciendo si la media móbil exponencial a 90 días del precio
+de cierre estará más alta o no a 1 meses vista. En este caso los mejores
+resultados se obtienen con una predicción hecha a 1 mes vista con los
+datos fuertemente alisados. El hecho de predecir si al cabo de un mes la
+media móbil exponencial del precio de cierre calculada con 90 días será
+más alta o no, es de ayuda para el inversor ya que significa que el
+precio de cierre al cabo de un mes será más alto. Esto se debe al hecho
+de que si la EMA 90 días será más alta al cabo de un mes significa que
+los precios de ese último mes han sido más altos.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#AMerican express}
+
+
+\NormalTok{a<-}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{mtry1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_AXP_30_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AXP_30_1m_target_feature))[}\DecValTok{1}\NormalTok{],}
+                                    \KeywordTok{which}\NormalTok{(errors_AXP_60_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AXP_60_1m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_AXP_90_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AXP_90_1m_target_feature))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_AXP_fun_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AXP_fun_1m_target_feature))[}\DecValTok{2}\NormalTok{])),}
+              \DataTypeTok{accuracy1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AXP_30_1m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AXP_60_1m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AXP_90_1m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AXP_fun_1m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{)),}
+              
+              
+              \DataTypeTok{mtry2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_AXP_30_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AXP_30_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                    \KeywordTok{which}\NormalTok{(errors_AXP_60_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AXP_60_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_AXP_90_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AXP_90_2m_target_feature))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_AXP_fun_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AXP_fun_2m_target_feature))[}\DecValTok{1}\NormalTok{])),}
+              
+                 \DataTypeTok{accuracy2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AXP_30_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AXP_60_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AXP_90_2m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AXP_fun_2m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{)),}
+              
+              
+              \DataTypeTok{mtry3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_AXP_30_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AXP_30_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                    \KeywordTok{which}\NormalTok{(errors_AXP_60_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AXP_60_3m_target_feature))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_AXP_90_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AXP_90_3m_target_feature))[}\DecValTok{2}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_AXP_fun_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_AXP_fun_3m_target_feature))[}\DecValTok{1}\NormalTok{])),}
+              
+              \DataTypeTok{accuracy3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AXP_30_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AXP_60_3m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AXP_90_3m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_AXP_fun_3m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{))}
+              
+\NormalTok{              ) }
+
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"EMA30"}\NormalTok{,}\StringTok{"EMA60"}\NormalTok{,}\StringTok{"EMA90"}\NormalTok{,}\StringTok{"Alisado exponencial"}\NormalTok{)}
+
+\KeywordTok{kable}\NormalTok{(a, }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }\StringTok{"Predicción 1 mes"}\NormalTok{ =}\StringTok{ }\DecValTok{2}\NormalTok{, }\StringTok{"Predicción 2 meses"}\NormalTok{ =}\StringTok{ }\DecValTok{2}\NormalTok{,}\StringTok{"Predicción 3 meses"}\NormalTok{=}\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|r|r|r|r|r}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{2}{|c|}{Predicción 1 mes} & \multicolumn{2}{|c|}{Predicción 2 meses} & \multicolumn{2}{|c}{Predicción 3 meses} \\
+\cline{2-3} \cline{4-5} \cline{6-7}
+  & mtry1m & accuracy1m & mtry2m & accuracy2m & mtry3m & accuracy3m\\
+\hline
+EMA30 & 9 & 79.76190 & 2 & 53.96825 & 2 & 63.88889\\
+\hline
+EMA60 & 2 & 73.80952 & 2 & 54.36508 & 5 & 76.19048\\
+\hline
+EMA90 & 10 & 74.60317 & 31 & 57.93651 & 2 & 80.15873\\
+\hline
+Alisado exponencial & 2 & 79.76190 & 3 & 59.92063 & 4 & 77.38095\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+
+\captionof{table}{American Express CO.: valores optimizados para mtry y accuracy obtenida}
+
+\setlength\parskip{5ex}
+
+Los resultados obtenidos para la empresa American Express CO. son
+globalmente mejores en los casos en los que la predicción está hecha
+para el siguiente mes y para al cabo de 3 meses. Para el caso en el que
+la predicción se hace a 1 mes, el mejor resultado obtenido es de 79.76\%
+de \emph{accuracy} en la muestra de validación y se corresponde a un
+alisado de los datos utilizando la fórmula del alisado exponencial. A su
+vez se obtiene el mismo resultado con los datos alisados mediante una
+media móbil exponencial de 30 días. Para el caso en el que la predicción
+se hace a 2 meses el mejor resultado que se obtiene es de 59.92\% de
+\emph{accuracy} en el caso de alisar los datos con la fórmula del
+alisado exponencial. Este resultado es ligeramente superior al que se
+obtendría con una predicción aleatória (50\%). El resultado que se
+obtiene en el caso de la predicción hecha a 3 meses ya que en el mejor
+de los casos, cuando se alisan los datos con una media móbil exponencial
+de 90 días, es de 80.16\% de \emph{accuracy} (mejor resultado global).
+Esto significa que, para esta empresa, la mejor clasificación se obtiene
+prediciendo si la EMA 90 días será más alta o no al cabo de 3 meses. En
+esencia, este caso de predicción representa que se está analizando si el
+incremento de los precios ha hecho que la media móbil exponencial haya
+subido los últimos 3 meses.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#wells fargo}
+
+
+\NormalTok{a<-}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{mtry1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_WFC_30_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_WFC_30_1m_target_feature))[}\DecValTok{1}\NormalTok{],}
+                                    \KeywordTok{which}\NormalTok{(errors_WFC_60_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_WFC_60_1m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_WFC_90_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_WFC_90_1m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_WFC_fun_1m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_WFC_fun_1m_target_feature))[}\DecValTok{1}\NormalTok{])),}
+              \DataTypeTok{accuracy1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_WFC_30_1m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_WFC_60_1m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_WFC_90_1m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_WFC_fun_1m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{)),}
+              
+              
+              \DataTypeTok{mtry2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_WFC_30_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_WFC_30_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                    \KeywordTok{which}\NormalTok{(errors_WFC_60_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_WFC_60_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_WFC_90_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_WFC_90_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_WFC_fun_2m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_WFC_fun_2m_target_feature))[}\DecValTok{1}\NormalTok{])),}
+              
+                 \DataTypeTok{accuracy2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_WFC_30_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_WFC_60_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_WFC_90_2m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_WFC_fun_2m_target_feature))}\OperatorTok{*}\DecValTok{100}\NormalTok{)),}
+              
+              
+              \DataTypeTok{mtry3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{which}\NormalTok{(errors_WFC_30_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_WFC_30_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                    \KeywordTok{which}\NormalTok{(errors_WFC_60_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_WFC_60_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_WFC_90_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_WFC_90_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{],}
+                                   \KeywordTok{which}\NormalTok{(errors_WFC_fun_3m_target_feature}\OperatorTok{==}\KeywordTok{min}\NormalTok{(errors_WFC_fun_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))[}\DecValTok{1}\NormalTok{])),}
+              
+              \DataTypeTok{accuracy3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{((}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_WFC_30_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_WFC_60_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_WFC_90_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}
+\NormalTok{                                    (}\DecValTok{1}\OperatorTok{-}\KeywordTok{min}\NormalTok{(errors_WFC_fun_3m_target_feature[}\OperatorTok{-}\DecValTok{1}\NormalTok{]))}\OperatorTok{*}\DecValTok{100}\NormalTok{))}
+              
+\NormalTok{              ) }
+
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"EMA30"}\NormalTok{,}\StringTok{"EMA60"}\NormalTok{,}\StringTok{"EMA90"}\NormalTok{,}\StringTok{"Alisado exponencial"}\NormalTok{)}
+
+\KeywordTok{kable}\NormalTok{(a, }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }\StringTok{"Predicción 1 mes"}\NormalTok{ =}\StringTok{ }\DecValTok{2}\NormalTok{, }\StringTok{"Predicción 2 meses"}\NormalTok{ =}\StringTok{ }\DecValTok{2}\NormalTok{,}\StringTok{"Predicción 3 meses"}\NormalTok{=}\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|r|r|r|r|r}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{2}{|c|}{Predicción 1 mes} & \multicolumn{2}{|c|}{Predicción 2 meses} & \multicolumn{2}{|c}{Predicción 3 meses} \\
+\cline{2-3} \cline{4-5} \cline{6-7}
+  & mtry1m & accuracy1m & mtry2m & accuracy2m & mtry3m & accuracy3m\\
+\hline
+EMA30 & 4 & 67.85714 & 2 & 50.00000 & 2 & 41.66667\\
+\hline
+EMA60 & 3 & 64.68254 & 2 & 50.39683 & 2 & 54.36508\\
+\hline
+EMA90 & 3 & 65.87302 & 2 & 55.15873 & 13 & 64.28571\\
+\hline
+Alisado exponencial & 4 & 69.84127 & 3 & 58.33333 & 3 & 55.95238\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+
+\captionof{table}{Wells Fargo and CO.: valores optimizados para mtry y accuracy obtenida}
+
+\setlength\parskip{5ex} En el caso de Wells Fargo \& CO. los resultados
+sobre la muestra de validación se pueden observar en la tabla 6.4. Son,
+en general, peores que los resultados obtenidos con la empresa Apple
+Inc. y American Express CO.. Para la predicción hecha a 1 mes el mejor
+resultado se obtiene utilizando la fórmula de alisado exponencial (2)
+con una \emph{accuracy} de 69.84\% (mejor resultado global para esta
+empresa). Esto significa que sobre la muestra de validación
+aproximadamente el 70\% de los casos queda bien clasificado. En el caso
+de la predicción a 2 meses el mejor resultado obtenido es de 58.33\% de
+\emph{accuracy} obtenido alisando los datos con la fórmula de alisado
+exponencial (2). El mejor resultadao cuando la predicción se hace a 3
+meses vista es del 64.28\% de \emph{accuracy}.
+
+\emph{Resultados sobre muestra test}
+
+Una vez optimizados los valores del hyper parámetro \texttt{mtry} se
+entrenan los modelos con las muestras de entrenamiento + validación con
+el objetivo de testar el modelo con los datos de test. En total se
+construyen 48 modelos: 4 por cada tipo de variable respuesta y, a su
+vez, 4 por cada empresa. En las tablas siguientes se muestran los
+valores de \emph{accuracy}, \emph{sensitivity} y \emph{specificity} de
+los distintos modelos sobre los datos test.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{load}\NormalTok{(}\StringTok{"C:/Users/i0386388/Desktop/tesis/datasplit_testmodels.RData"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{CM_KO_30_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_KO_30_1m_target_feature,test_KO_30_1m_target_feature),test_KO_30_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_KO_60_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_KO_60_1m_target_feature,test_KO_60_1m_target_feature),test_KO_60_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_KO_90_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_KO_90_1m_target_feature,test_KO_90_1m_target_feature),test_KO_90_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_KO_fun_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_KO_fun_1m_target_feature,test_KO_fun_1m_target_feature),test_KO_fun_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+
+
+\NormalTok{CM_KO_30_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_KO_30_2m_target_feature,test_KO_30_2m_target_feature),test_KO_30_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_KO_60_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_KO_60_2m_target_feature,test_KO_60_2m_target_feature),test_KO_60_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_KO_90_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_KO_90_2m_target_feature,test_KO_90_2m_target_feature),test_KO_90_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_KO_fun_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_KO_fun_2m_target_feature,test_KO_fun_2m_target_feature),test_KO_fun_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+
+\NormalTok{CM_KO_30_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_KO_30_3m_target_feature,test_KO_30_3m_target_feature),test_KO_30_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_KO_60_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_KO_60_3m_target_feature,test_KO_60_3m_target_feature),test_KO_60_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_KO_90_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_KO_90_3m_target_feature,test_KO_90_3m_target_feature),test_KO_90_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_KO_fun_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_KO_fun_3m_target_feature,test_KO_fun_3m_target_feature),test_KO_fun_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+
+
+\NormalTok{a<-}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{acc1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_KO_30_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_60_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_KO_90_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_KO_fun_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{sensi1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_KO_30_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_60_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_90_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_fun_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{speci1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_KO_30_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_60_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_90_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_fun_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              
+              \DataTypeTok{acc2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_KO_30_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_60_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_KO_90_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_KO_fun_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{sensi2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_KO_30_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_60_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_90_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_fun_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{speci2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_KO_30_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_60_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_90_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_fun_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              
+              \DataTypeTok{acc3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_KO_30_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_60_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_KO_90_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_KO_fun_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{sensi3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_KO_30_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_60_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_90_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_fun_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{speci3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_KO_30_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_60_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_90_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_KO_fun_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{)))}
+              
+              
+              
+\NormalTok{              ) }
+
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"EMA30"}\NormalTok{,}\StringTok{"EMA60"}\NormalTok{,}\StringTok{"EMA90"}\NormalTok{,}\StringTok{"Alisado exponencial"}\NormalTok{)}
+
+\NormalTok{ConfusionKO<-a}
+\NormalTok{ConfusionKO<-ConfusionKO[,}\KeywordTok{grep}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{names}\NormalTok{(ConfusionKO), }\DataTypeTok{pattern=}\StringTok{"acc"}\NormalTok{)]}
+
+\KeywordTok{kable}\NormalTok{(a, }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }\StringTok{"Predicción 1 mes"}\NormalTok{ =}\StringTok{ }\DecValTok{3}\NormalTok{, }\StringTok{"Predicción 2 meses"}\NormalTok{ =}\StringTok{ }\DecValTok{3}\NormalTok{,}\StringTok{"Predicción 3 meses"}\NormalTok{=}\DecValTok{3}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|r|r|r|r|r|r|r|r}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{3}{|c|}{Predicción 1 mes} & \multicolumn{3}{|c|}{Predicción 2 meses} & \multicolumn{3}{|c}{Predicción 3 meses} \\
+\cline{2-4} \cline{5-7} \cline{8-10}
+  & acc1m & sensi1m & speci1m & acc2m & sensi2m & speci2m & acc3m & sensi3m & speci3m\\
+\hline
+EMA30 & 41.16 & 95.21 & 17.61 & 45.12 & 94.17 & 27.86 & 58.05 & 98.17 & 44.88\\
+\hline
+EMA60 & 64.45 & 86.51 & 56.62 & 77.66 & 91.67 & 73.37 & 75.51 & 85.71 & 72.04\\
+\hline
+EMA90 & 84.20 & 92.56 & 81.39 & 65.08 & 93.28 & 55.26 & 69.84 & 91.53 & 61.92\\
+\hline
+Alisado exponencial & 48.65 & 90.91 & 32.66 & 43.60 & 93.86 & 27.09 & 66.44 & 89.09 & 58.91\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+
+\captionof{table}{Coca Cola CO.: Metricas de rendimiento sobre muestra test}
+
+\setlength\parskip{5ex}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{CM_AAPL_30_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AAPL_30_1m_target_feature,test_AAPL_30_1m_target_feature),test_AAPL_30_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AAPL_60_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AAPL_60_1m_target_feature,test_AAPL_60_1m_target_feature),test_AAPL_60_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AAPL_90_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AAPL_90_1m_target_feature,test_AAPL_90_1m_target_feature),test_AAPL_90_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AAPL_fun_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AAPL_fun_1m_target_feature,test_AAPL_fun_1m_target_feature),test_AAPL_fun_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+
+
+\NormalTok{CM_AAPL_30_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AAPL_30_2m_target_feature,test_AAPL_30_2m_target_feature),test_AAPL_30_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AAPL_60_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AAPL_60_2m_target_feature,test_AAPL_60_2m_target_feature),test_AAPL_60_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AAPL_90_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AAPL_90_2m_target_feature,test_AAPL_90_2m_target_feature),test_AAPL_90_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AAPL_fun_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AAPL_fun_2m_target_feature,test_AAPL_fun_2m_target_feature),test_AAPL_fun_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+
+\NormalTok{CM_AAPL_30_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AAPL_30_3m_target_feature,test_AAPL_30_3m_target_feature),test_AAPL_30_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AAPL_60_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AAPL_60_3m_target_feature,test_AAPL_60_3m_target_feature),test_AAPL_60_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AAPL_90_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AAPL_90_3m_target_feature,test_AAPL_90_3m_target_feature),test_AAPL_90_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AAPL_fun_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AAPL_fun_3m_target_feature,test_AAPL_fun_3m_target_feature),test_AAPL_fun_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+
+
+\NormalTok{a<-}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{acc1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AAPL_30_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_60_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_AAPL_90_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_AAPL_fun_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{sensi1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AAPL_30_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_60_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_90_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_fun_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{speci1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AAPL_30_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_60_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_90_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_fun_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              
+              \DataTypeTok{acc2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AAPL_30_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_60_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_AAPL_90_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_AAPL_fun_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{sensi2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AAPL_30_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_60_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_90_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_fun_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{speci2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AAPL_30_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_60_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_90_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_fun_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              
+              \DataTypeTok{acc3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AAPL_30_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_60_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_AAPL_90_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_AAPL_fun_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{sensi3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AAPL_30_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_60_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_90_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_fun_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{speci3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AAPL_30_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_60_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_90_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AAPL_fun_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{)))}
+              
+              
+              
+\NormalTok{              ) }
+
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"EMA30"}\NormalTok{,}\StringTok{"EMA60"}\NormalTok{,}\StringTok{"EMA90"}\NormalTok{,}\StringTok{"Alisado exponencial"}\NormalTok{)}
+\NormalTok{ConfusionAAPL<-a}
+\NormalTok{ConfusionAAPL<-ConfusionAAPL[,}\KeywordTok{grep}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{names}\NormalTok{(ConfusionAAPL), }\DataTypeTok{pattern=}\StringTok{"acc"}\NormalTok{)]}
+
+
+\KeywordTok{kable}\NormalTok{(a, }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }\StringTok{"Predicción 1 mes"}\NormalTok{ =}\StringTok{ }\DecValTok{3}\NormalTok{, }\StringTok{"Predicción 2 meses"}\NormalTok{ =}\StringTok{ }\DecValTok{3}\NormalTok{,}\StringTok{"Predicción 3 meses"}\NormalTok{=}\DecValTok{3}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|r|r|r|r|r|r|r|r}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{3}{|c|}{Predicción 1 mes} & \multicolumn{3}{|c|}{Predicción 2 meses} & \multicolumn{3}{|c}{Predicción 3 meses} \\
+\cline{2-4} \cline{5-7} \cline{8-10}
+  & acc1m & sensi1m & speci1m & acc2m & sensi2m & speci2m & acc3m & sensi3m & speci3m\\
+\hline
+EMA30 & 67.15 & 60.16 & 69.69 & 51.41 & 42.05 & 53.62 & 18.37 & 100.00 & 9.09\\
+\hline
+EMA60 & 64.86 & 77.17 & 61.95 & 55.31 & 61.54 & 54.94 & 59.64 & 13.04 & 62.20\\
+\hline
+EMA90 & 74.22 & 63.27 & 75.46 & 63.99 & 27.27 & 65.83 & 19.50 & 100.00 & 16.86\\
+\hline
+Alisado exponencial & 54.26 & 56.78 & 53.44 & 52.28 & 97.10 & 44.39 & 41.72 & 62.50 & 39.65\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+
+\captionof{table}{Apple Inc.: Metricas de rendimiento sobre muestra test}
+
+\setlength\parskip{5ex}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{CM_AXP_30_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AXP_30_1m_target_feature,test_AXP_30_1m_target_feature),test_AXP_30_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AXP_60_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AXP_60_1m_target_feature,test_AXP_60_1m_target_feature),test_AXP_60_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AXP_90_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AXP_90_1m_target_feature,test_AXP_90_1m_target_feature),test_AXP_90_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AXP_fun_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AXP_fun_1m_target_feature,test_AXP_fun_1m_target_feature),test_AXP_fun_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+
+
+\NormalTok{CM_AXP_30_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AXP_30_2m_target_feature,test_AXP_30_2m_target_feature),test_AXP_30_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AXP_60_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AXP_60_2m_target_feature,test_AXP_60_2m_target_feature),test_AXP_60_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AXP_90_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AXP_90_2m_target_feature,test_AXP_90_2m_target_feature),test_AXP_90_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AXP_fun_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AXP_fun_2m_target_feature,test_AXP_fun_2m_target_feature),test_AXP_fun_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+
+\NormalTok{CM_AXP_30_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AXP_30_3m_target_feature,test_AXP_30_3m_target_feature),test_AXP_30_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AXP_60_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AXP_60_3m_target_feature,test_AXP_60_3m_target_feature),test_AXP_60_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AXP_90_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AXP_90_3m_target_feature,test_AXP_90_3m_target_feature),test_AXP_90_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_AXP_fun_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_AXP_fun_3m_target_feature,test_AXP_fun_3m_target_feature),test_AXP_fun_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+
+
+
+\NormalTok{a<-}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{acc1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AXP_30_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_60_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_AXP_90_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_AXP_fun_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{sensi1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AXP_30_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_60_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_90_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_fun_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{speci1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AXP_30_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_60_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_90_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_fun_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              
+              \DataTypeTok{acc2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AXP_30_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_60_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_AXP_90_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_AXP_fun_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{sensi2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AXP_30_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_60_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_90_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_fun_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{speci2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AXP_30_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_60_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_90_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_fun_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              
+              \DataTypeTok{acc3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AXP_30_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_60_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_AXP_90_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_AXP_fun_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{sensi3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AXP_30_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_60_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_90_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_fun_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{speci3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_AXP_30_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_60_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_90_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_AXP_fun_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{)))}
+              
+              
+              
+\NormalTok{              ) }
+
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"EMA30"}\NormalTok{,}\StringTok{"EMA60"}\NormalTok{,}\StringTok{"EMA90"}\NormalTok{,}\StringTok{"Alisado exponencial"}\NormalTok{)}
+
+\NormalTok{ConfusionAXP<-a}
+\NormalTok{ConfusionAXP<-ConfusionAXP[,}\KeywordTok{grep}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{names}\NormalTok{(ConfusionAXP), }\DataTypeTok{pattern=}\StringTok{"acc"}\NormalTok{)]}
+
+
+\KeywordTok{kable}\NormalTok{(a, }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }\StringTok{"Predicción 1 mes"}\NormalTok{ =}\StringTok{ }\DecValTok{3}\NormalTok{, }\StringTok{"Predicción 2 meses"}\NormalTok{ =}\StringTok{ }\DecValTok{3}\NormalTok{,}\StringTok{"Predicción 3 meses"}\NormalTok{=}\DecValTok{3}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|r|r|r|r|r|r|r|r}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{3}{|c|}{Predicción 1 mes} & \multicolumn{3}{|c|}{Predicción 2 meses} & \multicolumn{3}{|c}{Predicción 3 meses} \\
+\cline{2-4} \cline{5-7} \cline{8-10}
+  & acc1m & sensi1m & speci1m & acc2m & sensi2m & speci2m & acc3m & sensi3m & speci3m\\
+\hline
+EMA30 & 54.26 & 89.23 & 41.31 & 54.88 & 97.20 & 42.09 & 50.79 & 68.33 & 48.03\\
+\hline
+EMA60 & 70.27 & 91.46 & 65.91 & 58.57 & 97.78 & 54.33 & 53.51 & 31.25 & 55.26\\
+\hline
+EMA90 & 70.27 & 96.97 & 68.30 & 59.65 & 100.00 & 56.84 & 66.67 & 0.00 & 68.69\\
+\hline
+Alisado exponencial & 66.53 & 83.33 & 60.94 & 47.29 & 100.00 & 36.55 & 47.62 & 72.55 & 44.36\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+
+\captionof{table}{American Express CO.: Metricas de rendimiento sobre muestra test}
+
+\setlength\parskip{5ex}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{CM_WFC_30_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_WFC_30_1m_target_feature,test_WFC_30_1m_target_feature),test_WFC_30_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_WFC_60_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_WFC_60_1m_target_feature,test_WFC_60_1m_target_feature),test_WFC_60_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_WFC_90_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_WFC_90_1m_target_feature,test_WFC_90_1m_target_feature),test_WFC_90_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_WFC_fun_1m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_WFC_fun_1m_target_feature,test_WFC_fun_1m_target_feature),test_WFC_fun_1m_target_feature}\OperatorTok{$}\NormalTok{target)}
+
+
+\NormalTok{CM_WFC_30_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_WFC_30_2m_target_feature,test_WFC_30_2m_target_feature),test_WFC_30_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_WFC_60_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_WFC_60_2m_target_feature,test_WFC_60_2m_target_feature),test_WFC_60_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_WFC_90_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_WFC_90_2m_target_feature,test_WFC_90_2m_target_feature),test_WFC_90_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_WFC_fun_2m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_WFC_fun_2m_target_feature,test_WFC_fun_2m_target_feature),test_WFC_fun_2m_target_feature}\OperatorTok{$}\NormalTok{target)}
+
+\NormalTok{CM_WFC_30_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_WFC_30_3m_target_feature,test_WFC_30_3m_target_feature),test_WFC_30_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_WFC_60_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_WFC_60_3m_target_feature,test_WFC_60_3m_target_feature),test_WFC_60_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_WFC_90_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_WFC_90_3m_target_feature,test_WFC_90_3m_target_feature),test_WFC_90_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+\NormalTok{CM_WFC_fun_3m<-}\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{predict}\NormalTok{(model_WFC_fun_3m_target_feature,test_WFC_fun_3m_target_feature),test_WFC_fun_3m_target_feature}\OperatorTok{$}\NormalTok{target)}
+
+\NormalTok{a<-}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{acc1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_WFC_30_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_60_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_WFC_90_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_WFC_fun_1m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{sensi1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_WFC_30_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_60_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_90_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_fun_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{speci1m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_WFC_30_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_60_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_90_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_fun_1m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              
+              \DataTypeTok{acc2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_WFC_30_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_60_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_WFC_90_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_WFC_fun_2m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{sensi2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_WFC_30_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_60_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_90_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_fun_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{speci2m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_WFC_30_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_60_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_90_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_fun_2m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              
+              \DataTypeTok{acc3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_WFC_30_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_60_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_WFC_90_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                   \KeywordTok{round}\NormalTok{(CM_WFC_fun_3m}\OperatorTok{$}\NormalTok{overall[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{sensi3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_WFC_30_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_60_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_90_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_fun_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{))),}
+              \DataTypeTok{speci3m=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{round}\NormalTok{(CM_WFC_30_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_60_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_90_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{),}
+                                    \KeywordTok{round}\NormalTok{(CM_WFC_fun_3m}\OperatorTok{$}\NormalTok{byClass[}\DecValTok{2}\NormalTok{]}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{)))}
+              
+              
+              
+\NormalTok{              ) }
+
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"EMA30"}\NormalTok{,}\StringTok{"EMA60"}\NormalTok{,}\StringTok{"EMA90"}\NormalTok{,}\StringTok{"Alisado exponencial"}\NormalTok{)}
+
+\NormalTok{ConfusionWFC<-a}
+\NormalTok{ConfusionWFC<-ConfusionWFC[,}\KeywordTok{grep}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{names}\NormalTok{(ConfusionWFC), }\DataTypeTok{pattern=}\StringTok{"acc"}\NormalTok{)]}
+
+
+\KeywordTok{kable}\NormalTok{(a, }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }\StringTok{"Predicción 1 mes"}\NormalTok{ =}\StringTok{ }\DecValTok{3}\NormalTok{, }\StringTok{"Predicción 2 meses"}\NormalTok{ =}\StringTok{ }\DecValTok{3}\NormalTok{,}\StringTok{"Predicción 3 meses"}\NormalTok{=}\DecValTok{3}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|r|r|r|r|r|r|r|r}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{3}{|c|}{Predicción 1 mes} & \multicolumn{3}{|c|}{Predicción 2 meses} & \multicolumn{3}{|c}{Predicción 3 meses} \\
+\cline{2-4} \cline{5-7} \cline{8-10}
+  & acc1m & sensi1m & speci1m & acc2m & sensi2m & speci2m & acc3m & sensi3m & speci3m\\
+\hline
+EMA30 & 67.98 & 68.38 & 67.61 & 68.55 & 71.30 & 65.80 & 62.13 & 77.48 & 39.66\\
+\hline
+EMA60 & 69.85 & 65.96 & 73.58 & 63.99 & 53.50 & 75.69 & 63.27 & 68.16 & 57.14\\
+\hline
+EMA90 & 78.38 & 77.08 & 79.82 & 67.25 & 60.82 & 74.54 & 65.99 & 80.93 & 48.78\\
+\hline
+Alisado exponencial & 67.98 & 57.87 & 77.64 & 71.58 & 72.29 & 70.87 & 59.64 & 87.01 & 22.46\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+
+\captionof{table}{Wells and Fargo CO.: Metricas de rendimiento sobre muestra test}
+
+\setlength\parskip{5ex}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#poner el heatmap en el markdown a modo de report useful para hacer investment}
+\NormalTok{acc.heatmap<-ConfusionKO }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(ConfusionAAPL)}\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(ConfusionAXP)}\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(ConfusionWFC)}
+
+\KeywordTok{rownames}\NormalTok{(acc.heatmap)<-}\KeywordTok{apply}\NormalTok{(}\KeywordTok{expand.grid}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"EMA30"}\NormalTok{,}\StringTok{"EMA60"}\NormalTok{,}\StringTok{"EMA90"}\NormalTok{,}\StringTok{"smooth f"}\NormalTok{), }\KeywordTok{c}\NormalTok{(}\StringTok{"KO"}\NormalTok{, }\StringTok{"AAPL"}\NormalTok{, }\StringTok{"AXP"}\NormalTok{, }\StringTok{"WFC"}\NormalTok{)), }\DecValTok{1}\NormalTok{, paste, }\DataTypeTok{collapse=}\StringTok{"."}\NormalTok{)}
+
+\NormalTok{acc.heatmap}\OperatorTok{$}\NormalTok{comb<-}\KeywordTok{rownames}\NormalTok{(acc.heatmap);}\KeywordTok{rownames}\NormalTok{(acc.heatmap)<-}\OtherTok{NULL}\NormalTok{;acc.heatmap}\OperatorTok{$}\NormalTok{comb<-}\KeywordTok{rep}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"EMA30"}\NormalTok{,}\StringTok{"EMA60"}\NormalTok{,}\StringTok{"EMA90"}\NormalTok{,}\StringTok{"smooth f"}\NormalTok{),}\DecValTok{4}\NormalTok{)}
+
+\NormalTok{stock.heatmap <-}\StringTok{ }\NormalTok{acc.heatmap }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select}\NormalTok{(comb,acc1m,acc2m,acc3m)}\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{gather}\NormalTok{(}\StringTok{"forecast.window"}\NormalTok{,}\StringTok{"test.acc"}\NormalTok{, }\DecValTok{2}\OperatorTok{:}\DecValTok{4}\NormalTok{) }\OperatorTok{%>%}\StringTok{          }
+\StringTok{  }\KeywordTok{cbind}\NormalTok{(}\DataTypeTok{company=}\KeywordTok{rep}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"KO"}\NormalTok{,}\StringTok{"AAPL"}\NormalTok{,}\StringTok{"AXP"}\NormalTok{,}\StringTok{"WFC"}\NormalTok{),}\DataTypeTok{each=}\DecValTok{4}\NormalTok{),}
+        \DataTypeTok{test.acc.label=}\KeywordTok{as.character}\NormalTok{(.}\OperatorTok{$}\NormalTok{test.acc)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ comb, }\DataTypeTok{y =}\NormalTok{ forecast.window,}\DataTypeTok{fill =}\NormalTok{ test.acc)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_tile}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_text}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{label=}\NormalTok{test.acc.label))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"Smooth type"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_grid}\NormalTok{(}\OperatorTok{~}\StringTok{ }\NormalTok{company, }\DataTypeTok{switch =} \StringTok{"x"}\NormalTok{, }\DataTypeTok{scales =} \StringTok{"free_x"}\NormalTok{, }\DataTypeTok{space =} \StringTok{"free_x"}\NormalTok{)}\OperatorTok{+}
+\KeywordTok{scale_fill_gradient2}\NormalTok{(}\StringTok{'test.acc'}\NormalTok{, }\DataTypeTok{low =} \StringTok{"blue"}\NormalTok{, }\DataTypeTok{mid =} \StringTok{"white"}\NormalTok{, }\DataTypeTok{high =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{midpoint =} \DecValTok{50}\NormalTok{)}\OperatorTok{+}
+\KeywordTok{theme_bw}\NormalTok{()}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}
+    \DataTypeTok{axis.text.x =} \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{angle=}\DecValTok{90}\NormalTok{, }\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{ )}
+\NormalTok{  )}
+
+\NormalTok{stock.heatmap}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{modelling_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#https://jcoliver.github.io/learn-r/006-heatmaps.html}
+\end{Highlighting}
+\end{Shaded}
+
+PONER LAS TABLAS CON LA MEDIA DE ACCURACY OBTENIDA ENTRE TODOS LOS
+ALISADOS. CREAR REGLA: SI COMO MINIMO 3 ALISADOS DICEN QUE SUBIRA, ES
+MAS ROBUSTO\ldots{}
+
+\emph{Importancia de las variables} A la hora de construir los árboles
+que conforman el bosque aleatorio ciertas variables son más importantes
+que otras. Éstas son las variables que consiguen partir mejor la base de
+datos, es decir, son las que consiguen que los nodos hijos sean los más
+puros posibles. En otras palabras: las variables más importantes a la
+hora de crear las particiones son aquellas que consiguen una mayor
+reducción de la impureza. En este sentido en las tablas siguientes se
+muestran las 4 variables más importantes para cada modelo construido con
+un alisado distinto. Dichas variables estan ordenadas de mayor a menor
+decrecimiento medio en la medida de impureza de Gini {[}@RF{]}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a<-}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Var1=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_KO_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_KO_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var1.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_KO_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_KO_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{                    )),}
+              \DataTypeTok{Var2=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_KO_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_KO_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var2.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_KO_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_KO_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{                    )),}
+              \DataTypeTok{Var3=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_KO_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_KO_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var3.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_KO_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_KO_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{]}
+\NormalTok{                    )),}
+              \DataTypeTok{Var4=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_KO_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_KO_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var4.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_KO_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_KO_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_KO_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{]}
+\NormalTok{                    ))}
+\NormalTok{              )}
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"EMA30 + target 1mes"}\NormalTok{,}\StringTok{"EMA30 + target 2mes"}\NormalTok{,}\StringTok{"EMA30 + target 3mes"}\NormalTok{,}
+               \StringTok{"EMA60 + target 1mes"}\NormalTok{,}\StringTok{"EMA60 + target 2mes"}\NormalTok{,}\StringTok{"EMA60 + target 3mes"}\NormalTok{,}
+               \StringTok{"EMA90 + target 1mes"}\NormalTok{,}\StringTok{"EMA90 + target 2mes"}\NormalTok{,}\StringTok{"EMA90 + target 3mes"}\NormalTok{)}
+
+\KeywordTok{kable}\NormalTok{(a, }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }\StringTok{"Variables ordenadas de mayor a menor importancia de izq. a dcha."}\NormalTok{ =}\StringTok{ }\DecValTok{8}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|l|r|l|r|l|r|l}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{8}{|c}{Variables ordenadas de mayor a menor importancia de izq. a dcha.} \\
+\cline{2-9}
+  & Var1 & Var1.n & Var2 & Var2.n & Var3 & Var3.n & Var4 & Var4.n\\
+\hline
+EMA30 + target 1mes & 210.17236 & ROC1 & 161.98600 & mom1 & 150.57163 & wAD & 146.11927 & atr\\
+\hline
+EMA30 + target 2mes & 127.77545 & atr & 121.04040 & sma10 & 118.66516 & wAD & 113.56721 & OBV\\
+\hline
+EMA30 + target 3mes & 141.33800 & atr & 125.01709 & wAD & 122.34676 & sma10 & 121.82152 & tr\\
+\hline
+EMA60 + target 1mes & 113.69941 & ROC1 & 102.59613 & mom1 & 96.56371 & mom2 & 85.95530 & mom4\\
+\hline
+EMA60 + target 2mes & 94.68379 & wAD & 91.55005 & sma10 & 90.65286 & atr & 85.77600 & OBV\\
+\hline
+EMA60 + target 3mes & 106.37693 & wAD & 104.92131 & OBV & 104.06340 & atr & 99.49582 & sma10\\
+\hline
+EMA90 + target 1mes & 104.72720 & ROC1 & 96.25954 & mom2 & 95.08068 & mom1 & 92.52522 & mom3\\
+\hline
+EMA90 + target 2mes & 113.73057 & ROC1 & 102.42608 & mom1 & 101.54729 & sma10 & 101.16146 & wAD\\
+\hline
+EMA90 + target 3mes & 101.19810 & sma10 & 99.34100 & wAD & 93.82961 & OBV & 85.61232 & atr\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# sort(model_KO_30_1m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_KO_30_2m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_KO_30_3m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# }
+\CommentTok{# sort(model_KO_60_1m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_KO_60_2m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_KO_60_3m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# }
+\CommentTok{# sort(model_KO_90_1m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_KO_90_2m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_KO_90_3m_target_feature$importance[,1],decreasing = T)[1:5]}
+\end{Highlighting}
+\end{Shaded}
+
+\captionof{table}{Coca Cola CO.: Importancia de las variables en los modelos Random Forest}
+
+\setlength\parskip{5ex}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a<-}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Var1=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AAPL_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AAPL_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var1.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AAPL_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AAPL_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{                    )),}
+              \DataTypeTok{Var2=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AAPL_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AAPL_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var2.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AAPL_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AAPL_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{                    )),}
+              \DataTypeTok{Var3=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AAPL_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AAPL_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var3.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AAPL_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AAPL_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{]}
+\NormalTok{                    )),}
+              \DataTypeTok{Var4=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AAPL_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AAPL_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var4.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AAPL_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AAPL_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AAPL_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{]}
+\NormalTok{                    ))}
+\NormalTok{              )}
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"EMA30 + target 1mes"}\NormalTok{,}\StringTok{"EMA30 + target 2mes"}\NormalTok{,}\StringTok{"EMA30 + target 3mes"}\NormalTok{,}
+               \StringTok{"EMA60 + target 1mes"}\NormalTok{,}\StringTok{"EMA60 + target 2mes"}\NormalTok{,}\StringTok{"EMA60 + target 3mes"}\NormalTok{,}
+               \StringTok{"EMA90 + target 1mes"}\NormalTok{,}\StringTok{"EMA90 + target 2mes"}\NormalTok{,}\StringTok{"EMA90 + target 3mes"}\NormalTok{)}
+
+\KeywordTok{kable}\NormalTok{(a, }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }\StringTok{"Variables ordenadas de mayor a menor importancia de izq. a dcha."}\NormalTok{ =}\StringTok{ }\DecValTok{8}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|l|r|l|r|l|r|l}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{8}{|c}{Variables ordenadas de mayor a menor importancia de izq. a dcha.} \\
+\cline{2-9}
+  & Var1 & Var1.n & Var2 & Var2.n & Var3 & Var3.n & Var4 & Var4.n\\
+\hline
+EMA30 + target 1mes & 512.15204 & ROC1 & 98.93951 & mom1 & 96.63055 & tdi & 88.19676 & di\\
+\hline
+EMA30 + target 2mes & 144.51919 & ROC1 & 121.75086 & atr & 118.99892 & sma10 & 102.01047 & wAD\\
+\hline
+EMA30 + target 3mes & 186.49601 & sma10 & 144.89187 & ROC1 & 134.81112 & OBV & 134.41703 & wAD\\
+\hline
+EMA60 + target 1mes & 681.73270 & ROC1 & 102.46408 & mom2 & 87.15053 & mom1 & 74.47985 & ADX\\
+\hline
+EMA60 + target 2mes & 90.74460 & ROC1 & 76.35801 & RSI & 75.34084 & ROC9 & 67.89531 & wAD\\
+\hline
+EMA60 + target 3mes & 362.46061 & ROC1 & 144.70053 & wAD & 142.20835 & sma10 & 130.94650 & OBV\\
+\hline
+EMA90 + target 1mes & 848.39350 & ROC1 & 105.87283 & mom1 & 61.86987 & ADX & 53.94166 & sma10\\
+\hline
+EMA90 + target 2mes & 97.99641 & ROC1 & 85.52830 & PNratio & 73.11995 & mom2 & 71.66828 & mom3\\
+\hline
+EMA90 + target 3mes & 330.79862 & ROC1 & 165.57534 & PNratio & 128.86718 & wAD & 111.52754 & ROC9\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# sort(model_AAPL_30_1m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_AAPL_30_2m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_AAPL_30_3m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# }
+\CommentTok{# sort(model_AAPL_60_1m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_AAPL_60_2m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_AAPL_60_3m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# }
+\CommentTok{# sort(model_AAPL_90_1m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_AAPL_90_2m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_AAPL_90_3m_target_feature$importance[,1],decreasing = T)[1:5]}
+\end{Highlighting}
+\end{Shaded}
+
+\captionof{table}{Apple Inc.: Importancia de las variables en los modelos Random Forest}
+
+\setlength\parskip{5ex}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a<-}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Var1=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AXP_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AXP_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var1.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AXP_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AXP_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{                    )),}
+              \DataTypeTok{Var2=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AXP_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AXP_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var2.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AXP_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AXP_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{                    )),}
+              \DataTypeTok{Var3=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AXP_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AXP_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var3.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AXP_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AXP_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{]}
+\NormalTok{                    )),}
+              \DataTypeTok{Var4=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AXP_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AXP_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var4.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_AXP_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_AXP_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_AXP_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{]}
+\NormalTok{                    ))}
+\NormalTok{              )}
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"EMA30 + target 1mes"}\NormalTok{,}\StringTok{"EMA30 + target 2mes"}\NormalTok{,}\StringTok{"EMA30 + target 3mes"}\NormalTok{,}
+               \StringTok{"EMA60 + target 1mes"}\NormalTok{,}\StringTok{"EMA60 + target 2mes"}\NormalTok{,}\StringTok{"EMA60 + target 3mes"}\NormalTok{,}
+               \StringTok{"EMA90 + target 1mes"}\NormalTok{,}\StringTok{"EMA90 + target 2mes"}\NormalTok{,}\StringTok{"EMA90 + target 3mes"}\NormalTok{)}
+
+\KeywordTok{kable}\NormalTok{(a, }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }\StringTok{"Variables ordenadas de mayor a menor importancia de izq. a dcha."}\NormalTok{ =}\StringTok{ }\DecValTok{8}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|l|r|l|r|l|r|l}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{8}{|c}{Variables ordenadas de mayor a menor importancia de izq. a dcha.} \\
+\cline{2-9}
+  & Var1 & Var1.n & Var2 & Var2.n & Var3 & Var3.n & Var4 & Var4.n\\
+\hline
+EMA30 + target 1mes & 165.25920 & mom1 & 130.4641 & mom2 & 127.02326 & ROC1 & 119.09421 & wAD\\
+\hline
+EMA30 + target 2mes & 120.43286 & sma10 & 113.3690 & wAD & 111.34118 & OBV & 104.51818 & atr\\
+\hline
+EMA30 + target 3mes & 131.57874 & atr & 116.5355 & sma10 & 115.22161 & OBV & 110.56381 & wAD\\
+\hline
+EMA60 + target 1mes & 118.07516 & mom1 & 102.0914 & ROC1 & 98.61755 & mom2 & 87.88118 & mom3\\
+\hline
+EMA60 + target 2mes & 99.28404 & atr & 97.1348 & wAD & 94.38705 & sma10 & 93.67309 & OBV\\
+\hline
+EMA60 + target 3mes & 181.81561 & atr & 144.7573 & sma10 & 141.83627 & tr & 125.10676 & wAD\\
+\hline
+EMA90 + target 1mes & 268.16814 & mom2 & 266.9641 & mom1 & 167.93294 & mom3 & 131.28383 & ROC1\\
+\hline
+EMA90 + target 2mes & 323.00340 & mom1 & 212.6846 & mom2 & 187.82489 & tr & 141.22069 & ADX\\
+\hline
+EMA90 + target 3mes & 107.27084 & tr & 103.5385 & atr & 89.91923 & sma10 & 82.61953 & OBV\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# sort(model_AXP_30_1m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_AXP_30_2m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_AXP_30_3m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# }
+\CommentTok{# sort(model_AXP_60_1m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_AXP_60_2m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_AXP_60_3m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# }
+\CommentTok{# sort(model_AXP_90_1m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_AXP_90_2m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_AXP_90_3m_target_feature$importance[,1],decreasing = T)[1:5]}
+\end{Highlighting}
+\end{Shaded}
+
+\captionof{table}{American Express CO.: Importancia de las variables en los modelos Random Forest}
+
+\setlength\parskip{5ex}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a<-}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Var1=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_WFC_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_WFC_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var1.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_WFC_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_WFC_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{                    )),}
+              \DataTypeTok{Var2=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_WFC_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_WFC_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var2.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_WFC_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_WFC_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{                    )),}
+              \DataTypeTok{Var3=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_WFC_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_WFC_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var3.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_WFC_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_WFC_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{3}\NormalTok{]}
+\NormalTok{                    )),}
+              \DataTypeTok{Var4=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_WFC_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_WFC_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{]}
+\NormalTok{                    ),}
+              \DataTypeTok{Var4.n=}\KeywordTok{names}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\KeywordTok{sort}\NormalTok{(model_WFC_30_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                     \KeywordTok{sort}\NormalTok{(model_WFC_30_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_30_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_60_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_1m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_2m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{],}
+                      \KeywordTok{sort}\NormalTok{(model_WFC_90_3m_target_feature}\OperatorTok{$}\NormalTok{importance[,}\DecValTok{1}\NormalTok{],}\DataTypeTok{decreasing =}\NormalTok{ T)[}\DecValTok{4}\NormalTok{]}
+\NormalTok{                    ))}
+\NormalTok{              )}
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"EMA30 + target 1mes"}\NormalTok{,}\StringTok{"EMA30 + target 2mes"}\NormalTok{,}\StringTok{"EMA30 + target 3mes"}\NormalTok{,}
+               \StringTok{"EMA60 + target 1mes"}\NormalTok{,}\StringTok{"EMA60 + target 2mes"}\NormalTok{,}\StringTok{"EMA60 + target 3mes"}\NormalTok{,}
+               \StringTok{"EMA90 + target 1mes"}\NormalTok{,}\StringTok{"EMA90 + target 2mes"}\NormalTok{,}\StringTok{"EMA90 + target 3mes"}\NormalTok{)}
+
+\KeywordTok{kable}\NormalTok{(a, }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\KeywordTok{add_header_above}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{" "}\NormalTok{, }\StringTok{"Variables ordenadas de mayor a menor importancia de izq. a dcha."}\NormalTok{ =}\StringTok{ }\DecValTok{8}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|l|r|l|r|l|r|l}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{8}{|c}{Variables ordenadas de mayor a menor importancia de izq. a dcha.} \\
+\cline{2-9}
+  & Var1 & Var1.n & Var2 & Var2.n & Var3 & Var3.n & Var4 & Var4.n\\
+\hline
+EMA30 + target 1mes & 103.91043 & ROC1 & 96.13491 & mom1 & 95.50823 & wAD & 94.68811 & sma10\\
+\hline
+EMA30 + target 2mes & 113.57309 & sma10 & 111.78549 & OBV & 110.34820 & wAD & 99.16066 & atr\\
+\hline
+EMA30 + target 3mes & 130.20298 & sma10 & 124.84470 & OBV & 121.70352 & wAD & 117.96892 & atr\\
+\hline
+EMA60 + target 1mes & 117.78181 & ROC1 & 100.53238 & mom1 & 93.98690 & mom2 & 91.03978 & mom3\\
+\hline
+EMA60 + target 2mes & 98.24817 & atr & 97.38317 & sma10 & 95.30748 & OBV & 92.67769 & wAD\\
+\hline
+EMA60 + target 3mes & 121.26242 & sma10 & 118.51177 & OBV & 114.25443 & wAD & 107.39861 & atr\\
+\hline
+EMA90 + target 1mes & 127.60044 & ROC1 & 112.53211 & mom2 & 111.11757 & mom1 & 85.74894 & mom5\\
+\hline
+EMA90 + target 2mes & 86.82101 & atr & 84.25939 & wAD & 83.97373 & sma10 & 81.06038 & ROC1\\
+\hline
+EMA90 + target 3mes & 208.36783 & atr & 201.44860 & sma10 & 166.60851 & OBV & 162.17772 & tr\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# sort(model_WFC_30_1m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_WFC_30_2m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_WFC_30_3m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# }
+\CommentTok{# sort(model_WFC_60_1m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_WFC_60_2m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_WFC_60_3m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# }
+\CommentTok{# sort(model_WFC_90_1m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_WFC_90_2m_target_feature$importance[,1],decreasing = T)[1:5]}
+\CommentTok{# sort(model_WFC_90_3m_target_feature$importance[,1],decreasing = T)[1:5]}
+\end{Highlighting}
+\end{Shaded}
+
+\captionof{table}{Wells and Fargo CO.: Importancia de las variables en los modelos Random Forest}
+
+\setlength\parskip{5ex}
+
+PONER AQUI LA FRECUENCIA DE LAS VARIABLES QUE SON LAS PRIMERAS MAS
+IMPORTANTES\ldots{} ASI PODEMOS VER SI HAY ALGUNA QUE SE SELECCIONA MAS
+VECES COMO VARIABLE MAS IMPORTANTE.
+
+\emph{Experimentos con los datos sin alisar}
+
+*poner aqui los precios reales para poder comparar\ldots{} si se predice
+con la ema90 que subira, es verdad que en ese momento el precio estava
+mas alto que cuando se hizo la predicción?
+
+
+\end{document}

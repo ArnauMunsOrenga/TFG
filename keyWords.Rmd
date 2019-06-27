@@ -1,0 +1,7 @@
+---
+output: pdf_document
+---
+
+\justifying
+
+Inteligencia artificial, Sector financiero, aplicaciones, consecuencias, Aprendizaje automático, Machine Learning,**Stock**, aprendizaje automático supervisado, aprendizaje automático no supervisado, modelo predictivo, Trading automático (negociación bursátil), precio de apertura, precio de cierre, precio máximo y mínimo, Stock Movement Direction models (SMD), Long-Short Term Memory (LSTM).

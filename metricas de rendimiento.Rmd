@@ -4,28 +4,86 @@ output: pdf_document
 
 \justifying
 
-Los modelos construidos están pensados para ser de ayuda a la hora de tomar una decisión de compra o venta de un *stock*. Si la predicción es +1 (Up) se espera que el precio al cabo de $d=30, \ 60 \ y \ 90 $ días sea superior al actual y entonces la acción lógica del inversor sería **comprar**. Al contrario ocurriría si la predicción fuera -1, lo cual significaría que se espera que el precio al cabo de $d$ días sea inferior. En este caso la decisión razonable a tomar por parte del inversor sería **vender**. Una predicción errónea puede causar grandes perdidas de dinero para el inversor. Por lo tanto, se deben definir métricas que ayuden a evaluar la potencia predictiva de los modelos construidos. Las métricas que se utilizan en el presente trabajo para evaluar la robustez del clasificador binario Random Forest que se crea a continuación son las siguientes:
+#### Modelos de clasificación
+
+\setlength\parskip{6ex}
+\noindent
+Los modelos construidos están pensados para ser de ayuda a la hora de tomar una decisión de compra o venta de un *stock*. Si la predicción es +1 (Up) se espera que el precio al cabo de $d=30, \ 60 \ y \ 90$ días sea superior al actual y entonces la acción lógica del inversor sería **comprar**. Al contrario ocurriría si la predicción fuera -1, lo cual significaría que se espera que el precio al cabo de $d$ días sea inferior. En este caso la decisión razonable a tomar por parte del inversor sería **vender**. Una predicción errónea puede causar grandes perdidas de dinero para el inversor. Por lo tanto, se deben definir métricas que ayuden a evaluar la potencia predictiva de los modelos construidos. Las métricas que se utilizan en el presente trabajo para evaluar el rendimiento de los modelos de clasificación que se crean a continuación son las siguientes:
+
+\setlength\parskip{9ex}
 
 *Accuracy*
 
+\noindent
 Esta métrica hace referencia a la proporción de casos clasificados correctamente entre el total de casos con los que se prueba el modelo. Se calcula a partir de la fórmula siguiente:
 
  $$Accuracy = \frac{tp+tn}{tp+tn+fp+fn} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (M.1)$$
  
 *Recall/Sensitivity*
 
+\noindent
 Esta métrica mide la habilidad de un modelo clasificador de identificar correctamente los casos positivos.
+
 $$Sensitivity = \frac{tp}{tp+fn} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (M.2)$$
 
 *Specificity*
+
+\noindent
 Esta métrica mide la habilidad de un modelo clasificador de identificar correctamente los casos negativos.
+
 $$Specificity = \frac{tn}{tn+fp} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (M.3)$$
 
+\noindent
 Dónde,
 
+\setlength\parskip{5ex}
+\noindent
 tp = número de verdaderos positivos $\equiv$ número de veces en las que el caso era positivo y el modelo predice positivo
+  
+\noindent
 tn = número de verdaderos negativos $\equiv$ número de veces en las que el caso era negativo y el modelo predice negativo
+
+\noindent
 fp = número de falsos positivos $\equiv$ número de veces en las que el caso era negativo y el modelo predice positivo
+
+\noindent
 fn = número de falsos negativos $\equiv$ número de veces en las que el caso era positivo y el modelo predice negativo
 
+<!-- *Curva ROC* -->
 
+<!-- La curva ROC, siglas de Receiver Operating Characteristic, es una representación gráfica del rendimiento dado de un modelo clasificador. Concretamente se trata de un gráfico que tiene representado en el eje X la ratio de falsos positivos (o lo que es lo mismo, 1- especificidad (M.3)) y en el eje Y la ratio de verdaderos positivos (o sensitividad (M.2)). Gracias a esta herramienta gráfica se pueden seleccionar aquellos modelos que tengan una predicción mejor que la aleatoria (correspondiente a la recta y=x en el gráfico) comparando la capacidad del modelo de detectar verdaderos positivos con la capacidad para detectar falsos positivos, cambiando el umbral. Es una herramienta potente que nos indica el rendimiento de los modelos de clasificación construidos. En el caso en el que el modelo clasificador fuera perfecto, la curva roc formaría un ángulo recto con la esquina superior izquierda mientras que un mal clasificador tendría la curva roc por debajo de la recta y=x (correspondiente a la predicción aleatoria de 50% de probabilidad en cada clase). -->
+
+*Area Under the Curve (AUC)*
+
+\noindent
+Directamente derivado de la curva ROC se define este estadístico llamado Área bajo la curva. Como su nombre indica, se trata de calcular el área que queda por debajo de la curva ROC. El objetivo de esta métrica es el de calcular los distintos ratios de verdaderos positivos y de falsos positivos para distintos umbrales definidos, no sólo para el umbral de 0.5 de probabilidad. La idea es que de un clasificador aleatorio se puede obtener tantos verdaderos positivos como falsos positivos, que es lo que indica un AUC de 0.5 o la recta y=x en la curva ROC. Por lo tanto, el AUC indica la capacidad del modelo clasificador de obtener más verdaderos positivos que falsos positivos para todos los umbrales posibles. Como se ha indicado, un AUC de 1 indicaria un modelo clasificador perfecto, capaz de predecir con un 100% de acierto los verdaderos positivos y de no dar ningún falso positivo mientras que un AUC de 0.5 indicaria el mismo número de falsos positivos que de verdaderos positivos. El objetivo es, pues, el de obtener un modelo clasificador que tengo un AUC entre 0.5 y 1 cosa que significa que puede mejorar la predicción aleatoria. Otro de los usos comunes de esta métrica es la de poder comparar modelos clasificadores de manera que un mismo modelo será mejor que otro si su AUC es mayor.
+
+\setlength\parskip{7ex}
+\noindent
+La diferencia básica respecto a la *accuracy* definida en M.1 es que para calcular la *accuracy* el usuario tiene que definir un umbral a partir del cual se define la clasificación como "1" o "0" (caso positivo o negativo) mientras que el AUC está midiendo el rendimiento del modelo **mientras el umbral varía sobre todo los posibles valores**. En este sentido el AUC es una métrica más general que no depende (no es función de) el umbral que se defina.
+
+\setlength\parskip{5ex}
+#### Modelos de regresión
+
+\noindent
+Para la evaluación de la LSTM sobre los precios se utilizan las siguientes métricas:
+
+*MAPE*
+
+\noindent
+Conocido por sus siglas en inglés, el Mean Absolute Percentage Error representa el error medio percentual que obtenemos al hacer una predicción. Se calcula de la siguiente manera:
+
+ $$MAPE = \frac{1}{n}\sum_{i=1}^{n}\frac{\left |  Actual_i \ -\ Predicted_i\right |}{Actual_i} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (M.4)$$
+
+\noindent 
+A su vez también se propone una medida alternativa de MAPE, que ofrece una visión más compensada de los errores:
+ 
+$$MAPE_2 = \frac{\sum_{i=1}^{n}\left |  Actual_i \ -\ Predicted_i\right |}{\sum_{i=1}^{n}Actual_i} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (M.5)$$
+
+\noindent
+Paralelamente a la medida de MAPE, cuyo rango de valores está restringido entre 0 y 1, se presentan las siguientes dos métricas:
+
+$$MAE = \frac{1}{n}\sum_{i=1}^{n}\left |  Actual_i \ -\ Predicted_i\right | \ \ \ \ \ \ \ \ \ \ \ \ \ \ (M.6)$$
+\setlength\parskip{5ex}
+
+$$RMSE = \sqrt{\frac{1}{n}\sum_{i=1}^{n}(Actual_i \ -\ Predicted_i)^2} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (M.7)$$

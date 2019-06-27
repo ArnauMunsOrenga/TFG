@@ -1,0 +1,17 @@
+---
+output: pdf_document
+---
+
+**Detección de fraude**
+
+\noindent
+Otra de las aplicaciones actuales es en el campo de la detección de fraudes o anomaías. Los modelos y técnicas de inteligencia artificial ayudan a identificar conductas o comportamientos que se alejan de los patrones regulares. Estos modelos se utilizan por ejemplo para detectar patrones complejos y para hacer hincapié en las transacciones sospechosas que son potencialmente más serias y peligrosas y que por lo tanto requieren una mayor atención y cuidado. Utilizando estas técnicas junto con distintos métodos de machine learning para analizar datos de una manera más desagregada de transacciones, perfiles de clientes y distintos tipos de datos desestructurados, el mundo de la inteligencia artificial se está utilizando para descubrir relaciones no lineales entre los diferentes atributos o características (variables), y para detectar patrones complejos que reflejen potencialmente un blanqueo de capitales [@AIboard]. En este sentido ayuda a agilizar el trabajo de los agentes institucionales encargados de velar por la seguridad financiera. Estos modelos están entrenados con una información que se genera a tiempo real y su utilidad real está en ser capaces de detectar y bloquear una transacción potencialmente sospechosa de fraude para su posterior revisión. Este tipo de sistemas ha permitido ahorrar a las autoridades y empresas un gran volúmen de masa monetaria. 
+
+\setlength\parskip{5ex}
+\noindent
+En la actualidad existen numerosos ejemplos de empresas aplicando tecnologías de machine learning. Casos como los de deepsense.ai o feedzai.com son bastante habituales a día de hoy. Estas empresas se dedican a ofrecer soluciones en relación a la detección del fraude a otras empresas. En este modelo B2B (empresa-empresa) permite a los clientes obtener soluciones personalizadas basadas en modelos y técnicas de análisis de datos e inteligencia artificial para poderlos utilizar en su día a día. También existen otros casos de empresas multinacionales que ya han incorporado este tipo de técnicas. Es el caso de Mastercard que lanzó en 2016 su nuevo sistema llamado "Decision Intelligence". Este sistema intenta resolver la problemática de los falsos positivos de fraude en transacciones genuinas, es decir, verdaderas, utilizando algoritmos y técnicas de machine learning. 
+
+**Compromiso regulatorio**
+
+\noindent
+Otra de las aplicaciones actuales de la inteligencia artificial y el machine learning se puede encontrar en el campo de la regulación financiera donde las instituciones financieras las están aplicando para hacer más potente el compromiso regulatorio. Un ejemplo de las técnicas que éstas utilizan son el procesamiento del lenguaje natural (NLP) para monitorear el comportamiento y la comunicación de los *traders*, con el objetivo de mantener la transparencia y la buena conducta en los mercados. Este tipo de modelos se basan en datos tales como emails, palabra hablada, mensajes intantáneos, documentos y otro tipo de metadatos. A su vez, también se están utilizando los modelos de procesamiento del lenguaje natural para interpretar, y hacer más comprensibles, regulaciones financieras como el MiFID II. Con esto se consigue el poder automatizar reglas de control basadas en este tipo de regulaciones.

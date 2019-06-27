@@ -1,15 +1,25 @@
 ---
 output: pdf_document
 ---
-\justifying
 
-En primer lugar, la metodología que va a seguir el presente trabajo en cuanto al análisis económico del marco teórico actual es el siguiente: en primer lugar se aborda la evolución histórica de la inteligencia artificial, poniendo especial atención en las aplicaciones financieras creadas durante el desarrollo de este campo de estudio. En segundo lugar, (revisar) use case y consecuencias asociadas a los mismos. En tercer lugar consecuencias micro, macro
+\noindent
+En el siguiente apartado se procede a detallar la metodología que se sigue en esta tesis. Para hacerlo se aborda desde 3 perspectivas. En primer lugar se describe la metodología seguida en la redacción del presente documento. En segundo lugar se explica el procedimiento o metodología seguidos en el análisis económico de la situación actual y sus consecuencias. En tercer y último lugar se detalla la metodología seguida durante el proceso de modelado de la dirección de movimiento del precio de cierre.
 
-La metodología que se va a seguir en el presente trabajo es la siguiente:
+\noindent
+En cuanto a la redacción del presente documento se ha decidido redactarlo utilizando el software R Markdown. Se ha procedido a descargar una plantilla en LaTeX para la redacción de tesis o artículos académicos y se ha adaptado a las necesidades de la presente tesis. Se ha decidido proceder así para facilitar la interacción entre la escritura de la tesis y el desarrollo de la modelización propuesta, elaborada en R. Utilizando este marco de escritura con R Markdown, controlando la forma y estilo con LaTeX y documento tipo .cls, se consigue una interactividad completa entre el código estadístico escrito en R y la redacción en formato .pdf del presente documento. Técnicamente, la metodología de escritura de este trabajo con R Markdown consiste en separar en un documento a parte cada una de la piezas que conforman la tesis, de manera que se cargan en un documento general que hace las veces de esqueleto vertebrador de la escritura de la tesis. De esta manera se consigue tener cada apartado por separado, potenciando la estructuración y simplicidad de un documento académico que podría ser, de no seguir esta metodología, más difícil de escribir con un software estadístico que con un editor de texto. Por lo que respecta a la definición del estilo de esta tesis, cabe destacar que se ha hecho acorde con las normas definidas por el documento oficial para los trabajos del grado de Estadística.
+
+\noindent
+*Todos los documentos y archivos necesarios para compilar y generar la presente tesis en formato .pdf se pueden encontrar en el proyecto "TFG" de mi perfil personal de Git Hub https://github.com/ArnauMunsOrenga/TFG*
+
+\noindent
+En cuanto a la metodología que va a seguir el presente trabajo en el análisis económico del marco actual es el siguiente: la investigación académica se elabora a partir del análisis de tesis doctorales, trabajos de final de máster y artículos académicos para servir de base del análisis propuesto. En primer lugar se aborda la evolución histórica de la inteligencia artificial, poniendo especial atención en las aplicaciones financieras creadas durante el desarrollo de este campo de estudio. En segundo lugar, se utiliza el análisis de documentos de instituciones oficiales y artículos académicos para repasar los *use cases* o aplicaciones actuales de IA en el sector financiero, así como las consecuencias asociadas a los mismos. Finalmente se discuten los posibles efectos a nivel micro y macro económico a partir del análisis de artículos elaborados por instituciones relacionadas con la actividad y estabilidad económicas.
+
+\noindent
+Por último, se detalla la metodología propuesta en cuanto a la modelización que se lleva a cabo. En la figura II.1 se encuentra detallado el proceso de modelado propuesto en el presente trabajo. La variedad y el proceso de investigación llevado a cabo en este trabajo corresponde con la parte de la elección de los modelos, que se desglosa en el capítulo V. Es por eso que los pasos iniciales de la metodología propuesta se comparten entre los distintos procesos de modelado siguientes.
 
 \centering
-![](metodologia.png)
+![](metodologia3.png){width=625px height=800px}
 \centering
-  \captionof{figure}{Metodología propuesta}
+  \captionof{figure}{Metodología propuesta. Fuente: elaboración propia}
   
 \justifying

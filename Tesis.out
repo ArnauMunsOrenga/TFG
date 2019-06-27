@@ -1,0 +1,31 @@
+\BOOKMARK [1][-]{chapter*.6}{LISTA\040DE\040TABLAS}{}% 1
+\BOOKMARK [1][-]{chapter*.7}{LISTA\040DE\040FIGURAS}{}% 2
+\BOOKMARK [0][-]{chapter.1}{INTRODUCCIÓN}{}% 3
+\BOOKMARK [0][-]{chapter.2}{METODOLOGÍA}{}% 4
+\BOOKMARK [0][-]{chapter.3}{CONSECUENCIAS DE LA IMPLANTACIÓN DE LA IA EN LOS MERCADOS FINANCIEROS}{}% 5
+\BOOKMARK [1][-]{section*.8}{III.1 Evolución histórica y contexto actual}{chapter.3}% 6
+\BOOKMARK [1][-]{figure.3.4}{III.2\040Aplicaciones\040y\040consecuencias}{chapter.3}% 7
+\BOOKMARK [2][-]{section*.9}{III.2.1\040Aplicaciones\040front\040office:\040centradas\040en\040el\040cliente}{figure.3.4}% 8
+\BOOKMARK [2][-]{section*.9}{III.2.2\040Aplicaciones\040back\040office:\040centradas\040en\040las\040operaciones}{figure.3.4}% 9
+\BOOKMARK [2][-]{section*.9}{III.2.3 Gestión de carteras e inversión en mercados financieros}{figure.3.4}% 10
+\BOOKMARK [2][-]{figure.3.5}{III.2.4 Regulación y supervisión}{figure.3.4}% 11
+\BOOKMARK [2][-]{figure.3.5}{III.2.5\040Otras\040aplicaciones}{figure.3.4}% 12
+\BOOKMARK [1][-]{figure.3.5}{III.3 Análisis económico: posibles efectos}{chapter.3}% 13
+\BOOKMARK [2][-]{section*.10}{III.3.1 Análisis micro-económico}{figure.3.5}% 14
+\BOOKMARK [2][-]{section*.10}{III.3.2 Análisis macro-económico}{figure.3.5}% 15
+\BOOKMARK [0][-]{chapter.4}{CASOS PRÁCTICOS: MARCO}{}% 16
+\BOOKMARK [1][-]{section*.11}{IV.1\040Definiciones\040de\040los\040modelos}{chapter.4}% 17
+\BOOKMARK [1][-]{figure.4.7}{IV.2 Métricas de rendimiento}{chapter.4}% 18
+\BOOKMARK [0][-]{chapter.5}{CASOS PRÁCTICOS: EJECUCIÓN}{}% 19
+\BOOKMARK [1][-]{section*.12}{V.1 Dirección de movimiento del precio de cierre: análisis detallado con Random Forest}{chapter.5}% 20
+\BOOKMARK [2][-]{section*.12}{V.1.1 Base de datos: Obtención y descripción}{chapter.5}% 21
+\BOOKMARK [2][-]{table.5.10}{V.1.2\040Procesamiento\040de\040los\040datos}{chapter.5}% 22
+\BOOKMARK [2][-]{table.5.11}{V.1.3 Creación de variables}{chapter.5}% 23
+\BOOKMARK [2][-]{table.5.16}{V.1.4\040Experimentos}{chapter.5}% 24
+\BOOKMARK [1][-]{table.5.28}{V.2 Dirección de movimiento del precio: análisis masivo con Random Forest}{chapter.5}% 25
+\BOOKMARK [1][-]{table.5.29}{V.3 Dirección de movimiento del precio: Automatic Machine Learning}{chapter.5}% 26
+\BOOKMARK [1][-]{table.5.31}{V.4 Predicción del precio: LSTM-RNN}{chapter.5}% 27
+\BOOKMARK [1][-]{figure.5.17}{V.5 Predicción de la rentabilidad: LSTM-RNN}{chapter.5}% 28
+\BOOKMARK [0][-]{chapter.6}{CONCLUSIONES}{}% 29
+\BOOKMARK [0][-]{chapter.7}{  BIBLIOGRAFÍA}{}% 30
+\BOOKMARK [0][-]{chapter.8}{\040\040ANEXO}{}% 31

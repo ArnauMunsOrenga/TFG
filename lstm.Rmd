@@ -1,0 +1,459 @@
+---
+output: pdf_document
+---
+
+\noindent
+En el presente apartado se procede a construir una red neuronal recurrente tipo LSTM para predecir los precios de cierre de la empresa Coca Cola Co.. En hecho de escoger esta empresa está justificado por distintas razones. En primer lugar el hecho de que solo sea una empresa y no las 4 utilizadas como ejemplo en el apartado V.1 se debe a que la capacidad computacional de la que se dispone es limitada.  El proceso de entrenamiento de un modelo de estas características requiere de una elevada capacidad computacional para poder realizarse en un periodo de tiempo relativamente razonable. En segundo lugar el hecho de que sea Coca Cola y no una de las otras 3 empresas responde a lo observado en el apartado V.1.1. Esta empresa es la que ofrece una opción relativamente balanceada entre rentabilidad y riesgo. En tercer lugar la tendencia creciente presente en parte de la serie parece ser relativamente fuerte y la LSTM pueda probablemente captarlo.
+
+\noindent
+Para emprezar se elabora el plan de entrenamiento del modelo lstm. Con el procedimiento que se detalla a continuación permite obtener una evaluación del rendimiento de este tipo de modelos en distintos trozos de la serie temporal. En este caso se contruyen 6 submuestras que conforman el plan de entrenamiento, cada una con 996 días en la muestra de entrenamiento y 83 en la muestra de test. El por qué de esta configuració se explica posteriormente en la parte de ajuste de los parámetros. El tercer parámetro que define la partición del plan de entrenamiento es el que controla la separación entre las ventanas móviles. En este caso se define en 650 días. Esto significa que la distancia entre el inicio de las series temporales en cada partición está separado por 650 días. En definitiva el desarrollo que tiene este apartado es el siguiente: por simplicidad, se procede a entrenar una LSTM para cada partición creada, utilizando la misma combinación de hyperparámetros para este modelo. En este apartado no se elabora una optimización exhaustiva de los hyperparámetros de este modelo, que es de hecho donde está la gran complejidad de los algoritmos de machine learning, sino que se define una combinación de los mismos, que se podría considerar como referencia para futuras optimizaciones. Esto es así ya que en el momento de la elaboración de este trabajo no se dispone de la capacidad computacional adecuada para poder elaborar una tarea de semejante magnitud, al ser el periodo de tiempo considerado relativamente elevado (18 años) y al ser el número de combinaciones de hyper parámetros que hay que probar muy elevada. El hecho de entrenar disintos modelos en distintos periodos de tiempo ofrece la posibilidad de analizar el rendimiento de estos modelos con distintas predicciones a lo largo del tiempo. El hecho de reducir el tamaño de la muestra de entrenamiento para cada LSTM hace que el proceso de entrenamiento sea mucho más rápido, con la contrapartida de que los modelos que se crean no están ofreciendo todo su potencial.
+
+\justifying
+\noindent
+En la gráfica que se muestra a continuación se pueden ver representadas las distintas particiones de la serie temporal de los precios de cierre de Coca-Cola sobre los cuales se va a entrenar una LSTM-RNN con el fin de testearla en los 83 días de muestra de prueba, graficados en rojo.
+
+<!-- LSTM para KO -->
+\centering
+
+```{r,results='hide'}
+libraries <- c("lubridate","tidyverse","tidyr","forecast","ggplot2","seasonal","tidyverse",
+               "manipulate","compiler","scales","lmtest","MASS","glmnet","forecTheta",
+               "neuralnet","tsDyn","changepoint","RSNNS","xgboost","foreach","doSNOW",
+               "tcltk","DescTools","rnn","glue","forcats","timetk","tidyquant","tibbletime",
+               "cowplot","recipes","rsample","yardstick","keras","quantmod","tidyverse"
+)
+# check.libraries <- is.element(libraries, installed.packages()[, 1])==FALSE
+# libraries.to.install <- libraries[check.libraries]
+# if (length(libraries.to.install!=0)) {
+#   install.packages(libraries.to.install)
+# }
+
+lapply(libraries, require, character.only=TRUE)
+library(tidyverse)
+library(quantmod)
+getSymbols(Symbols = "KO", from ="2000-01-01",to="2018-12-31")
+#install_keras()
+```
+
+\justifying
+```{r}
+load("C:/Users/i0386388/Desktop/tesis/lstm_prices.RData")
+sample_predictions_lstm_tbl_prices<-sample_predictions_lstm_tbl
+load("C:/Users/i0386388/Desktop/tesis/lstm_return.RData")
+sample_predictions_lstm_tbl_return<-sample_predictions_lstm_tbl
+rm(sample_predictions_lstm_tbl)
+```
+
+```{r,results='hide'}
+
+dates<-rownames(as.data.frame(KO))
+
+Exerci.0<-data.frame(MSales=as.vector(KO$KO.Close),StartDate=dates)#Close prices
+
+rownames(Exerci.0)<-Exerci.0$StartDate
+input<-Exerci.0 %>% dplyr::select(MSales)
+
+
+input.0 <- input %>%
+  tk_tbl() %>%
+  mutate(index = as_date(index)) %>%
+  as_tbl_time(index = index) %>% 
+  rename("value"=MSales)
+
+
+periods_train <- 996 #train length in each resample
+periods_test  <- 83
+skip_span     <- 650
+
+rolling_origin_resamples <- rolling_origin(
+  input.0,
+  initial    = periods_train,
+  assess     = periods_test,
+  cumulative = FALSE,
+  skip       = skip_span
+)
+
+rolling_origin_resamples
+
+```
+
+```{r fig.height=9, fig.width=11,fig.align = "center"}
+# Plotting function for a single split
+plot_split <- function(split, expand_y_axis = TRUE, alpha = 1, size = 1, base_size = 14) {
+  
+  # Manipulate data
+  train_tbl <- training(split) %>%
+    add_column(key = "training") 
+  
+  test_tbl  <- testing(split) %>%
+    add_column(key = "testing") 
+  
+  data_manipulated <- bind_rows(train_tbl, test_tbl) %>%
+    as_tbl_time(index = index) %>%
+    mutate(key = fct_relevel(key, "training", "testing"))
+  
+  # Collect attributes
+  train_time_summary <- train_tbl %>%
+    tk_index() %>%
+    tk_get_timeseries_summary()
+  
+  test_time_summary <- test_tbl %>%
+    tk_index() %>%
+    tk_get_timeseries_summary()
+  
+  # Visualize
+  g <- data_manipulated %>%
+    ggplot(aes(x = index, y = value, color = key, group = 1)) +
+    geom_line(size = size, alpha = alpha) +
+    theme_tq(base_size = base_size) +
+    scale_color_tq() +
+    labs(
+      title    = glue("Split: {split$id}"),
+      subtitle = glue("{train_time_summary$start} to {test_time_summary$end}"),
+      y = "", x = ""
+    ) +
+    theme(legend.position = "none") 
+  
+  if (expand_y_axis) {
+    
+    input.0_time_summary <- input.0 %>% 
+      tk_index() %>% 
+      tk_get_timeseries_summary()
+    
+    g <- g +
+      scale_x_date(limits = c(input.0_time_summary$start, 
+                              input.0_time_summary$end))
+  }
+  
+  return(g)
+}
+
+
+plot_sampling_plan <- function(sampling_tbl, expand_y_axis = TRUE, 
+                               ncol = 3, alpha = 1, size = 1, base_size = 14, 
+                               title = "Sampling Plan") {
+  
+  # Map plot_split() to sampling_tbl
+  sampling_tbl_with_plots <- sampling_tbl %>%
+    mutate(gg_plots = map(splits, plot_split, 
+                          expand_y_axis = expand_y_axis,
+                          alpha = alpha, base_size = base_size))
+  
+  # Make plots with cowplot
+  plot_list <- sampling_tbl_with_plots$gg_plots 
+  
+  p_temp <- plot_list[[1]] + theme(legend.position = "bottom")
+  legend <- get_legend(p_temp)
+  
+  p_body  <- plot_grid(plotlist = plot_list, ncol = ncol)
+  
+  p_title <- ggdraw() + 
+    draw_label(title, size = 18, fontface = "bold", colour = palette_light()[[1]])
+  
+  g <- plot_grid(p_title, p_body, legend, ncol = 1, rel_heights = c(0.05, 1, 0.05))
+  
+  return(g)
+  
+}
+
+rolling_origin_resamples %>%
+  plot_sampling_plan(expand_y_axis = T, ncol = 3, alpha = 1, size = 1, base_size = 10, 
+                     title = "Ventana móbil de muestras de entrenamiento y prueba")
+
+```
+\centering
+  \captionof{figure}{Plan de entrenamiento de la LSTM para los precios de cierre. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+\noindent
+También se muestra el gráfico ampliado.
+```{r fig.height=9, fig.width=11,fig.align = "center"}
+rolling_origin_resamples %>%
+  plot_sampling_plan(expand_y_axis = F, ncol = 3, alpha = 1, size = 1, base_size = 10, 
+                     title = "Ventana móbil de muestras de entrenamiento y prueba. Ampliado")
+```
+\centering
+  \captionof{figure}{Plan de entrenamiento de la LSTM para los precios de cierre. Ampliado. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+\noindent
+Una vez se tienen listas las particiones se procede a la creación de los modelos LSTM sobre cada una de ellas. Cabe decir que la implementación que se hace en este trabajo de los modelos LSTM se soporta en el entorno Keras. En este caso se ha decidido utilizar la implementación del entorno en keras en R, utilizando el paquete `keras`, en vez de hacerlo en Python para mantener la integridad de todo el trabajo en cuanto al software / lenguaje que se utiliza para escribir y realizar los apartados de la presente tesis. Esta decisión tiene implicaciones ya que el paquete `keras`, aunque trabaja "por debajo" con el entorno de programación TensorFlow, no permite tener un control a tan bajo nivel de todos los hyper parámetros que se pueden optimizar en un modelo de estas características.
+
+\noindent
+Como se ha apuntado previamente, en el presente trabajo se elaboran los modelos LSTM con una cierta combinación de parámetros, debido a la alta capacidad computacional que requiere el hecho de hacer el proceso de *rolling origin cross validation* que este tipo de modelos requieren para optimizar sus hyper parámteros. Los pasos en el proceso de creación de estos modelos se detallan a continuación:
+
+i) En primer lugar se separan los datos de cada partición en sendas muestras de entrenamiento y prueba, teniendo la primera 996 observaciones, es decir, días con valor en el precio de cierre de la empresa Coca Cola, mientras que la muestra de prueba consta de 83 días. Esta separación entre muestras de entrenamiento y prueba responde al hecho que, a causa de la forma requerida del tensor de entrada en el modelo, el número de observaciones en la muestra de entrenamiento tiene que ser divisible entre el número de observaciones de la muestra de prueba, de manera que el resultado sea un número entero.
+
+ii) En segundo lugar se preprocesan los datos. En este caso se aplica en primer lugar la raíz cuadrada a los datos. Este proceso ayuda a reducir la varianza y eliminar los outliers. En segundo lugar se estandarizan los datos, restándoles la media y dividiéndolos por su desviación típica. Este proceso también se conoce como escalar y centrar los datos.
+
+iii) En tercer lugar se transforma la forma de los datos. Éstos necesitan ser transformados a forma de tensor, ya que es la forma requerida por este tipo de modelos. El concepto de tensor se puede pensar como una entidad algebraica que generaliza los conceptos de escalar, vector y matriz. Se podría entender como un vector de matrices, en este caso. En el presente trabajo la forma del tensor se detalla posteriormente en este apartado. Se construyen pues los tensores input y output de las muestras de entrenamiento y prueba.
+
+iv) En cuarto lugar se definen los hyper parámetros y se construye la función que se aplicará a cada partición para entrenar la LSTM. En cuanto a los parámetros, se presenta una restricción añadida a la descrita en el apartado i). El cociente entre el número de observaciones de la muestra de entrenamiento y el parámetro llamado *batch size*, o tamaño del grupo, tiene que resultar también en un número entero. Esta regla también se aplica al número de observaciones en la muestra de prueba. El hyper parámetro *batch size* controla el número de muestras, u observaciones, sobre las que se trabaja antes de actualizar los parámetros internos de la LSTM o pesos da la red. De hecho, es el número de observaciones que se utilizan para hacer las predicciones y así poder calcular el error que permite optimizar los pesos de la red. En el presente trabajo este parámetro se fija en 1 de manera que se está utilizando sólo 1 observación a la vez para actualizar los parámetros internos del modelo. Esta configuración a la hora de utilizar el algoritmo de optimización del descenso del gradiente (Gradient Descent) para optimizar los pesos de la red se llama Stochastic Gradient Descent. Se sabe que fijar el *batch size* en un valor pequeño aportan ruido y añaden un efecto regularizador que permite generalizar mejor. [@smallbatch] presentan unos resultados en los que confirman que utilizando un valor pequeño para el parámetro *batch size* se consigue obtener una estabilidad en el entrenamiento y una mejor generalización, dado una capacidad computacional, a través de un amplio abanico de experimentos.Otro de los parámetros que se fijan durante el entrenamiento de las LSTM es el número de épocas. Este hyper parámetro define el número de veces que el algoritmo va a aprender de todo el conjunto de datos. Es decir, terminar una época significa que cada muestra u observación en el conjunto de entrenamiento ha tenido la oportunidad de actualizar los parámetros internos del modelo o pesos de la red. Las épocas se fijan en 100 para limitar el tiempo de entrenamiento. También se fijan a 100 las unidades, o redes neuronales, internas de la LSTM. Este parámetro también se conoce como neuronas y controla la capacidad que tiene la LSTM de aprender. A más neuronas, más capacidad tiene la LSTM de aprender. Seguidamente se fija para el ajuste de la LSTM es el llamado *time steps*. Este parámetro corresponde a la segunda dimensión del tensor de entrada. En este caso los tensores son de la forma $Input = [996,1,1] , \ output=[83,1]$. Este hyper parámetro controla el número de observaciones en el pasado sobre las de las que la LSTM aprende. Como se ha detallado en el apartado IV.1 la LSTM es un tipo de red neuronal que permite aprender de periodos alejados en el tiempo, ya que es capaz de determinar la cantidad de información del pasado que hay que retener. Por añadidura, se fija el parámetro *unit_forget_bias* a 1. Este hyper parámetro añade 1 al seso de la *puerta de olvido* al inicializarse. Además añade una referencia a Jozefowicz et. al. apuntando a que lo recomienda [@keras]. Finalmente cabe decir que la LSTM que se construye es de tipo *STATEFULL*, tal y como se describe en el apartado IV.1.
+
+v) En quinto lugar se entrena de manera iterativa sobre todas las épocas la LSTM. 
+
+vi) Con el modelo entrenado, se calcula la predicción sobre la muestra de entrenamiento y se construye un `data frame` con los resultados reales y los predichos.
+
+\noindent
+Este proceso se aplica de manera iterativa sobre todas las particiones y se grafican los resultados obtenidos sobre las muestras de prueba. En rojo se pueden ver las predicciones, mientras que en negro se dibujan los valores reales del precio de cierre.
+
+```{r fig.height=6, fig.width=12,fig.align = "center"}
+
+calc_mape <- function(prediction_tbl) {
+  
+  mape_calculation <- function(data) {
+    data %>%
+      spread(key = key, value = value) %>%
+      dplyr::select(-index) %>%
+      filter(!is.na(predict)) %>%
+      rename(
+        truth    = actual,
+        estimate = predict
+      ) %>%
+      filter(truth!=0) %>% 
+      mutate(diff=abs(truth-estimate)) %>%
+      mutate(coc=diff/truth) %>% 
+      summarise(mape=mean(coc))*100
+  }
+  
+  safe_mape <- possibly(mape_calculation, otherwise = NA)
+  
+  safe_mape(prediction_tbl)
+  
+}
+
+calc_mape_sfi <- function(prediction_tbl) {
+
+    mape_calculation_sfi <- function(data) {
+    data %>%
+      spread(key = key, value = value) %>%
+      dplyr::select(-index) %>%
+      filter(!is.na(predict)) %>%
+      rename(
+        truth    = actual,
+        estimate = predict
+      ) %>%
+      filter(truth!=0) %>% 
+      summarise(diff=sum(abs(truth-estimate)),
+                total=sum(truth)) %>%
+      mutate(mape=(diff/total)*100) 
+  }
+  
+  safe_mape1 <- possibly(mape_calculation_sfi, otherwise = NA)
+  
+  safe_mape1(prediction_tbl)
+}
+
+
+
+
+# Setup single plot function
+
+plot_prediction <- function(data, id, alpha = 1, size = 2, base_size = 6) {
+  
+  #mape_val <- calc_mape(data)
+  
+  g <- data %>%
+    ggplot(aes(index, value, color = key)) +
+    geom_point(alpha = alpha, size = size) + 
+    #geom_line(size = size) + 
+    tidyquant::theme_tq(base_size = base_size) +
+    tidyquant::scale_color_tq() +
+    theme(legend.position = "none") +
+    labs(
+      #title = glue("{id}, mape: {round(mape_val, digits = 1)}"),
+      x = "", y = ""
+    )
+  
+  return(g)
+}
+
+
+plot_predictions <- function(sampling_tbl, predictions_col, 
+                             ncol = 2, alpha = 1, size = 2, base_size = 18,
+                             title = "Backtested Predictions") {
+  
+  predictions_col_expr <- enquo(predictions_col)
+  
+  # Map plot_split() to sampling_tbl
+  sampling_tbl_with_plots <- sampling_tbl %>%
+    mutate(gg_plots = map2(!! predictions_col_expr, id, 
+                           .f        = plot_prediction, 
+                           alpha     = alpha, 
+                           size      = size, 
+                           base_size = base_size)) 
+  
+  # Make plots with cowplot
+  plot_list <- sampling_tbl_with_plots$gg_plots 
+  
+  p_temp <- plot_list[[1]] + theme(legend.position = "bottom")
+  legend <- get_legend(p_temp)
+  
+  p_body  <- plot_grid(plotlist = plot_list, ncol = ncol)
+  
+  
+  
+  p_title <- ggdraw() + 
+    draw_label(title, size = 18, fontface = "bold", colour = palette_light()[[1]])
+  
+  g <- plot_grid(p_title, p_body, legend, ncol = 1, rel_heights = c(0.05, 1, 0.05))
+  
+  return(g)
+  
+}
+
+
+sample_predictions_lstm_tbl_prices %>%
+  filter(id%in%c("Slice1", "Slice2")) %>% 
+  plot_predictions(predictions_col = predict, alpha = 1, size = 1, base_size = 10,
+                   title = "Predicción sobre las muestras de prueba. Particiones 1 y 2")
+```
+\centering
+  \captionof{figure}{Resultados sobre muestra de prueba de la LSTM sobre los precios de cierre en particiones 1 y 2. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+
+```{r fig.height=6, fig.width=12,fig.align = "center"}
+sample_predictions_lstm_tbl_prices %>%
+  filter(id%in%c("Slice3","Slice4")) %>% 
+  plot_predictions(predictions_col = predict, alpha = 1, size = 1, base_size = 10,
+                   title = "Predicción sobre las muestras de prueba. Particiones 3 y 4")
+```
+\centering
+  \captionof{figure}{Resultados sobre muestra de prueba de la LSTM sobre los precios de cierre en particiones 3 y 4. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+```{r fig.height=6, fig.width=12,fig.align = "center"}
+sample_predictions_lstm_tbl_prices %>%
+  filter(id%in%c( "Slice5","Slice6")) %>% 
+  plot_predictions(predictions_col = predict, alpha = 1, size = 1, base_size = 10,
+                   title = "Predicción sobre las muestras de prueba. Particiones 5 y 6")
+
+```
+\centering
+  \captionof{figure}{Resultados sobre muestra de prueba de la LSTM sobre los precios de cierre en particiones 5 y 6. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+\noindent
+Seguidamente se presenta la tabla que muestra el cálculo de las distintas métricas de rendimiento para las distintas particiones:
+
+```{r}
+sample_mape_tbl <- sample_predictions_lstm_tbl_prices %>%
+  mutate(mape = map(predict, calc_mape)) %>% 
+  dplyr::select(id, mape)
+
+```
+
+```{r}
+#sample_predictions_lstm_tbl_prices$predict[[1]]
+# for(i in 1:length(sample_predictions_lstm_tbl_prices$predict)){
+#   temp<-calc_mape_sfi(sample_predictions_lstm_tbl_prices$predict[[i]])
+#   if(base::exists("results")){
+#     results<-results %>% rbind(temp)
+#   }else{results<-temp}
+# }
+
+results<-calc_mape_sfi(sample_predictions_lstm_tbl_prices$predict[[1]]) %>% 
+  rbind(calc_mape_sfi(sample_predictions_lstm_tbl_prices$predict[[2]]),
+        calc_mape_sfi(sample_predictions_lstm_tbl_prices$predict[[3]]),
+        calc_mape_sfi(sample_predictions_lstm_tbl_prices$predict[[4]]),
+        calc_mape_sfi(sample_predictions_lstm_tbl_prices$predict[[5]]),
+        calc_mape_sfi(sample_predictions_lstm_tbl_prices$predict[[6]]))
+
+do.call(rbind.data.frame, sample_mape_tbl$mape) %>% mutate(Split=paste("split",seq(1,6,1))) %>%
+  left_join(
+    results %>% mutate(key=paste("split",seq(1,6,1))),
+    by=c("Split"="key")
+  ) %>%
+  dplyr::rename("MAPE"=mape.x,"MAPE2"=mape.y) %>%
+  dplyr::select(Split,MAPE,MAPE2)
+```
+
+\noindent
+Como se puede observar en base al cálculo de los dos tipos de MAPE, los resultados parecen bastante buenos. En la peor de las particiones el modelo es capaz de generar un error percentual absoluto medio de alrededor del 7%. El MAPE2, modificado, muestra unos resultados que son ligeramente mejores que la métrica del MAPE original, pero aun así en general se observan buenos resultados. Aun habiendo entrenado la LSTM sin optimizar los hyper parámetros y en el caso más sencillo en el que los *time steps* están fijados a 1 parece que se obtiene un resultado relativamente bueno en términos de MAPE. Sin embargo, una observación más detallada de las gráficas anteriores indica que, aunque los valos predichos están en un nivel razonable, no son capaces de captar los patrones que aparecen rápidamente, como podría ser un crecimiento. Cabe destacar la predicción elaborada en la partición 2. Los valores predichos tienen una tendencia decreciente, mientras que los precios crecían. Esto se debe al gran decrecimiento que presentan los datos en esta partición, en su primera mitad. El modelo LSTM entrenado con esta partición aprende este partón y es el que intenta replicar al hacer las predicciones.
+
+\noindent
+Para facilitar la comparabilidad de las dos métricas se presenta la siguiente visualización gráfica:
+
+```{r}
+
+do.call(rbind.data.frame, sample_mape_tbl$mape) %>% mutate(Split=paste("split",seq(1,6,1))) %>%
+  left_join(
+    results %>% mutate(key=paste("split",seq(1,6,1))),
+    by=c("Split"="key")
+  ) %>%
+  dplyr::rename("MAPE"=mape.x,"MAPE2"=mape.y) %>%
+  dplyr::select(Split,MAPE,MAPE2) %>%
+  gather(metrica,valor,2:3) %>%
+  ggplot(aes(x=Split,y=valor,fill=metrica),color="black")+
+  geom_bar(stat = "identity",position=position_dodge())+
+  theme_tq()+
+  scale_fill_brewer(palette="Set1")+
+  theme(legend.text  = element_text(size=15),
+        legend.title = element_text(size=15))+
+  ggtitle("Métricas sobre las distintas particiones obtenidas con la LSTM")
+# 
+# 
+
+
+```
+\centering
+  \captionof{figure}{Métricas de rendimiento de las predicciones elaboradas con LSTM sobre las distintas particiones. Precio de cierre. Fuente: elaboración propia}
+  
+\setlength\parskip{5ex}
+\justifying
+\noindent
+Gracias a la figura anterior se puede ver fácilmente el punto que se apuntaba previamente. La segunda métrica parece ofrecer ligeramente unos valores inferiores pero en general los resultados obtenidos en términos de MAPE son bastante postivios. Esto induce a pensar que, disponiendo de una mayor capacidad computacional, este modelo se podría mejorar más. La propuesta sería la de utilizar el paquete `tfruns` para elaborar un *grid search* sobre todas las combinaciones de hyper parámetros disponibles. Esta técnica consiste en probar todas las combinaciones de parámetros con tal de escoger la combinación que ofrece un mejor resultado sobre la muestra de validación. En este caso se hubiera propuesto una técnica de cross-validación adaptada a las series temporales llamada *rolling origin cross-validation*, que permite mantener la estructura temporal de la seria en el momento de hacer la optimización vía *grid search* en muestra de validación.
+
+\noindent
+Seguidamente también se muestran dos métricas alternativas que permiten evaluar la capacidad predictiva de los precios de la LSTM. Éstas métricas son el Error Absoluto Medio (MAE) y el Cuadrado de la Media de los errores al cuadrado (RMSE)
+
+
+```{r}
+
+metrics<-function(x){
+  
+a<-x %>%
+    spread(key = key, value = value) %>%
+    dplyr::select(-index) %>%
+    filter(!is.na(predict)) %>%
+    rename(
+        truth    = actual,
+        estimate = predict
+    ) %>%
+    filter(truth!=0)
+  
+return(data.frame(MAE=MAE(x = a$estimate,ref=a$truth),
+                  RMSE=RMSE(x = a$estimate,ref=a$truth)
+        ))
+
+}
+
+
+
+
+metrics(sample_predictions_lstm_tbl_prices$predict[[1]]) %>% 
+  rbind(metrics(sample_predictions_lstm_tbl_prices$predict[[2]]),
+        metrics(sample_predictions_lstm_tbl_prices$predict[[3]]),
+        metrics(sample_predictions_lstm_tbl_prices$predict[[4]]),
+        metrics(sample_predictions_lstm_tbl_prices$predict[[5]]),
+        metrics(sample_predictions_lstm_tbl_prices$predict[[6]])) %>% 
+  mutate(particiones=paste("split",seq(1,6,1))) %>% 
+  dplyr::select(particiones,everything()) %>% 
+  arrange(RMSE)
+
+```
+
+\noindent
+Como se puede apreciar en los resultados anteriores, ambas métricas también muestran que en general se obtienen unos resultados relativamente buenos. En ningún caso el RMSE pasa de 2 puntos en las particiones, siendo la 1ª y la 5ª partición las que obtienen mejores resultados, siendo su RMSE menor a 1. Sin embargo, las particiones que obtienen peores resultados son las particiones 2 y 3.
+
+```{r fig.height=7, fig.width=11,fig.align = "center"}
+# sample_predictions_lstm_tbl_return %>%
+#   plot_predictions(predictions_col = predict, alpha = 1, size = 1, base_size = 10,
+#                    title = "Keras Stateful LSTM: Prediction")
+```

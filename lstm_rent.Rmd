@@ -1,0 +1,435 @@
+---
+output: pdf_document
+---
+
+<!-- LSTM returns -->
+\noindent
+Una vez aplicada la LSTM sobre los precios de cierre directamente, se explora la posibilidad de construir el mismo tipo de modelos pero utilizando el logaritmo de las rentabilidades como serie temporal. Los *log returns* pueden verse desde una perspectiva económica como la ganancia percentual entre dos precios, puediendo ser su valor positivo o negativo. Desde un punto de vista estadístico lo que busca esta transformación es que la serie temporal pase a ser estacionaria de segundo orden al estar sus valores centrados en 0 y tener (teóricamente) una varianza constante a lo largo del periodo considerado. Sin embargo, este último punto no es del todo cierto en el contexto del sector financiero ya que, al ser las series temporales consideradas muy volátiles, no se consigue estabilizar totalmente la varianza aplicando el logaritmo. Ésto se puede observar en los gráficos que se muestran a continuación en los distintos picos que presenta la rentabilidad, cosa que indica que la varianza no está del todo estabilizada. Esta rentabilidad es la misma que se calcula en la sección V.1 al hacer la descriptiva de las series temporales consideradas.
+
+
+```{r,results='hide'}
+libraries <- c("lubridate","tidyverse","tidyr","forecast","ggplot2","seasonal","tidyverse",
+               "manipulate","compiler","scales","lmtest","MASS","glmnet","forecTheta",
+               "neuralnet","tsDyn","changepoint","RSNNS","xgboost","foreach","doSNOW",
+               "tcltk","DescTools","rnn","glue","forcats","timetk","tidyquant","tibbletime",
+               "cowplot","recipes","rsample","yardstick","keras","quantmod","tidyverse"
+)
+# check.libraries <- is.element(libraries, installed.packages()[, 1])==FALSE
+# libraries.to.install <- libraries[check.libraries]
+# if (length(libraries.to.install!=0)) {
+#   install.packages(libraries.to.install)
+# }
+
+lapply(libraries, require, character.only=TRUE)
+library(tidyverse)
+library(quantmod)
+getSymbols(Symbols = "KO", from ="2000-01-01",to="2018-12-31")
+#install_keras()
+```
+
+\justifying
+```{r}
+load("C:/Users/i0386388/Desktop/tesis/lstm_prices.RData")
+sample_predictions_lstm_tbl_prices<-sample_predictions_lstm_tbl
+load("C:/Users/i0386388/Desktop/tesis/lstm_return.RData")
+sample_predictions_lstm_tbl_return<-sample_predictions_lstm_tbl
+rm(sample_predictions_lstm_tbl)
+```
+
+```{r,results='hide'}
+
+dates<-rownames(as.data.frame(KO))
+log_return <- diff(log(as.vector(KO$KO.Close)))
+
+Exerci.0<-data.frame(MSales=log_return,StartDate=dates[-length(dates)])#log returns
+
+rownames(Exerci.0)<-Exerci.0$StartDate
+input<-Exerci.0 %>% dplyr::select(MSales)
+
+
+input.0 <- input %>%
+  tk_tbl() %>%
+  mutate(index = as_date(index)) %>%
+  as_tbl_time(index = index) %>% 
+  rename("value"=MSales)
+
+
+periods_train <- 996 #train length in each resample
+periods_test  <- 83
+skip_span     <- 650
+
+rolling_origin_resamples <- rolling_origin(
+  input.0,
+  initial    = periods_train,
+  assess     = periods_test,
+  cumulative = FALSE,
+  skip       = skip_span
+)
+
+rolling_origin_resamples
+
+```
+
+\noindent
+La estrategia de entrenamiento de los modelos LSTM sobre la rentabilidad es la misma que en el caso anterior sobre el precio. Se elaboran 6 particiones y sus respectivas particiones sobre muestras de entrenamiento y prueba. Los gráficos de las particiones se presentan a continuación.
+
+
+```{r fig.height=9, fig.width=11,fig.align = "center"}
+# Plotting function for a single split
+plot_split <- function(split, expand_y_axis = TRUE, alpha = 1, size = 1, base_size = 14) {
+  
+  # Manipulate data
+  train_tbl <- training(split) %>%
+    add_column(key = "training") 
+  
+  test_tbl  <- testing(split) %>%
+    add_column(key = "testing") 
+  
+  data_manipulated <- bind_rows(train_tbl, test_tbl) %>%
+    as_tbl_time(index = index) %>%
+    mutate(key = fct_relevel(key, "training", "testing"))
+  
+  # Collect attributes
+  train_time_summary <- train_tbl %>%
+    tk_index() %>%
+    tk_get_timeseries_summary()
+  
+  test_time_summary <- test_tbl %>%
+    tk_index() %>%
+    tk_get_timeseries_summary()
+  
+  # Visualize
+  g <- data_manipulated %>%
+    ggplot(aes(x = index, y = value, color = key, group = 1)) +
+    geom_line(size = size, alpha = alpha) +
+    theme_tq(base_size = base_size) +
+    scale_color_tq() +
+    labs(
+      title    = glue("Split: {split$id}"),
+      subtitle = glue("{train_time_summary$start} to {test_time_summary$end}"),
+      y = "", x = ""
+    ) +
+    theme(legend.position = "none") 
+  
+  if (expand_y_axis) {
+    
+    input.0_time_summary <- input.0 %>% 
+      tk_index() %>% 
+      tk_get_timeseries_summary()
+    
+    g <- g +
+      scale_x_date(limits = c(input.0_time_summary$start, 
+                              input.0_time_summary$end))
+  }
+  
+  return(g)
+}
+
+
+plot_sampling_plan <- function(sampling_tbl, expand_y_axis = TRUE, 
+                               ncol = 3, alpha = 1, size = 1, base_size = 14, 
+                               title = "Sampling Plan") {
+  
+  # Map plot_split() to sampling_tbl
+  sampling_tbl_with_plots <- sampling_tbl %>%
+    mutate(gg_plots = map(splits, plot_split, 
+                          expand_y_axis = expand_y_axis,
+                          alpha = alpha, base_size = base_size))
+  
+  # Make plots with cowplot
+  plot_list <- sampling_tbl_with_plots$gg_plots 
+  
+  p_temp <- plot_list[[1]] + theme(legend.position = "bottom")
+  legend <- get_legend(p_temp)
+  
+  p_body  <- plot_grid(plotlist = plot_list, ncol = ncol)
+  
+  p_title <- ggdraw() + 
+    draw_label(title, size = 18, fontface = "bold", colour = palette_light()[[1]])
+  
+  g <- plot_grid(p_title, p_body, legend, ncol = 1, rel_heights = c(0.05, 1, 0.05))
+  
+  return(g)
+  
+}
+
+rolling_origin_resamples %>%
+  plot_sampling_plan(expand_y_axis = T, ncol = 3, alpha = 1, size = 1, base_size = 10, 
+                     title = "Ventana móbil de muestras de entrenamiento y prueba")
+
+```
+\centering
+  \captionof{figure}{Plan de entrenamiento de la LSTM para la rentabilidad de Coca Cola. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+\noindent
+Para facilitar la visualización se presentan también las gráficas ampliadas:
+
+```{r fig.height=9, fig.width=11,fig.align = "center"}
+rolling_origin_resamples %>%
+  plot_sampling_plan(expand_y_axis = F, ncol = 3, alpha = 1, size = 1, base_size = 10, 
+                     title = "Ventana móbil de muestras de entrenamiento y prueba. Ampliado")
+```
+\centering
+  \captionof{figure}{Plan de entrenamiento de la LSTM para los precios de cierre. Ampliado. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+\noindent
+La configuración de los hyper parámetros ha sido la misma que en la sección V.4 donde se aplican los modelos LSTM sobre el precio. De nuevo esto responde a un intento de simplificar la complejidad computacional que presenta una optimización y entrenamiento intensivos de estos modelos. A continuación se presentan graficados los valores predichos en rojo encima de los valores reales en gris.
+
+
+```{r fig.height=6, fig.width=12,fig.align = "center"}
+
+calc_mape <- function(prediction_tbl) {
+  
+  mape_calculation <- function(data) {
+    data %>%
+      spread(key = key, value = value) %>%
+      dplyr::select(-index) %>%
+      filter(!is.na(predict)) %>%
+      rename(
+        truth    = actual,
+        estimate = predict
+      ) %>%
+      filter(truth!=0) %>% 
+      mutate(diff=abs(truth-estimate)) %>%
+      mutate(truth=abs(truth)) %>%
+      mutate(coc=diff/truth) %>% 
+      summarise(mape=mean(coc))*100
+  }
+  
+  safe_mape <- possibly(mape_calculation, otherwise = NA)
+  
+  safe_mape(prediction_tbl)
+  
+}
+
+calc_mape_sfi <- function(prediction_tbl) {
+
+    mape_calculation_sfi <- function(data) {
+    data %>%
+      spread(key = key, value = value) %>%
+      dplyr::select(-index) %>%
+      filter(!is.na(predict)) %>%
+      rename(
+        truth    = actual,
+        estimate = predict
+      ) %>%
+      filter(truth!=0) %>% 
+      summarise(diff=sum(abs(truth-estimate)),
+                total=sum(abs(truth))) %>%
+      mutate(mape=(diff/total)*100) 
+  }
+  
+  safe_mape1 <- possibly(mape_calculation_sfi, otherwise = NA)
+  
+  safe_mape1(prediction_tbl)
+}
+
+
+
+
+# Setup single plot function
+
+plot_prediction <- function(data, id, alpha = 1, size = 2, base_size = 6) {
+  
+  #mape_val <- calc_mape(data)
+  
+  g <- data %>%
+    ggplot(aes(index, value, color = key)) +
+    geom_point(alpha = alpha, size = size) + 
+    #geom_line(size = size) + 
+    tidyquant::theme_tq(base_size = base_size) +
+    tidyquant::scale_color_tq() +
+    theme(legend.position = "none") +
+    labs(
+      #title = glue("{id}, mape: {round(mape_val, digits = 1)}"),
+      x = "", y = ""
+    )
+  
+  return(g)
+}
+
+
+plot_predictions <- function(sampling_tbl, predictions_col, 
+                             ncol = 2, alpha = 1, size = 2, base_size = 18,
+                             title = "Backtested Predictions") {
+  
+  predictions_col_expr <- enquo(predictions_col)
+  
+  # Map plot_split() to sampling_tbl
+  sampling_tbl_with_plots <- sampling_tbl %>%
+    mutate(gg_plots = map2(!! predictions_col_expr, id, 
+                           .f        = plot_prediction, 
+                           alpha     = alpha, 
+                           size      = size, 
+                           base_size = base_size)) 
+  
+  # Make plots with cowplot
+  plot_list <- sampling_tbl_with_plots$gg_plots 
+  
+  p_temp <- plot_list[[1]] + theme(legend.position = "bottom")
+  legend <- get_legend(p_temp)
+  
+  p_body  <- plot_grid(plotlist = plot_list, ncol = ncol)
+  
+  
+  
+  p_title <- ggdraw() + 
+    draw_label(title, size = 18, fontface = "bold", colour = palette_light()[[1]])
+  
+  g <- plot_grid(p_title, p_body, legend, ncol = 1, rel_heights = c(0.05, 1, 0.05))
+  
+  return(g)
+  
+}
+
+
+sample_predictions_lstm_tbl_return %>%
+  filter(id%in%c("Slice1", "Slice2")) %>% 
+  plot_predictions(predictions_col = predict, alpha = 1, size = 1, base_size = 10,
+                   title = "Predicción sobre las muestras de prueba. Particiones 1 y 2")
+```
+\centering
+  \captionof{figure}{Resultados sobre muestra de prueba de la LSTM sobre la rentabilidad en particiones 1 y 2. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+
+```{r fig.height=6, fig.width=12,fig.align = "center"}
+sample_predictions_lstm_tbl_return %>%
+  filter(id%in%c("Slice3","Slice4")) %>% 
+  plot_predictions(predictions_col = predict, alpha = 1, size = 1, base_size = 10,
+                   title = "Predicción sobre las muestras de prueba. Particiones 3 y 4")
+```
+\centering
+  \captionof{figure}{Resultados sobre muestra de prueba de la LSTM sobre la rentabilidad en particiones 3 y 4. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+```{r fig.height=6, fig.width=12,fig.align = "center"}
+sample_predictions_lstm_tbl_return %>%
+  filter(id%in%c( "Slice5","Slice6")) %>% 
+  plot_predictions(predictions_col = predict, alpha = 1, size = 1, base_size = 10,
+                   title = "Predicción sobre las muestras de prueba. Particiones 5 y 6")
+
+```
+\centering
+  \captionof{figure}{Resultados sobre muestra de prueba de la LSTM sobre la rentabilidad en particiones 5 y 6. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+\noindent
+Para evaluar la capacidad predictiva de la LSTM que se acaba de construir sobre la rentabilidad de la empresa Coca Cola se necesita modificar ligeramente la métrica de MAPE presentada en M.4 ya que, al ser la rentabilidad un estadístico que puede presentar valores tanto negativos como positivos, hay que hacer el sumatorio del valor absoluto del cociente, en vez de simplemente el valor absoluto del nominador. Esto se debe al hecho de que los valores actuales, o reales, pueden ser negativos. La nueva métrica de MAPE propuesta para el caso de la rentabilidad es la siguiente:
+
+$$MAPE_{bis} = \frac{1}{n}\sum_{i=1}^{n}\left | \frac{Actual_i \ -\ Predicted_i}{Actual_i}\right | \ \ \ \ \ \ \ \ \ \ \ \ \ \ (M.4bis)$$
+\setlength\parskip{5ex}
+
+$$MAPE_{2bis} = \frac{\sum_{i=1}^{n}\left |  Actual_i \ -\ Predicted_i\right |}{\sum_{i=1}^{n}\left |Actual_i \right |} \ \ \ \ \ \ \ \ \ \ \ \ \ \ (M.5bis)$$
+
+```{r}
+sample_mape_tbl <- sample_predictions_lstm_tbl_return %>%
+  mutate(mape = map(predict, calc_mape)) %>% 
+  dplyr::select(id, mape)
+
+```
+
+```{r}
+#sample_predictions_lstm_tbl_return$predict[[1]]
+# for(i in 1:length(sample_predictions_lstm_tbl_return$predict)){
+#   temp<-calc_mape_sfi(sample_predictions_lstm_tbl_return$predict[[i]])
+#   if(base::exists("results")){
+#     results<-results %>% rbind(temp)
+#   }else{results<-temp}
+# }
+
+results<-calc_mape_sfi(sample_predictions_lstm_tbl_return$predict[[1]]) %>%
+  rbind(calc_mape_sfi(sample_predictions_lstm_tbl_return$predict[[2]]),
+        calc_mape_sfi(sample_predictions_lstm_tbl_return$predict[[3]]),
+        calc_mape_sfi(sample_predictions_lstm_tbl_return$predict[[4]]),
+        calc_mape_sfi(sample_predictions_lstm_tbl_return$predict[[5]]),
+        calc_mape_sfi(sample_predictions_lstm_tbl_return$predict[[6]]))
+
+do.call(rbind.data.frame, sample_mape_tbl$mape) %>% mutate(Split=paste("split",seq(1,6,1))) %>%
+  left_join(
+    results %>% mutate(key=paste("split",seq(1,6,1))),
+    by=c("Split"="key")
+  ) %>%
+  dplyr::rename("MAPE"=mape.x,"MAPE2"=mape.y) %>%
+  dplyr::select(Split,MAPE,MAPE2)
+```
+
+\noindent
+A continuación se presentan finalmente, siguiendo el formato presentado en la sección V.4, las métricas de rendimiento sobre la predicción que se acaba de generar para la rentabilidad de la empresa Coca-Cola en las 6 particiones. En este caso las métricas que se presentan finalmente para evaluar el rendimiento de las predicciones hechas con la LSTM sobre la muestra de prueba de las rentabilidades son el Error Medio Absoluto (MAE) y el RMSE.
+
+
+
+
+```{r}
+
+# do.call(rbind.data.frame, sample_mape_tbl$mape) %>% mutate(Split=paste("split",seq(1,6,1))) %>%
+#   left_join(
+#     results %>% mutate(key=paste("split",seq(1,6,1))),
+#     by=c("Split"="key")
+#   ) %>%
+#   dplyr::rename("MAPE"=mape.x,"MAPE2"=mape.y) %>%
+#   dplyr::select(Split,MAPE,MAPE2) %>%
+#   gather(metrica,valor,2:3) %>%
+#   ggplot(aes(x=Split,y=valor,fill=metrica),color="black")+
+#   geom_bar(stat = "identity",position=position_dodge())+
+#   theme_tq()+
+#   scale_fill_brewer(palette="Set1")+
+#   theme(legend.text  = element_text(size=15),
+#         legend.title = element_text(size=15))+
+#   ggtitle("Métricas sobre las distintas particiones obtenidas con la LSTM")
+# # 
+# # 
+
+
+```
+<!-- \centering -->
+<!--   \captionof{figure}{Métricas de rendimiento de las predicciones elaboradas con LSTM sobre las distintas particiones. Fuente: elaboración propia} -->
+
+<!-- \setlength\parskip{5ex} -->
+<!-- \justifying -->
+
+
+```{r}
+
+metrics<-function(x){
+  
+a<-x %>%
+    spread(key = key, value = value) %>%
+    dplyr::select(-index) %>%
+    filter(!is.na(predict)) %>%
+    rename(
+        truth    = actual,
+        estimate = predict
+    ) %>%
+    filter(truth!=0)
+  
+return(data.frame(MAE=MAE(x = a$estimate,ref=a$truth),
+                  RMSE=RMSE(x = a$estimate,ref=a$truth)
+        ))
+
+}
+
+
+
+
+metrics(sample_predictions_lstm_tbl_return$predict[[1]]) %>% 
+  rbind(metrics(sample_predictions_lstm_tbl_return$predict[[2]]),
+        metrics(sample_predictions_lstm_tbl_return$predict[[3]]),
+        metrics(sample_predictions_lstm_tbl_return$predict[[4]]),
+        metrics(sample_predictions_lstm_tbl_return$predict[[5]]),
+        metrics(sample_predictions_lstm_tbl_return$predict[[6]])) %>% 
+  mutate(particiones=paste("split",seq(1,6,1))) %>% 
+  dplyr::select(particiones,everything()) %>% 
+  arrange(RMSE)
+
+```
+
+\noindent
+Los resultados observados anteriormente llevan a pensar que los modelos LSTM construidos con la rentabilidad sobre las distintas particiones no son para nada unos modelos que ofrezcan buenos resultados. Esto se puede ver a partir del cáluclo del MAPE, en contrapartida a las métricas MAE y RMSE. El MAPE de todas las particiones está sobre el 100%. Esto significa que en porcentage, se hace un 100% de error respecto a los valores actuales. Cabe destacar que para considerar un modelo predictivo como de alto rendimiento, el MAPE debería ser inferior al 5%. En este caso, los valores de la rentabilidad son muy pequeños, del orden de 3 decimales, de manera que una diferencia de 1 decimal implica un porcentage de error muy elevado. Por ejemplo, si el valor actual de la rentabilidad es del 0.00019 y el modelo predice un valor de 0.014 para el mismo periodo, uno se encuentra con un error que es 6 veces mayor que el valor real. Es por esto que el cálculo del MAPE ofrece valores tan elevados (alrededor del 100%). Este hecho se remarca ya que el cálculo del RMSE podría engañar al lector. Aunque los cuadrados de los errores sean muy pequeños, esto no significa que los modelos construidos sobre la rentabilidad tengan un buen rendimiento (tal como indica el MAPE). Estos modelos presentan un RMSE tan pequeño a causa del orden de los valores de la rentabilidad. Es decir, al ser la rentabilidad un valor tan pequeño, del orden de 3 o 4 decimales, los cuadrados de los errores que se obtienen son, a su vez, muy pequeños. Esto podría parecer la indicación de que los modelos predictivos sobre la rentabilidad funcionan de una manera sorprendentemente buena cuando, en realidad, no lo están haciendo, como muestra el MAPE. En resumen: parece que los modelos LSTM construidos sobre la rentabilidad no funcionan, ni de cerca, tan bien que los modelos sobre el precio de cierre. El lector debe recordar que los modelos LSTM se han construido con una configuración determinada al disponer de una capacidad computacional limitada. Por ese motivo el rendimiento de la LSTM sobre la rentabilidad se cree que puede mejorar con una configuración optimizada de los hyper parámetros.

@@ -1,0 +1,326 @@
+---
+output: pdf_document
+---
+
+\noindent
+En el presente apartado se procede a utilizar el modelo de predicción de la dirección de movimiento del precio de cierre desarrollado en el apartado anterior en una aplicación masiva. El hecho de que se considere una aplicación masiva hace referencia a que el modelo SMD definido en la sección V.1 se aplica, después de construir una función que permite generalizar su aplicación, de una manera iterativa sobre un conjunto predefinido de *stocks*, paralelizando el cálculo. En este sentido se puede entender que es una aplicación masiva ya que no se aplica sobre un conjunto específico de empresas sino que se lanza de manera general para un conjunto mucho mayor de empresas. El objetivo es lo que distingue esta sección de la anterior: mientras que en la anterior el centro del análisis consiste en visualizar cómo rinde cada empresa con este tipo de modelos, lo interesante de este apartado es poder analizar más globalmente (o masivamente) el resultado de este tipo de modelos sobre un conjunto con un gran número de empresas. Esta aplicación no deja de ser un ejemplo adaptado para este trabajo y limitado por la capacidad computacional disponible en el momento de su creación. Cabe decir que la presente lógica de aplicación del modelo SMD se puede extender fácilmente si se dispone de mayor capacidad computacional.
+
+\noindent
+En primer lugar se descargan los datos de 01-01-2000 a 06-05-2019 de 165 empresas con los símbolos correlativos del NYSE. La selección de las empresas del NYSE es consecutiva empezando con el símbolo ETG. Posteriormente se aplica de manera iterativa el modelo de predicción de la dirección de movimiento definido en el apartado anterior utilizando el modelo Random Forest con los parámetros por defecto (número de variables a probar en cada split = sqrt(p) donde p es el número de regresores y número de árboles a crecer). Las particiones de muestra de entramiento y test que se utilizan para evaluar el modelo se construyen con las siguientes proporciones: train = 85% y test = 15%. Para crear estas particiones se mantiene, como en el caso anterior, el factor temporal. Sin embargo, en este caso se definen las particiones en proporción al no tener el mismo número de datos disponibles para todas las empresas. Por lo que respecta al tipo de alisado en los datos que se elabora antes de construir las variables y ajustar los modelos, para este apartado se ha restringido el perímetro y sólo se ha utilizado un alisado exponencial del precio con una EMA a 90 días. Los símbolos o compañías que se analizan en este apartado son las siguientes:
+
+```{r}
+load("C:/Users/i0386388/Desktop/tesis/massive_SMD.RData")
+results<-results[-c(47,75,76,93,103,109,112,121,125,126,141,159,160,162,164,167,168,173),]
+print(results$stock)
+```
+
+\noindent
+Al ser un ejercicio con un coste computacional elevado, para el presente trabajo se ha decidido **paralelizar el cálculo** de los distintos modelos utilizando los núcleos del ordenador con el que se ha trabajado. En este caso el cálculo se ha paralelizado utilizando 3 núcleos, de manera que en cada uno de ellos se ha calculado por separado todo el proceso de modelización SMD: Recogida de datos, procesamiento de alisado con EMA 90, *feature extraction*, modelización y evaluación de los resultados utilizando la *accuracy* obtenida con el modelo de clasificación. El proceso de cálculo de los 3 modelos (uno para cada ventana de predicción en el futuro) con las 165 empresas tomó alrededor de 5 horas aun habiendo paralelizado el cálculo con 3 núcleos.
+
+\noindent
+La evaluación de los resultados se hace desde tres perspectivas. En primer lugar se elabora un *heatmap* con la *accuracy* obtenida sobre muestra de prueba con cada una de las 3 ventanas de predicción hacia el futuro: 1, 2 y 3 meses. El objetivo de esta herramienta gráfica es múltiple. Por un lado permite la visualización global de los resultados, a la vez que aporta una primera imagen de lo buenos que son los resultados. La idea es que si se pinta el *heatmap* de los resultados obtenidos y el resultado es generalmente bueno (alta *accuracy*) el color predominante en el gráfico debería ser el rojo, indicando que la mayoría de los valores están por encima del umbral del 50%. Seguidamente se presenta el *heatmap*:
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+# source("C:/Users/i0386388/Desktop/TFG-master/functions/smooth_target.R")
+# 
+# source("C:/Users/i0386388/Desktop/tesis/Tesis/target_feature_extraction.R")
+# 
+# # Fetch all Symbols & store only the tickers to retrieve the data
+# symbols <- stockSymbols(exchange = "NYSE")
+# symbols <- symbols[,1]
+# #
+# symbols<-symbols[1000:1300]
+# n <- length(symbols)
+# pb <- txtProgressBar(min = 0, max = n, style=3)
+# 
+# 
+# library(doParallel)
+# 
+# #setup parallel backend to use many processors
+# cores=detectCores()
+# cl <- makeCluster(cores[1]-1) #not to overload your computer
+# registerDoParallel(cl)
+# 
+# # Actual loop:
+# #for(i in 1:length(symbols)) {
+#   time<-Sys.time()
+# results= foreach::foreach(i=1:length(symbols),
+#                           .export = c("symbols","n"),#ls()
+#                           .combine = rbind,
+#                           .packages = c("quantmod","TTR","tidyverse","caret","randomForest","CombMSC"),
+#                           .verbose = TRUE)%dopar%{
+# 
+# #   cat(paste0("Doing ",symbols[i],"\n",length(symbols)-i, "remaining"))
+# 
+#   symbols[i]-> symbol
+#   # specify the "from" date to desired start date
+#   tryit <- try(getSymbols(symbol,from="2000-01-01", src='yahoo'))
+#   if(inherits(tryit, "try-error")){
+#     i <- i+1
+#   } else {
+#     # specify the "from" date to desired start date
+#     #data <-
+#       getSymbols(symbol, from="2000-01-01", src='yahoo')
+#     #dataset <- merge(dataset, Ad(get(symbols[i])))
+#     rm(symbol)
+# 
+#   # setTxtProgressBar(pb, i)
+# 
+# 
+#   if(nrow(get(symbols[i]))>2000){
+#   data<-try(EMA_finance(get(symbols[i]),smoothing_period = 90),silent = T)
+# 
+#   if(class(data)!="try-error"){
+# 
+# 
+#   data_1m<-data %>%
+#     slice(1:(nrow(.)-20)) %>%
+#     bind_cols(target=target_calc(data,20))
+# 
+#   rownames(data_1m)<-rownames(data)[c(1:(nrow(data)-20))]
+#   data_1m$target<-factor(data_1m$target)
+# 
+#   data_2m<-data %>%
+#     slice(1:(nrow(.)-40)) %>%
+#     bind_cols(target=target_calc(data,40))
+# 
+#   rownames(data_2m)<-rownames(data)[c(1:(nrow(data)-40))]
+#   data_2m$target<-factor(data_2m$target)
+# 
+#   data_3m<-data %>%
+#     slice(1:(nrow(.)-60)) %>%
+#     bind_cols(target=target_calc(data,60))
+# 
+#   rownames(data_3m)<-rownames(data)[c(1:(nrow(data)-60))]
+#   data_3m$target<-factor(data_3m$target)
+# 
+#   rm(data)
+# 
+#    data_1m_target_feature<-feature_extraction_finance(data_1m)
+#    data_2m_target_feature<-feature_extraction_finance(data_2m)
+#    data_3m_target_feature<-feature_extraction_finance(data_3m)
+# 
+#    rm(data_1m,data_2m,data_3m)
+# 
+#    train_data_1m_target_feature<-data_1m_target_feature[1:floor(nrow(data_1m_target_feature)*0.85),]
+#    test_data_1m_target_feature<-data_1m_target_feature[(floor(nrow(data_1m_target_feature)*0.85)+1):nrow(data_1m_target_feature),]
+# 
+#    train_data_2m_target_feature<-data_2m_target_feature[1:floor(nrow(data_2m_target_feature)*0.85),]
+#    test_data_2m_target_feature<-data_2m_target_feature[(floor(nrow(data_2m_target_feature)*0.85)+1):nrow(data_2m_target_feature),]
+# 
+#    train_data_3m_target_feature<-data_3m_target_feature[1:floor(nrow(data_3m_target_feature)*0.85),]
+#    test_data_3m_target_feature<-data_3m_target_feature[(floor(nrow(data_3m_target_feature)*0.85)+1):nrow(data_3m_target_feature),]
+# 
+#    #remover las filas donde el pn ratio sea infinito5
+#    if(any(train_data_1m_target_feature$PNratio=="Inf")){
+#      RF_1m<-randomForest(target~.,data=train_data_1m_target_feature %>% select(-PNratio),ntree=1500)
+#    }else{
+#      RF_1m<-randomForest(target~.,data=train_data_1m_target_feature,ntree=1500)
+#    }
+# 
+#    if(any(train_data_2m_target_feature$PNratio=="Inf")){
+#    RF_2m<-randomForest(target~.,data=train_data_2m_target_feature%>% select(-PNratio),ntree=1500)
+#    }else{
+#      RF_2m<-randomForest(target~.,data=train_data_2m_target_feature,ntree=1500)
+# 
+#    }
+# 
+#    if(any(train_data_2m_target_feature$PNratio=="Inf")){
+#      RF_3m<-randomForest(target~.,data=train_data_3m_target_feature%>% select(-PNratio),ntree=1500)
+# 
+#    }else{
+#      RF_3m<-randomForest(target~.,data=train_data_3m_target_feature,ntree=1500)
+# 
+#    }
+# 
+#    if(symbols[i]=="AAPL"){summary(RF_3m)}
+#    #poner aqui todas las empresas
+#    CM_data_1m<-confusionMatrix(predict(RF_1m,test_data_1m_target_feature),test_data_1m_target_feature$target)
+#    CM_data_2m<-confusionMatrix(predict(RF_2m,test_data_2m_target_feature),test_data_2m_target_feature$target)
+#    CM_data_3m<-confusionMatrix(predict(RF_3m,test_data_3m_target_feature),test_data_3m_target_feature$target)
+# 
+#    rm(RF_1m,RF_2m,RF_3m)
+# 
+#    a<-data.frame(acc1m=as.numeric(c(round(CM_data_1m$overall[1]*100,2))),
+#                  sensi1m=as.numeric(c(round(CM_data_1m$byClass[1]*100,2))),
+#                  speci1m=as.numeric(c(round(CM_data_1m$byClass[2]*100,2))),
+# 
+#                  acc2m=as.numeric(c(round(CM_data_2m$overall[1]*100,2))),
+#                  sensi2m=as.numeric(c(round(CM_data_2m$byClass[1]*100,2))),
+#                  speci2m=as.numeric(c(round(CM_data_2m$byClass[2]*100,2))),
+# 
+#                  acc3m=as.numeric(c(round(CM_data_3m$overall[1]*100,2))),
+#                  sensi3m=as.numeric(c(round(CM_data_3m$byClass[1]*100,2))),
+#                  speci3m=as.numeric(c(round(CM_data_3m$byClass[2]*100,2)))
+#                 )
+# 
+# 
+#    b<-a[,grep(x=names(a), pattern="acc")] %>% mutate(stock=symbols[i])
+#    rm(a)
+#    b
+#    # if(i==1){
+#    #   heat.map.data<-a[,grep(x=names(a), pattern="acc")] %>% mutate(stock=symbols[i])
+#    #   cat("First done\n")
+#    #
+#    # }else{
+#    #   temp<-a[,grep(x=names(a), pattern="acc")] %>% mutate(stock=symbols[i])
+#    #   heat.map.data<-heat.map.data %>% rbind(temp)
+#    # }
+# 
+#     }
+# 
+#     }else{  rm(list=symbols[i])}#end of error in EMA
+#   }#end of second (try) if
+# } #end of loop
+# 
+# stopCluster(cl)
+# time
+```
+
+```{r fig.height=7, fig.width=11,fig.align = "center"}
+source("C:/Users/i0386388/Desktop/TFG-master/functions/smooth_target.R")
+
+source("C:/Users/i0386388/Desktop/tesis/Tesis/target_feature_extraction.R")
+
+
+##heatmap
+
+results %>%
+  gather("forecast.window","test.acc", 1:3) %>%
+  arrange(stock) %>%
+  cbind(test.acc.label=as.character(.$test.acc)) %>%
+  ggplot(mapping = aes(x = stock, y = forecast.window,fill = test.acc)) +
+  geom_tile() +
+  #geom_text(aes(label=test.acc.label),size=2)+
+  xlab(label = "Companies")+
+  #facet_grid(~ company, switch = "x", scales = "free_x", space = "free_x")+
+  scale_fill_gradient2('test.acc', low = "blue", mid = "white", high = "red", midpoint = 50)+
+  theme_bw()+
+  theme(
+    axis.text.x = element_text(angle=90,vjust = 1,hjust = 0.5,size=7),
+    axis.ticks.length = unit(10, "pt"),
+    legend.position="bottom")+
+  scale_y_discrete(expand=c(0,0))
+```
+\centering
+  \captionof{figure}{Heatmap de la accuracy obtenida sobre muestra test SMD masivo para 165 empresas. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+\noindent
+Como se puede apreciar en la figura V.8 el resultado es, generalmente, positivo. El color que predomina en el *heatmap* es el color rojizo, señal de que los resultados son generalmente superiores al 50% de accuracy sobre la muestra test. Es un buen resultado. Esto significa que para la mayoría de empresas sobre las que se ha probado masivamente este tipo de modelización el resultado es positivo. Sin embargo, también permite observar como para algunas empresas el resultado no es tan positivo en según que ventana de predicción, así como diversas empresas cuyo rendimiento no es generalmente elevado, al presentar unos valores de *accuracy* inferiores al 50% en todas las ventanas de predicción. Estos hechos se aprecian a partir de los valores en azul presentes en el *heatmap*. El hecho de que para algunas empresas el resultado en términos de *accuracy* sean tan malos se puede deber a varias razones. En primer lugar es posible que, para algunas empresas, este tipo de modelo no mejore la predicción base que se podría hacer lanzando una moneda. En otras palabras, para determinadas empresas el hecho de utilizar datos alisados y indicadores técnicos para predecir la dirección de movimiento puede no mejora la predicción *naive*. En segundo lugar, los malos resultados se pueden deber a otro simple hecho: durante el periodo de prueba (test) el comportamiento de los datos es completamente nuevo, es decir, totalmente diferente de los patrones mostrados en la muestra de entrenamiento. Esto explica el hecho de los malos resultados en muestra test ya que el modelo que se entrena con los datos de entrenamientos aprende una serie de relaciones que no se repiten durante el periodo de prueba. En otras palabras: el modelo se evalúa con unos datos que no se corresponden con los datos con los cuales se entrenó el modelo y, por lo tanto, el resultado obtenido en términos de *accuracy* son realmente malos (inferiores a un 50%).
+
+\noindent
+Para ilustrar este último punto se analiza en detalle una de las empresas con las que se obtienen peores resultados. Es el caso de la empresa Ferrellgas (FGP), una empresa americana de distribución de gas natural. Los resultados de *accuracy* obtenidos con los datos de FGP son los siguientes:
+
+```{r}
+print(results[results$stock=="FGP",])
+```
+ 
+\noindent
+El gráfico V.9 siguiente muestra toda la serie temporal con una línea que separa las muestras de entrenamiento y test:
+```{r, results='hide',message=FALSE}
+library(quantmod)
+getSymbols("FGP",from="2000-01-01")
+```
+
+```{r fig.height=5, fig.width=9,fig.align = "center"}
+data.FGP<-try(EMA_finance(FGP,smoothing_period = 90),silent = T)
+add_rownames(as.data.frame(data.FGP),"rownames") %>%
+  mutate(rownames=as.Date(rownames,"%Y-%m-%d")) %>% 
+  ggplot(aes(x=rownames,y=Close))+
+  geom_line() + 
+  theme_bw()+
+  geom_vline(xintercept = as.Date("2016-06-21"),col="red",size=1.5)+
+  scale_x_date(expand=c(0,0))+
+  ggtitle("Stock FGP partición de datos entrenamiento - prueba. Datos alisados con una EMA 90 días")+
+  xlab("")
+```
+\centering
+  \captionof{figure}{Precio de cierre empresa Ferrellgas (FGP). Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+\noindent
+Como se puede observar en el gráfico anterior, los malos resultados que obtiene el modelo SMD aplicado a los datos alisados con una EMA 30 de la empresa FGP se deben al hecho de que el periodo de test muestra un comportamiento totalmente distinto al periodo de entrenamiento. El potente descenso que presentan los precios de cierre diarios al inicio del periodo de prueba representa un cambio estructural en los datos. Los modelos a 1, 2 y 3 meses que se entrenan con los datos anteriores a este drop no son capaces de predecir correctamente los datos del periodo de test ya que el patrón cambia totalmente. Sin embargo, los malos resultados obtenidos de accuracy no significan que el modelo no hubiera funcionado mejor si el periodo de entramiento no consistiera en un cambio estructural en los datos. Este punto realza el hecho de que, posiblemente, ningún modelo entrenado con los datos históricos de esta compañía sea útil para predecir el futuro de los precios de cierre al existir un cambio estructural en los datos a partir de 2016. En este caso, como es evidente, no se puede en ningún caso utilizar de manera práctica el modelo creado para predecir la dirección de movimiento del precio de cierre de esta empresa.
+
+\setlength\parskip{5ex}
+\justifying
+\noindent
+En segundo lugar se presenta una forma alternativa de visualizar el conjunto de los resultados de *accuracy* obtenidos con las diferentes empresas y ventanas temporales. Al tener 165 empresas se tienen 165 valores de *accuracy* para cada una de las ventanas temporales con lo que se puede graficar la densidad que representa esta muestra de valores con tal de visualizar la distribución de los resultados. En este caso se decide utilizar la función `density` en vez de graficar simplemente el histograma de los datos para conseguir un resultado más suavizado. Además, la densidad de la distribución de los resultados de *accuracy* para cada ventana temporal se presente en un mismo gráfico para facilitar la interpretabilidad y comparación de los resultados.
+
+```{r fig.height=5, fig.width=9,fig.align = "center"}
+library(reshape2)
+data<- melt(results[,-4])
+
+
+ggplot(data,aes(x=value, fill=variable)) + 
+  geom_density(alpha=0.25)+
+  theme_bw()+
+  ggtitle("Accuracy sobre muestra test")+
+  xlab("Accuracy")+
+  theme(legend.position="bottom")+
+  scale_x_continuous(expand=c(0,0))
+
+```
+\centering
+  \captionof{figure}{Distribución de los resultados de accuracy sobre muestra test en las 3 ventanas temporales consideradas. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying 
+\noindent
+Como se puede apreciar en la figura V.10 los resultados obtenidos son, en general, buenos en el sentido de que la mayoría de modelos mejoran la predicción naive de 50% en cada clase de la variable respuesta. En general las tres distribuciónes, correspondientes a las distintas ventanas de predicción, no son distribuciones simétricas. Al contrario, son distribución con asimetría a la izquierda (negativa) en el sentido de que tiene una cola pesada en los valores bajos. Esto significa que se obtienen en general resultados positivos pero que existen ciertos resultados negativos en las distintas ventanas de predicción que hacen que las distribuciones de los resultados estén sesgadas hacia valores bajos. Si se entra en el detalle, la primera conclusión que se puede extraer de este gráfico es la misma que en el apartado V.1: estos modelos parecen rendir mejor cuando la predicción está más cerca en el tiempo. Es decir, cuando más hacia el futuro se intenta predecir menor es la precisión obtenida. Esto se observa a partir de analizar el gráfico anterior y de ver que conforme se aumenta la ventana de predicción la media de los resultados obtenidos cada vez es más baja. Además, las colas tienden a aumentar cosa que significa que conforme más hacia el futuro se intenta predecir más resultados por debajo del umbral del 50% se obtienen.
+
+\noindent
+Sin embargo la media de *accuracy* obtenida para todas las empresas es mayor del 50% en todas las ventanas de predicción con lo que se demuestra que, en general y excepto casos excepcionales, los modelos de predicción de la dirección de movimiento del precio de cierre a partir de indicadores técnicos son capaces de aportar valor añadido y mejorar la predicción ingenua del 50% de probabilidad asociada al hecho de subir o bajar. El hecho de que se obtengan mejores resultados cuanto más corta sea la ventana de predicción hacia el futuro no debería sorprender al lector ya que tiene una explicación sencilla. Se predice mejor cuanto más cerca en el tiempo ya que las variables predictoras con las que se define el modelo de predicción de dirección del movimiento son indicadores técnicos extraídos a partir de los datos OHLC. Estos indicadores no dejan de ser estadísticos calculados a partir del precio y su propósito es el de indicarnos diferentes patrones o tendencias que se vienen dando en los precios.
+
+\noindent
+Los indicadores técnicos pueden ayudar a predecir futuros movimientos en el precio pero es natural que los modelos predigan mejor cuanto más cerca en el tiempo. La descripción de la situación actual de un precio, que es en definitiva la información extraída a partir de los indicadores técnicos, es potencialmente útil para predecir el futuro pero es, evidentemente, más útil cuanto más cerca en el tiempo se mire hacia el futuro. 
+
+\noindent
+Este hecho se repite de manera habitual en cualquier proceso predictivo que involucre una descripción de la situación actual. En general, si se quiere predecir el futuro en base a cómo están las cosas en el momento actual, es lógico que se prediga mejor una situación cercana en el tiempo (que es consecuencia directa de las cosas que están ocurriendo en este momento) más que una situación lejana en el tiempo que es en parte consecuencia de las cosas que pasan en el momento actual pero también puede incluir otros elementos que pasan entre el momento actual y el momento lejano en el futuro.
+
+\noindent
+Para analizar descriptivamente las distribuciones también se aplica un descriptivo básico de los 4 momentos centrales de estas distribuciones. Con este análisis descriptivo se pueden reafirmar los resultados anteriores: cuanto más alejada en el futuro se hace la predicción, mayor variabilidad se obtiene en el resultado para todas las empresas; cuanto más alejada en el futuro se hace la predicción, menor es la asimetría negativa presente en los resultados (ya que aparecen más frecuentemente resultados malos o menores del 50% de *accuracy*); cuanto más alejada en el futuro se hace la predicción, menor es el coeficiente de kurtosis, indicando una menor concentración de los resultados y, a su vez, una ampliación de las colas.
+
+```{r}
+library(fBasics)
+basicStats(results[,-4])[c("Mean","Variance","Skewness","Kurtosis"),]
+```
+
+
+\setlength\parskip{5ex}
+\justifying
+\noindent
+En tercer lugar se analizan los datos desde una perspectiva más descriptiva. Por un lado se calcula un descriptivo básico de todas las muestras de *accuracy* obtenidas para cada ventana temporal. 
+
+```{r}
+results %>% select(-stock) %>% summary
+```
+
+\noindent
+Como se puede apreciar a partir del cálculo anterior, los mejores resultados se obtienen, en general, cuando la ventana de predicción es a 1 mes vista. Esto refuerza la conclusión desarrollada en el apartado anterior. Los modelos de predicción de la dirección de movimiento funcionan mejor cuanto más cerca en el tiempo se intente predecir. Para el caso de la predicción a un mes vista se obtiene una media de 71.73% de *accuracy* en las 165 empresas utilizadas mientras que la media es de 66.17% y 60.94% para los casos en los que la predicción es a 2 y 3 meses, respectivamente. Este descriptivo básico permite ver numéricamente la asimetría hacia la izquierda presente en las distribuciones de los resultados al ser en todos los casos la mediana superir a la media. Esto significa que las distribuciones son asimétricas con cola pesada a la izquierda. Otro hecho característico que se puede resaltar es que para los tres casos se alcanza más del 50% de *accuracy* en el primer quartil. Además, cabe destacar el hecho que de la *accuracy* máxima obtenida para las tres ventanas de predicción es superior al 90% sobre muestra de entrenamiento. 
+
+\noindent
+Por otro lado se presentan los ránkings con las 10 empresas que han obtenido mejores resultados en cada una de las ventanas temporales de previsión. Con esta tercera manera de visualizar los resultados se pueden analizar para qué empresas los modelos obtienen un mejor rendimiento sobre muestra test. En este sentido, se trata de encontrar las empresas para las cuales estos modelos funcionan mejor de manera que la confianza al utilizarlos en un caso real de inversión sea máxima. En la tabla V.28 que se presenta a continuación se muestran estos datos:
+
+
+```{r}
+library(kableExtra)
+a<-dplyr::top_n(results,n = 10,wt = acc1m) %>% arrange(desc(acc1m)) %>% select(acc1m,stock) %>% 
+  cbind(dplyr::top_n(results,n = 10,wt = acc2m) %>% arrange(desc(acc2m))%>% select(acc2m,stock),
+        dplyr::top_n(results,n = 10,wt = acc3m) %>% arrange(desc(acc3m))%>% select(acc3m,stock))
+
+kable(a, "latex") %>%
+  add_header_above(c("Predicción 1 mes" = 2, "Predicción 2 meses" = 2,"Predicción 3 meses"=2)) %>%
+ kable_styling(font_size = 10,latex_options = c("basic"))
+```
+\centering
+  \captionof{table}{Top 10 empresas con mejor rendimiento sobre muestra test para cada ventana de predicción.}
+
+\setlength\parskip{5ex}
+\justifying
+\noindent
+Gracias a esta tabla se puede priorizar la inversión en las empresas con las que se obtiene un mejor resultado. La idea es que para las empresas dentro del top 10 en *accuracy* queda demostrado que este tipo de modelo tiene un buen rendimiento en términos de capacidad predictiva.. Si en el futuro los precios no experimentan ningún cambio estructural cabe esperar que se puedan utilizar estos modelos como ayuda en el momento de tomar una decisión de inversión o a la hora de crear un algoritmo de trading automático.

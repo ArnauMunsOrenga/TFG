@@ -1,0 +1,46 @@
+---
+output: pdf_document
+---
+
+**Credit scoring**
+
+\noindent
+La evaluación del crédito ha sido un método lárgamente usado por los prestamistas a la hora de prestar o no un crédito. La capacidad de evalúar el potencial riesgo del préstamo, otorgándole un valor, de un determinado cliente es esencial para las compañías financieras. La aplicación de técnicas de aprendizaje automático en este sector se está estableciendo lárgamente entre las distintas instituciones encargadas de prestar dinero. Tradicionalmente se han utilizado datos estructurados como transacciones y el historial de pagos para crear modelos tales como regresiones lineales o árboles de decisión para generar un ránking o valoración de crédito. Sin embargo en la actualidad los prestamistas, ya sean bancos o otras comañías, están utilizando ya otras fuentes de datos no estructurados o semi estructurados tales como la actividad en las redes sociales, uso del teléfono móvil o mensajes de texto. Este tipo de datos permite a estas empresas obtener una visión más matizada de la fiabilidad potencial que tendría un préstamo. La aplicación de modelos de IA y ML sobre esta gran variedad de tipos de datos ha permitido a las empresas prestamistas analizar factores cualitativos como el comportamiento del consumo de los clientes o la valoración de la voluntad de pagar el préstamo.
+
+\setlength\parskip{5ex}
+\noindent
+Una de las principales consecuencias de la capacidad de manejar distintas fuentes de información ha sido el hecho de que actualmente es que la segmentación de la calidad de los prestatarios se hace a mayor escala, de una manera más rápida y más barata. En definitiva esto radica en una *decisión de crédito más rápida y acurada* [@creditscoring1]. Otra de las consecuencias de la aplicación del machine learning en este sector es el hecho de que puede ayudar a garantizar un mayor acceso al crédito. Esto es así ya que los sistemas de evaluación de crédito tradicionales necesitan una cantidad suficiente de datos históricos sobre crédito de esa persona para poder considerarla apta para la evaluación. Si esta información no está disponible, el valor de la evaluación del crédito no puede ser generado y el cliente puede ser potencialmente incapaz de obtener un crédito. Con el uso de fuentes de datos alternativas y la aplicación de modelos de aprendizaje automático los prestamistas son capaces de llevar a decisiones de crédito que hubieran sido imposibles anteriormente [@AIboard].
+
+\setlength\parskip{5ex}
+\noindent
+En general se pueden observar ventajas e inconvenientes de utilizar inteligencia artificial o machine learning en el sector de la evaluación del credito. Como ventaja se encuentra el hecho de que la IA permite analizar una cantidad enorme de datos de una manera rápida. Esto implica que el coste de evaluar los riesgos de los potenciales clientes se verá reducido. Además, el hecho de introducir nuevos tipos de datos puede permitir a las compañías el evaluar el riesgo de crédito de individuos para los cuales no se podía evaluar utilizando los datos tradicionales (historial de crédito). Es decir, la falta de historial de crédito o una valoración anterior de crédito ya no serán más un impedimento a la obtención de un crédito ya que otros indicadores de la verosimilitud del pago están siendo utilizados por las compañías.
+
+\setlength\parskip{5ex}
+\noindent
+Sin embargo, el uso de complejos algoritmos de machine learning puede conducir a una falta de transparencia con el consumidor. Cuando se utilizan modelos de machine learning para construir una valoración o puntuación de crédito, es generalmente más difícil el poder ofrecer una explicación sobre esa valoración y la posterior decisión a los clientes, auditores y supervisores. La faceta *black box* que tienen normalmente estos algoritmos lo complica. Además, ciertos autores argumentan que la utilización de fuentes de datos alternaticvas, tales como comportamiento online o fuentes de información financiera no tradicionales, puede introducir **sesgo** en las decisiones de crédito [@biascredit]. En este sentido ciertas asociaciones de consumidores han levantado la voz en cuanto al aspecto moral. Los modelos de machine learning pueden llevar perfiles de prestatario que tengan en consideración la raza o el género. Por ejemplo, estos modelos pueden puntuar a un prestatario de una minoría étnica con un mayor riesgo por defecto sólo porque prestatarios similares han tenido tradicionalmente unas condiciones menos favorables de crédito.
+
+\setlength\parskip{5ex}
+
+**Servicios de seguros**
+
+\noindent
+El sector de los seguros es uno de los sectores que más confía en el análisis de datos y la inteligencia artificial para llevar a cabo su negocio. De hecho, el análisi estadístico representa el núcleo fundamental de este tipo de negocio. La capacidad de evalúar el precio de un producto asegurador es esencial para este sector para poder ser rentable. Todas estas técnicas se basan en un análisis masivo de grandes bases de datos que las empresas aseguradoras han venido recolectando desde hace años para evaluar el riesgo de un potencial cliente. De esta manera consiguen ofrecer servicios más baratos a aquellas personas con un menor riesgo potencial o inrcementarlo para aquellas personas con más riesgo. Un claro ejemplo que el lector es posible que haya experimentado es el hecho de ver como incrementa la cuota de su seguro de automóvil después de tener un accidente de tráfico.
+
+\setlength\parskip{6ex}
+\noindent
+Sin embargo, muchas de las aplicaciones actuales de técnicas de machine learning incorporan el análisis de datos desestructurados para mejorar el proceso de suscripción de los seguros, apoyando la asignación de un precio en función de las características del potencial cliente, o para fortalecer estrategias de márketing hacia determinados clientes (segmentación). Ejemplos de estos nuevos tipos de datos son los datos en tiempo real y los datos con alta granularidad. Ejemplos de estos últimos son datos relacionados con el comportamiento de compra online o datos telemétricos provinientes de sensores en aparatos electrónicos. En este sentido, estas empresas empiezan a explorar cómo pueden aplicar la IA y el machine learning sobre datos de sensores remotos, conectados a través del *Internet of Things (IoT)*, para detectar e intentar prevenir accidentes susceptibles de ser asegurados (como accidentes de coche).
+
+\setlength\parskip{5ex}
+
+**Chat Bots**
+
+\noindent
+Otra de las aplicaciones actuales de la inteligencia artificial en el campo del *front end* son los llamados ChatBots que se encargan de interactuar con el cliente. Los Chat Bots son programas automáticos que se encargan de asistir y/o ayudar a los clientes en sus transacciones diarias o para resolver problemas. Estos programas utilizan una rama del machine learning llamada NLP (procesamiento del lenguaje natural) para interactuar con los clientes en lenguajes naturales, ya sea por texto o por voz. Este tipo de programas están siendo introducidos por numerosas compañías de servicios financieros, especialmente en sus aplicaciones móviles o las redes sociales, con el fin de agilizar la relación con el cliente y captar nuevas generaciones de clientes. 
+
+\noindent
+Actualmente los algortimos Chat Bot que se están utilizando son relativamente sencillos y se centran en informar al cliente y resolver cuestiones sencillas. Sin embargo, los Chat Bots se están moviendo cada vez más hacia las recomendaciones, especialmente en las decisiones financieras importantes. Además, este tipo de modelos permiten a las compañías obtener información de sus clientes gracias a la interacción con estos programas. Ejemplos de sectores que utilizan actualmente los Chat Bots en el mundo financiero son las instituciones financieras y las compañías de seguros. Éstas utilizan los Chat Bots para dar consejos sobre seguros en tiempo real.
+
+\noindent
+Una de las principales consecuencias de la implantación de los Chat bots en el *front office* del sector financiero es algo muy obvio pero a la vez muy importante. Este tipo de programas consiguen reducir las relaciones humanas en el sector financiero. Es posible que en un futuro un gran porcentage de las interacciones entre los clientes y el sector financiero se hagan a través de este tipo de programas, o de otros más complejos que se puedan desarrollar en el futuro.
+
+\setlength\parskip{5ex}

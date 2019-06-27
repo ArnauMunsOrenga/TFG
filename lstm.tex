@@ -1,0 +1,1085 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{}
+    \pretitle{\vspace{\droptitle}}
+  \posttitle{}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+
+\begin{document}
+
+En el presente apartado se procede a construir una red neuronal
+recurrente tipo LSTM para predecir los precios de cierre de la empresa
+Coca Cola Co.. En hecho de escoger esta empresa está justificado por
+distintas razones. En primer lugar el hecho de que solo sea una empresa
+y no las 4 utilizadas como ejemplo en el apartado V.1 se debe a que la
+capacidad computacional de la que se dispone es limitada. El proceso de
+entrenamiento de un modelo de estas características requiere de una
+elevada capacidad computacional para poder realizarse en un periodo de
+tiempo relativamente razonable. En segundo lugar el hecho de que sea
+Coca Cola y no una de las otras 3 empresas responde a lo observado en el
+apartado V.1.1. Esta empresa es la que ofrece una opción relativamente
+balanceada entre rentabilidad y riesgo. En tercer lugar la tendencia
+creciente presente en parte de la serie parece ser relativamente fuerte
+y la LSTM pueda probablemente captarlo.
+
+Para emprezar se elabora el plan de entrenamiento del modelo lstm. Con
+el procedimiento que se detalla a continuación permite obtener una
+evaluación del rendimiento de este tipo de modelos en distintos trozos
+de la serie temporal. En este caso se contruyen 6 submuestras que
+conforman el plan de entrenamiento, cada una con 996 días en la muestra
+de entrenamiento y 83 en la muestra de test. El por qué de esta
+configuració se explica posteriormente en la parte de ajuste de los
+parámetros. El tercer parámetro que define la partición del plan de
+entrenamiento es el que controla la separación entre las ventanas
+móviles. En este caso se define en 650 días. Esto significa que la
+distancia entre el inicio de las series temporales en cada partición
+está separado por 650 días. En definitiva el desarrollo que tiene este
+apartado es el siguiente: por simplicidad, se procede a entrenar una
+LSTM para cada partición creada, utilizando la misma combinación de
+hyperparámetros para este modelo. En este apartado no se elabora una
+optimización exhaustiva de los hyperparámetros de este modelo, que es de
+hecho donde está la gran complejidad de los algoritmos de machine
+learning, sino que se define una combinación de los mismos, que se
+podría considerar como referencia para futuras optimizaciones. Esto es
+así ya que en el momento de la elaboración de este trabajo no se dispone
+de la capacidad computacional adecuada para poder elaborar una tarea de
+semejante magnitud, al ser el periodo de tiempo considerado
+relativamente elevado (18 años) y al ser el número de combinaciones de
+hyper parámetros que hay que probar muy elevada. El hecho de entrenar
+disintos modelos en distintos periodos de tiempo ofrece la posibilidad
+de analizar el rendimiento de estos modelos con distintas predicciones a
+lo largo del tiempo. El hecho de reducir el tamaño de la muestra de
+entrenamiento para cada LSTM hace que el proceso de entrenamiento sea
+mucho más rápido, con la contrapartida de que los modelos que se crean
+no están ofreciendo todo su potencial.
+
+\justifying
+
+En la gráfica que se muestra a continuación se pueden ver representadas
+las distintas particiones de la serie temporal de los precios de cierre
+de Coca-Cola sobre los cuales se va a entrenar una LSTM-RNN con el fin
+de testearla en los 83 días de muestra de prueba, graficados en rojo.
+
+\centering
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{libraries <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"lubridate"}\NormalTok{,}\StringTok{"tidyverse"}\NormalTok{,}\StringTok{"tidyr"}\NormalTok{,}\StringTok{"forecast"}\NormalTok{,}\StringTok{"ggplot2"}\NormalTok{,}\StringTok{"seasonal"}\NormalTok{,}\StringTok{"tidyverse"}\NormalTok{,}
+               \StringTok{"manipulate"}\NormalTok{,}\StringTok{"compiler"}\NormalTok{,}\StringTok{"scales"}\NormalTok{,}\StringTok{"lmtest"}\NormalTok{,}\StringTok{"MASS"}\NormalTok{,}\StringTok{"glmnet"}\NormalTok{,}\StringTok{"forecTheta"}\NormalTok{,}
+               \StringTok{"neuralnet"}\NormalTok{,}\StringTok{"tsDyn"}\NormalTok{,}\StringTok{"changepoint"}\NormalTok{,}\StringTok{"RSNNS"}\NormalTok{,}\StringTok{"xgboost"}\NormalTok{,}\StringTok{"foreach"}\NormalTok{,}\StringTok{"doSNOW"}\NormalTok{,}
+               \StringTok{"tcltk"}\NormalTok{,}\StringTok{"DescTools"}\NormalTok{,}\StringTok{"rnn"}\NormalTok{,}\StringTok{"glue"}\NormalTok{,}\StringTok{"forcats"}\NormalTok{,}\StringTok{"timetk"}\NormalTok{,}\StringTok{"tidyquant"}\NormalTok{,}\StringTok{"tibbletime"}\NormalTok{,}
+               \StringTok{"cowplot"}\NormalTok{,}\StringTok{"recipes"}\NormalTok{,}\StringTok{"rsample"}\NormalTok{,}\StringTok{"yardstick"}\NormalTok{,}\StringTok{"keras"}\NormalTok{,}\StringTok{"quantmod"}\NormalTok{,}\StringTok{"tidyverse"}
+\NormalTok{)}
+\CommentTok{# check.libraries <- is.element(libraries, installed.packages()[, 1])==FALSE}
+\CommentTok{# libraries.to.install <- libraries[check.libraries]}
+\CommentTok{# if (length(libraries.to.install!=0)) \{}
+\CommentTok{#   install.packages(libraries.to.install)}
+\CommentTok{# \}}
+
+\KeywordTok{lapply}\NormalTok{(libraries, require, }\DataTypeTok{character.only=}\OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: lubridate
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'lubridate'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:base':
+## 
+##     date
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: tidyverse
+\end{verbatim}
+
+\begin{verbatim}
+## -- Attaching packages ----------------------------------------------------------------------------------------------------------------------------- tidyverse 1.2.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v ggplot2 3.1.1       v purrr   0.3.2  
+## v tibble  2.1.1       v dplyr   0.8.0.1
+## v tidyr   0.8.3       v stringr 1.4.0  
+## v readr   1.3.1       v forcats 0.4.0
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts -------------------------------------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
+## x lubridate::as.difftime() masks base::as.difftime()
+## x lubridate::date()        masks base::date()
+## x dplyr::filter()          masks stats::filter()
+## x lubridate::intersect()   masks base::intersect()
+## x dplyr::lag()             masks stats::lag()
+## x lubridate::setdiff()     masks base::setdiff()
+## x lubridate::union()       masks base::union()
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: forecast
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: seasonal
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'seasonal'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:tibble':
+## 
+##     view
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: manipulate
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: compiler
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: scales
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'scales'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:purrr':
+## 
+##     discard
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:readr':
+## 
+##     col_factor
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: lmtest
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: zoo
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'zoo'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     as.Date, as.Date.numeric
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: MASS
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'MASS'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     select
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: glmnet
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+## logical.return = TRUE, : there is no package called 'glmnet'
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: forecTheta
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+## logical.return = TRUE, : there is no package called 'forecTheta'
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: neuralnet
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+## logical.return = TRUE, : there is no package called 'neuralnet'
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: tsDyn
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+## logical.return = TRUE, : there is no package called 'tsDyn'
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: changepoint
+\end{verbatim}
+
+\begin{verbatim}
+## Successfully loaded changepoint package version 2.2.2
+##  NOTE: Predefined penalty values changed in version 2.2.  Previous penalty values with a postfix 1 i.e. SIC1 are now without i.e. SIC and previous penalties without a postfix i.e. SIC are now with a postfix 0 i.e. SIC0. See NEWS and help files for further details.
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: RSNNS
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+## logical.return = TRUE, : there is no package called 'RSNNS'
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: xgboost
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+## logical.return = TRUE, : there is no package called 'xgboost'
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: foreach
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'foreach'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:purrr':
+## 
+##     accumulate, when
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: doSNOW
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: iterators
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: snow
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: tcltk
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: DescTools
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'DescTools'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:forecast':
+## 
+##     BoxCox
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: rnn
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+## logical.return = TRUE, : there is no package called 'rnn'
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: glue
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'glue'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     collapse
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: timetk
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: tidyquant
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: PerformanceAnalytics
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: xts
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'xts'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:dplyr':
+## 
+##     first, last
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'PerformanceAnalytics'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:graphics':
+## 
+##     legend
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: quantmod
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: TTR
+\end{verbatim}
+
+\begin{verbatim}
+## Version 0.4-0 included new data defaults. See ?getSymbols.
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: tibbletime
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'tibbletime'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:stats':
+## 
+##     filter
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: cowplot
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'cowplot'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:ggplot2':
+## 
+##     ggsave
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: recipes
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'recipes'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:stringr':
+## 
+##     fixed
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:stats':
+## 
+##     step
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: rsample
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: yardstick
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+## logical.return = TRUE, : there is no package called 'yardstick'
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: keras
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'keras'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:compiler':
+## 
+##     compile
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\KeywordTok{library}\NormalTok{(quantmod)}
+\KeywordTok{getSymbols}\NormalTok{(}\DataTypeTok{Symbols =} \StringTok{"KO"}\NormalTok{, }\DataTypeTok{from =}\StringTok{"2000-01-01"}\NormalTok{,}\DataTypeTok{to=}\StringTok{"2018-12-31"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'getSymbols' currently uses auto.assign=TRUE by default, but will
+## use auto.assign=FALSE in 0.5-0. You will still be able to use
+## 'loadSymbols' to automatically load data. getOption("getSymbols.env")
+## and getOption("getSymbols.auto.assign") will still be checked for
+## alternate defaults.
+## 
+## This message is shown once per session and may be disabled by setting 
+## options("getSymbols.warning4.0"=FALSE). See ?getSymbols for details.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#install_keras()}
+\end{Highlighting}
+\end{Shaded}
+
+\justifying
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{load}\NormalTok{(}\StringTok{"C:/Users/i0386388/Desktop/tesis/lstm_prices.RData"}\NormalTok{)}
+\NormalTok{sample_predictions_lstm_tbl_prices<-sample_predictions_lstm_tbl}
+\KeywordTok{load}\NormalTok{(}\StringTok{"C:/Users/i0386388/Desktop/tesis/lstm_return.RData"}\NormalTok{)}
+\NormalTok{sample_predictions_lstm_tbl_return<-sample_predictions_lstm_tbl}
+\KeywordTok{rm}\NormalTok{(sample_predictions_lstm_tbl)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dates<-}\KeywordTok{rownames}\NormalTok{(}\KeywordTok{as.data.frame}\NormalTok{(KO))}
+
+\NormalTok{Exerci}\FloatTok{.0}\NormalTok{<-}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{MSales=}\KeywordTok{as.vector}\NormalTok{(KO}\OperatorTok{$}\NormalTok{KO.Close),}\DataTypeTok{StartDate=}\NormalTok{dates)}\CommentTok{#Close prices}
+
+\KeywordTok{rownames}\NormalTok{(Exerci}\FloatTok{.0}\NormalTok{)<-Exerci}\FloatTok{.0}\OperatorTok{$}\NormalTok{StartDate}
+\NormalTok{input<-Exerci}\FloatTok{.0} \OperatorTok{%>%}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(MSales)}
+
+
+\NormalTok{input}\FloatTok{.0}\NormalTok{ <-}\StringTok{ }\NormalTok{input }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tk_tbl}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{index =} \KeywordTok{as_date}\NormalTok{(index)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{as_tbl_time}\NormalTok{(}\DataTypeTok{index =}\NormalTok{ index) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{rename}\NormalTok{(}\StringTok{"value"}\NormalTok{=MSales)}
+
+
+\NormalTok{periods_train <-}\StringTok{ }\DecValTok{996} \CommentTok{#train length in each resample}
+\NormalTok{periods_test  <-}\StringTok{ }\DecValTok{83}
+\NormalTok{skip_span     <-}\StringTok{ }\DecValTok{650}
+
+\NormalTok{rolling_origin_resamples <-}\StringTok{ }\KeywordTok{rolling_origin}\NormalTok{(}
+\NormalTok{  input}\FloatTok{.0}\NormalTok{,}
+  \DataTypeTok{initial    =}\NormalTok{ periods_train,}
+  \DataTypeTok{assess     =}\NormalTok{ periods_test,}
+  \DataTypeTok{cumulative =} \OtherTok{FALSE}\NormalTok{,}
+  \DataTypeTok{skip       =}\NormalTok{ skip_span}
+\NormalTok{)}
+
+\NormalTok{rolling_origin_resamples}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plotting function for a single split}
+\NormalTok{plot_split <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(split, }\DataTypeTok{expand_y_axis =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{alpha =} \DecValTok{1}\NormalTok{, }\DataTypeTok{size =} \DecValTok{1}\NormalTok{, }\DataTypeTok{base_size =} \DecValTok{14}\NormalTok{) \{}
+  
+  \CommentTok{# Manipulate data}
+\NormalTok{  train_tbl <-}\StringTok{ }\KeywordTok{training}\NormalTok{(split) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{add_column}\NormalTok{(}\DataTypeTok{key =} \StringTok{"training"}\NormalTok{) }
+  
+\NormalTok{  test_tbl  <-}\StringTok{ }\KeywordTok{testing}\NormalTok{(split) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{add_column}\NormalTok{(}\DataTypeTok{key =} \StringTok{"testing"}\NormalTok{) }
+  
+\NormalTok{  data_manipulated <-}\StringTok{ }\KeywordTok{bind_rows}\NormalTok{(train_tbl, test_tbl) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{as_tbl_time}\NormalTok{(}\DataTypeTok{index =}\NormalTok{ index) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{key =} \KeywordTok{fct_relevel}\NormalTok{(key, }\StringTok{"training"}\NormalTok{, }\StringTok{"testing"}\NormalTok{))}
+  
+  \CommentTok{# Collect attributes}
+\NormalTok{  train_time_summary <-}\StringTok{ }\NormalTok{train_tbl }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{tk_index}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{tk_get_timeseries_summary}\NormalTok{()}
+  
+\NormalTok{  test_time_summary <-}\StringTok{ }\NormalTok{test_tbl }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{tk_index}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{tk_get_timeseries_summary}\NormalTok{()}
+  
+  \CommentTok{# Visualize}
+\NormalTok{  g <-}\StringTok{ }\NormalTok{data_manipulated }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ index, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{color =}\NormalTok{ key, }\DataTypeTok{group =} \DecValTok{1}\NormalTok{)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{size =}\NormalTok{ size, }\DataTypeTok{alpha =}\NormalTok{ alpha) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{theme_tq}\NormalTok{(}\DataTypeTok{base_size =}\NormalTok{ base_size) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{scale_color_tq}\NormalTok{() }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}
+      \DataTypeTok{title    =} \KeywordTok{glue}\NormalTok{(}\StringTok{"Split: \{split$id\}"}\NormalTok{),}
+      \DataTypeTok{subtitle =} \KeywordTok{glue}\NormalTok{(}\StringTok{"\{train_time_summary$start\} to \{test_time_summary$end\}"}\NormalTok{),}
+      \DataTypeTok{y =} \StringTok{""}\NormalTok{, }\DataTypeTok{x =} \StringTok{""}
+\NormalTok{    ) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"none"}\NormalTok{) }
+  
+  \ControlFlowTok{if}\NormalTok{ (expand_y_axis) \{}
+    
+\NormalTok{    input}\FloatTok{.0}\NormalTok{_time_summary <-}\StringTok{ }\NormalTok{input}\FloatTok{.0} \OperatorTok{%>%}\StringTok{ }
+\StringTok{      }\KeywordTok{tk_index}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{      }\KeywordTok{tk_get_timeseries_summary}\NormalTok{()}
+    
+\NormalTok{    g <-}\StringTok{ }\NormalTok{g }\OperatorTok{+}
+\StringTok{      }\KeywordTok{scale_x_date}\NormalTok{(}\DataTypeTok{limits =} \KeywordTok{c}\NormalTok{(input}\FloatTok{.0}\NormalTok{_time_summary}\OperatorTok{$}\NormalTok{start, }
+\NormalTok{                              input}\FloatTok{.0}\NormalTok{_time_summary}\OperatorTok{$}\NormalTok{end))}
+\NormalTok{  \}}
+  
+  \KeywordTok{return}\NormalTok{(g)}
+\NormalTok{\}}
+
+
+\NormalTok{plot_sampling_plan <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(sampling_tbl, }\DataTypeTok{expand_y_axis =} \OtherTok{TRUE}\NormalTok{, }
+                               \DataTypeTok{ncol =} \DecValTok{3}\NormalTok{, }\DataTypeTok{alpha =} \DecValTok{1}\NormalTok{, }\DataTypeTok{size =} \DecValTok{1}\NormalTok{, }\DataTypeTok{base_size =} \DecValTok{14}\NormalTok{, }
+                               \DataTypeTok{title =} \StringTok{"Sampling Plan"}\NormalTok{) \{}
+  
+  \CommentTok{# Map plot_split() to sampling_tbl}
+\NormalTok{  sampling_tbl_with_plots <-}\StringTok{ }\NormalTok{sampling_tbl }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{gg_plots =} \KeywordTok{map}\NormalTok{(splits, plot_split, }
+                          \DataTypeTok{expand_y_axis =}\NormalTok{ expand_y_axis,}
+                          \DataTypeTok{alpha =}\NormalTok{ alpha, }\DataTypeTok{base_size =}\NormalTok{ base_size))}
+  
+  \CommentTok{# Make plots with cowplot}
+\NormalTok{  plot_list <-}\StringTok{ }\NormalTok{sampling_tbl_with_plots}\OperatorTok{$}\NormalTok{gg_plots }
+  
+\NormalTok{  p_temp <-}\StringTok{ }\NormalTok{plot_list[[}\DecValTok{1}\NormalTok{]] }\OperatorTok{+}\StringTok{ }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"bottom"}\NormalTok{)}
+\NormalTok{  legend <-}\StringTok{ }\KeywordTok{get_legend}\NormalTok{(p_temp)}
+  
+\NormalTok{  p_body  <-}\StringTok{ }\KeywordTok{plot_grid}\NormalTok{(}\DataTypeTok{plotlist =}\NormalTok{ plot_list, }\DataTypeTok{ncol =}\NormalTok{ ncol)}
+  
+\NormalTok{  p_title <-}\StringTok{ }\KeywordTok{ggdraw}\NormalTok{() }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{draw_label}\NormalTok{(title, }\DataTypeTok{size =} \DecValTok{18}\NormalTok{, }\DataTypeTok{fontface =} \StringTok{"bold"}\NormalTok{, }\DataTypeTok{colour =} \KeywordTok{palette_light}\NormalTok{()[[}\DecValTok{1}\NormalTok{]])}
+  
+\NormalTok{  g <-}\StringTok{ }\KeywordTok{plot_grid}\NormalTok{(p_title, p_body, legend, }\DataTypeTok{ncol =} \DecValTok{1}\NormalTok{, }\DataTypeTok{rel_heights =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{0.05}\NormalTok{))}
+  
+  \KeywordTok{return}\NormalTok{(g)}
+  
+\NormalTok{\}}
+
+\NormalTok{rolling_origin_resamples }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{plot_sampling_plan}\NormalTok{(}\DataTypeTok{expand_y_axis =}\NormalTok{ T, }\DataTypeTok{ncol =} \DecValTok{3}\NormalTok{, }\DataTypeTok{alpha =} \DecValTok{1}\NormalTok{, }\DataTypeTok{size =} \DecValTok{1}\NormalTok{, }\DataTypeTok{base_size =} \DecValTok{10}\NormalTok{, }
+                     \DataTypeTok{title =} \StringTok{"Ventana móbil de muestras de entrenamiento y prueba"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{lstm_files/figure-latex/unnamed-chunk-4-1} \end{center}
+\centering
+  \captionof{figure}{Plan de entrenamiento de la LSTM para los precios de cierre. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+
+También se muestra el gráfico ampliado.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rolling_origin_resamples }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{plot_sampling_plan}\NormalTok{(}\DataTypeTok{expand_y_axis =}\NormalTok{ F, }\DataTypeTok{ncol =} \DecValTok{3}\NormalTok{, }\DataTypeTok{alpha =} \DecValTok{1}\NormalTok{, }\DataTypeTok{size =} \DecValTok{1}\NormalTok{, }\DataTypeTok{base_size =} \DecValTok{10}\NormalTok{, }
+                     \DataTypeTok{title =} \StringTok{"Ventana móbil de muestras de entrenamiento y prueba. Ampliado"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{lstm_files/figure-latex/unnamed-chunk-5-1} \end{center}
+\centering
+  \captionof{figure}{Plan de entrenamiento de la LSTM para los precios de cierre. Ampliado. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+
+Una vez se tienen listas las particiones se procede a la creación de los
+modelos LSTM sobre cada una de ellas. Cabe decir que la implementación
+que se hace en este trabajo de los modelos LSTM se soporta en el entorno
+Keras. En este caso se ha decidido utilizar la implementación del
+entorno en keras en R, utilizando el paquete \texttt{keras}, en vez de
+hacerlo en Python para mantener la integridad de todo el trabajo en
+cuanto al software / lenguaje que se utiliza para escribir y realizar
+los apartados de la presente tesis. Esta decisión tiene implicaciones ya
+que el paquete \texttt{keras}, aunque trabaja ``por debajo'' con el
+entorno de programación TensorFlow, no permite tener un control a tan
+bajo nivel de todos los hyper parámetros que se pueden optimizar en un
+modelo de estas características.
+
+Como se ha apuntado previamente, en el presente trabajo se elaboran los
+modelos LSTM con una cierta combinación de parámetros, debido a la alta
+capacidad computacional que requiere el hecho de hacer el proceso de
+\emph{rolling origin cross validation} que este tipo de modelos
+requieren para optimizar sus hyper parámteros. Los pasos en el proceso
+de creación de estos modelos se detallan a continuación:
+
+\begin{enumerate}
+\def\labelenumi{\roman{enumi})}
+\item
+  En primer lugar se separan los datos de cada partición en sendas
+  muestras de entrenamiento y prueba, teniendo la primera 996
+  observaciones, es decir, días con valor en el precio de cierre de la
+  empresa Coca Cola, mientras que la muestra de prueba consta de 83
+  días. Esta separación entre muestras de entrenamiento y prueba
+  responde al hecho que, a causa de la forma requerida del tensor de
+  entrada en el modelo, el número de observaciones en la muestra de
+  entrenamiento tiene que ser divisible entre el número de observaciones
+  de la muestra de prueba, de manera que el resultado sea un número
+  entero.
+\item
+  En segundo lugar se preprocesan los datos. En este caso se aplica en
+  primer lugar la raíz cuadrada a los datos. Este proceso ayuda a
+  reducir la varianza y eliminar los outliers. En segundo lugar se
+  estandarizan los datos, restándoles la media y dividiéndolos por su
+  desviación típica. Este proceso también se conoce como escalar y
+  centrar los datos.
+\item
+  En tercer lugar se transforma la forma de los datos. Éstos necesitan
+  ser transformados a forma de tensor, ya que es la forma requerida por
+  este tipo de modelos. El concepto de tensor se puede pensar como una
+  entidad algebraica que generaliza los conceptos de escalar, vector y
+  matriz. Se podría entender como un vector de matrices, en este caso.
+  En el presente trabajo la forma del tensor se detalla posteriormente
+  en este apartado. Se construyen pues los tensores input y output de
+  las muestras de entrenamiento y prueba.
+\item
+  En cuarto lugar se definen los hyper parámetros y se construye la
+  función que se aplicará a cada partición para entrenar la LSTM. En
+  cuanto a los parámetros, se presenta una restricción añadida a la
+  descrita en el apartado i). El cociente entre el número de
+  observaciones de la muestra de entrenamiento y el parámetro llamado
+  \emph{batch size}, o tamaño del grupo, tiene que resultar también en
+  un número entero. Esta regla también se aplica al número de
+  observaciones en la muestra de prueba. El hyper parámetro \emph{batch
+  size} controla el número de muestras, u observaciones, sobre las que
+  se trabaja antes de actualizar los parámetros internos de la LSTM o
+  pesos da la red. De hecho, es el número de observaciones que se
+  utilizan para hacer las predicciones y así poder calcular el error que
+  permite optimizar los pesos de la red. En el presente trabajo este
+  parámetro se fija en 1 de manera que se está utilizando sólo 1
+  observación a la vez para actualizar los parámetros internos del
+  modelo. Esta configuración a la hora de utilizar el algoritmo de
+  optimización del descenso del gradiente (Gradient Descent) para
+  optimizar los pesos de la red se llama Stochastic Gradient Descent. Se
+  sabe que fijar el \emph{batch size} en un valor pequeño aportan ruido
+  y añaden un efecto regularizador que permite generalizar mejor.
+  {[}@smallbatch{]} presentan unos resultados en los que confirman que
+  utilizando un valor pequeño para el parámetro \emph{batch size} se
+  consigue obtener una estabilidad en el entrenamiento y una mejor
+  generalización, dado una capacidad computacional, a través de un
+  amplio abanico de experimentos.Otro de los parámetros que se fijan
+  durante el entrenamiento de las LSTM es el número de épocas. Este
+  hyper parámetro define el número de veces que el algoritmo va a
+  aprender de todo el conjunto de datos. Es decir, terminar una época
+  significa que cada muestra u observación en el conjunto de
+  entrenamiento ha tenido la oportunidad de actualizar los parámetros
+  internos del modelo o pesos de la red. Las épocas se fijan en 100 para
+  limitar el tiempo de entrenamiento. También se fijan a 100 las
+  unidades, o redes neuronales, internas de la LSTM. Este parámetro
+  también se conoce como neuronas y controla la capacidad que tiene la
+  LSTM de aprender. A más neuronas, más capacidad tiene la LSTM de
+  aprender. Seguidamente se fija para el ajuste de la LSTM es el llamado
+  \emph{time steps}.(revisar, 6 tsteps) Este parámetro corresponde a la
+  segunda dimensión del tensor de entrada. En este caso los tensores son
+  de la forma \(Input = [996,6,1] , \ output=[83,1]\). Este hyper
+  parámetro controla el número de observaciones en el pasado sobre las
+  de las que la LSTM aprende. Como se ha detallado en el apartado IV.1
+  la LSTM es un tipo de red neuronal que permite aprender de periodos
+  alejados en el tiempo, ya que es capaz de determinar la cantidad de
+  información del pasado que hay que retener. Por añadidura, se fija el
+  parámetro \emph{unit\_forget\_bias} a 1. Este hyper parámetro añade 1
+  al seso de la \emph{puerta de olvido} al inicializarse. Además añade
+  una referencia a Jozefowicz et. al.~apuntando a que lo recomienda
+  {[}@keras{]}. Finalmente cabe decir que la LSTM que se construye es de
+  tipo \emph{STATEFULL}, tal y como se describe en el apartado IV.1
+  (revisar apartado, poner stateful)
+\item
+  En quinto lugar se entrena de manera iterativa sobre todas las épocas
+  la LSTM.
+\item
+  Con el modelo entrenado, se calcula la predicción sobre la muestra de
+  entrenamiento y se construye un \texttt{data\ frame} con los
+  resultados reales y los predichos.
+\end{enumerate}
+
+Este proceso se aplica de manera iterativa sobre todas las particiones y
+se grafican los resultados obtenidos sobre las muestras de prueba. En
+rojo se pueden ver las predicciones, mientras que en negro se dibujan
+los valores reales del precio de cierre.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc_mape <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(prediction_tbl) \{}
+  
+\NormalTok{  mape_calculation <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(data) \{}
+\NormalTok{    data }\OperatorTok{%>%}
+\StringTok{      }\KeywordTok{spread}\NormalTok{(}\DataTypeTok{key =}\NormalTok{ key, }\DataTypeTok{value =}\NormalTok{ value) }\OperatorTok{%>%}
+\StringTok{      }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{index) }\OperatorTok{%>%}
+\StringTok{      }\KeywordTok{filter}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(predict)) }\OperatorTok{%>%}
+\StringTok{      }\KeywordTok{rename}\NormalTok{(}
+        \DataTypeTok{truth    =}\NormalTok{ actual,}
+        \DataTypeTok{estimate =}\NormalTok{ predict}
+\NormalTok{      ) }\OperatorTok{%>%}
+\StringTok{      }\KeywordTok{filter}\NormalTok{(truth}\OperatorTok{!=}\DecValTok{0}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{      }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{diff=}\KeywordTok{abs}\NormalTok{(truth}\OperatorTok{-}\NormalTok{estimate)) }\OperatorTok{%>%}
+\StringTok{      }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{coc=}\NormalTok{diff}\OperatorTok{/}\NormalTok{truth) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{      }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{mape=}\KeywordTok{mean}\NormalTok{(coc))}\OperatorTok{*}\DecValTok{100}
+\NormalTok{  \}}
+  
+\NormalTok{  safe_mape <-}\StringTok{ }\KeywordTok{possibly}\NormalTok{(mape_calculation, }\DataTypeTok{otherwise =} \OtherTok{NA}\NormalTok{)}
+  
+  \KeywordTok{safe_mape}\NormalTok{(prediction_tbl)}
+  
+\NormalTok{\}}
+
+\NormalTok{calc_mape_sfi <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(prediction_tbl) \{}
+
+\NormalTok{    mape_calculation_sfi <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(data) \{}
+\NormalTok{    data }\OperatorTok{%>%}
+\StringTok{      }\KeywordTok{spread}\NormalTok{(}\DataTypeTok{key =}\NormalTok{ key, }\DataTypeTok{value =}\NormalTok{ value) }\OperatorTok{%>%}
+\StringTok{      }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{index) }\OperatorTok{%>%}
+\StringTok{      }\KeywordTok{filter}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(predict)) }\OperatorTok{%>%}
+\StringTok{      }\KeywordTok{rename}\NormalTok{(}
+        \DataTypeTok{truth    =}\NormalTok{ actual,}
+        \DataTypeTok{estimate =}\NormalTok{ predict}
+\NormalTok{      ) }\OperatorTok{%>%}
+\StringTok{      }\KeywordTok{filter}\NormalTok{(truth}\OperatorTok{!=}\DecValTok{0}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{      }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{diff=}\KeywordTok{sum}\NormalTok{(}\KeywordTok{abs}\NormalTok{(truth}\OperatorTok{-}\NormalTok{estimate)),}
+                \DataTypeTok{total=}\KeywordTok{sum}\NormalTok{(truth)) }\OperatorTok{%>%}
+\StringTok{      }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{mape=}\NormalTok{(diff}\OperatorTok{/}\NormalTok{total)}\OperatorTok{*}\DecValTok{100}\NormalTok{) }
+\NormalTok{  \}}
+  
+\NormalTok{  safe_mape1 <-}\StringTok{ }\KeywordTok{possibly}\NormalTok{(mape_calculation_sfi, }\DataTypeTok{otherwise =} \OtherTok{NA}\NormalTok{)}
+  
+  \KeywordTok{safe_mape1}\NormalTok{(prediction_tbl)}
+\NormalTok{\}}
+
+
+
+
+\CommentTok{# Setup single plot function}
+
+\NormalTok{plot_prediction <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(data, id, }\DataTypeTok{alpha =} \DecValTok{1}\NormalTok{, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{, }\DataTypeTok{base_size =} \DecValTok{6}\NormalTok{) \{}
+  
+  \CommentTok{#mape_val <- calc_mape(data)}
+  
+\NormalTok{  g <-}\StringTok{ }\NormalTok{data }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(index, value, }\DataTypeTok{color =}\NormalTok{ key)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =}\NormalTok{ alpha, }\DataTypeTok{size =}\NormalTok{ size) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\CommentTok{#geom_line(size = size) + }
+\StringTok{    }\NormalTok{tidyquant}\OperatorTok{::}\KeywordTok{theme_tq}\NormalTok{(}\DataTypeTok{base_size =}\NormalTok{ base_size) }\OperatorTok{+}
+\StringTok{    }\NormalTok{tidyquant}\OperatorTok{::}\KeywordTok{scale_color_tq}\NormalTok{() }\OperatorTok{+}
+\StringTok{    }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"none"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}
+      \CommentTok{#title = glue("\{id\}, mape: \{round(mape_val, digits = 1)\}"),}
+      \DataTypeTok{x =} \StringTok{""}\NormalTok{, }\DataTypeTok{y =} \StringTok{""}
+\NormalTok{    )}
+  
+  \KeywordTok{return}\NormalTok{(g)}
+\NormalTok{\}}
+
+
+\NormalTok{plot_predictions <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(sampling_tbl, predictions_col, }
+                             \DataTypeTok{ncol =} \DecValTok{3}\NormalTok{, }\DataTypeTok{alpha =} \DecValTok{1}\NormalTok{, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{, }\DataTypeTok{base_size =} \DecValTok{18}\NormalTok{,}
+                             \DataTypeTok{title =} \StringTok{"Backtested Predictions"}\NormalTok{) \{}
+  
+\NormalTok{  predictions_col_expr <-}\StringTok{ }\KeywordTok{enquo}\NormalTok{(predictions_col)}
+  
+  \CommentTok{# Map plot_split() to sampling_tbl}
+\NormalTok{  sampling_tbl_with_plots <-}\StringTok{ }\NormalTok{sampling_tbl }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{gg_plots =} \KeywordTok{map2}\NormalTok{(}\OperatorTok{!!}\StringTok{ }\NormalTok{predictions_col_expr, id, }
+                           \DataTypeTok{.f        =}\NormalTok{ plot_prediction, }
+                           \DataTypeTok{alpha     =}\NormalTok{ alpha, }
+                           \DataTypeTok{size      =}\NormalTok{ size, }
+                           \DataTypeTok{base_size =}\NormalTok{ base_size)) }
+  
+  \CommentTok{# Make plots with cowplot}
+\NormalTok{  plot_list <-}\StringTok{ }\NormalTok{sampling_tbl_with_plots}\OperatorTok{$}\NormalTok{gg_plots }
+  
+\NormalTok{  p_temp <-}\StringTok{ }\NormalTok{plot_list[[}\DecValTok{1}\NormalTok{]] }\OperatorTok{+}\StringTok{ }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"bottom"}\NormalTok{)}
+\NormalTok{  legend <-}\StringTok{ }\KeywordTok{get_legend}\NormalTok{(p_temp)}
+  
+\NormalTok{  p_body  <-}\StringTok{ }\KeywordTok{plot_grid}\NormalTok{(}\DataTypeTok{plotlist =}\NormalTok{ plot_list, }\DataTypeTok{ncol =}\NormalTok{ ncol)}
+  
+  
+  
+\NormalTok{  p_title <-}\StringTok{ }\KeywordTok{ggdraw}\NormalTok{() }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{draw_label}\NormalTok{(title, }\DataTypeTok{size =} \DecValTok{18}\NormalTok{, }\DataTypeTok{fontface =} \StringTok{"bold"}\NormalTok{, }\DataTypeTok{colour =} \KeywordTok{palette_light}\NormalTok{()[[}\DecValTok{1}\NormalTok{]])}
+  
+\NormalTok{  g <-}\StringTok{ }\KeywordTok{plot_grid}\NormalTok{(p_title, p_body, legend, }\DataTypeTok{ncol =} \DecValTok{1}\NormalTok{, }\DataTypeTok{rel_heights =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{0.05}\NormalTok{))}
+  
+  \KeywordTok{return}\NormalTok{(g)}
+  
+\NormalTok{\}}
+
+
+\NormalTok{sample_predictions_lstm_tbl_prices }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(id}\OperatorTok{%in%}\KeywordTok{c}\NormalTok{(}\StringTok{"Slice1"}\NormalTok{, }\StringTok{"Slice2"}\NormalTok{,}\StringTok{"Slice3"}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{plot_predictions}\NormalTok{(}\DataTypeTok{predictions_col =}\NormalTok{ predict, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{size =} \DecValTok{1}\NormalTok{, }\DataTypeTok{base_size =} \DecValTok{10}\NormalTok{,}
+                   \DataTypeTok{title =} \StringTok{"Predicción sobre las muestras de prueba. Particiones 1 a 3"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{lstm_files/figure-latex/unnamed-chunk-6-1} \end{center}
+\centering
+  \captionof{figure}{Resultados sobre muestra de prueba de la LSTM sobre los precios de cierre en particiones 1 a 3. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sample_predictions_lstm_tbl_prices }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(id}\OperatorTok{%in%}\KeywordTok{c}\NormalTok{(}\StringTok{"Slice4"}\NormalTok{, }\StringTok{"Slice5"}\NormalTok{,}\StringTok{"Slice6"}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{plot_predictions}\NormalTok{(}\DataTypeTok{predictions_col =}\NormalTok{ predict, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{size =} \DecValTok{1}\NormalTok{, }\DataTypeTok{base_size =} \DecValTok{10}\NormalTok{,}
+                   \DataTypeTok{title =} \StringTok{"Predicción sobre las muestras de prueba. Particiones 4 a 6"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{lstm_files/figure-latex/unnamed-chunk-7-1} \end{center}
+\centering
+  \captionof{figure}{Resultados sobre muestra de prueba de la LSTM sobre los precios de cierre en particiones 4 a 6. Fuente: elaboración propia}
+
+\setlength\parskip{5ex}
+\justifying
+
+Seguidamente se presenta la tabla que muestra el cálculo de las
+distintas métricas de rendimiento para las distintas particiones:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sample_mape_tbl <-}\StringTok{ }\NormalTok{sample_predictions_lstm_tbl_prices }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{mape =} \KeywordTok{map}\NormalTok{(predict, calc_mape)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(id, mape)}
+
+\CommentTok{#sample_predictions_lstm_tbl_prices$predict[[1]]}
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(sample_predictions_lstm_tbl_prices}\OperatorTok{$}\NormalTok{predict))\{}
+\NormalTok{  temp<-}\KeywordTok{calc_mape_sfi}\NormalTok{(sample_predictions_lstm_tbl_prices}\OperatorTok{$}\NormalTok{predict[[i]])}
+  \ControlFlowTok{if}\NormalTok{(}\KeywordTok{exists}\NormalTok{(}\StringTok{"results"}\NormalTok{))\{}
+\NormalTok{    results<-results }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(temp)}
+\NormalTok{  \}}\ControlFlowTok{else}\NormalTok{\{results<-temp\}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+Como se puede observar en base al cálculo de los dos tipos de MAPE, los
+resultados parecen bastante buenos. En la peor de las particiones el
+modelo es capaz de generar un error percentual absoluto medio de
+alrededor del 7\%
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# }
+\CommentTok{# do.call(rbind.data.frame, sample_mape_tbl$mape) %>% mutate(Split=paste("split",seq(1,6,1))) %>% }
+\CommentTok{#   left_join(}
+\CommentTok{#     results %>% mutate(key=paste("split",seq(1,6,1))),}
+\CommentTok{#     by=c("Split"="key")}
+\CommentTok{#   ) %>% }
+\CommentTok{#   dplyr::rename("MAPE"=mape.x,"MAPE2"=mape.y) %>% }
+\CommentTok{#   dplyr::select(Split,MAPE,MAPE2) %>% }
+\CommentTok{#   gather(metrica,valor,2:3) %>% }
+\CommentTok{#   ggplot(aes(x=Split,y=valor,fill=metrica),color="black")+}
+\CommentTok{#   geom_bar(stat = "identity",position=position_dodge())+}
+\CommentTok{#   theme_tq()+}
+\CommentTok{#   scale_fill_brewer(palette="Set1")+}
+\CommentTok{#   theme(legend.text  = element_text(size=15),}
+\CommentTok{#         legend.title = element_text(size=15))+}
+\CommentTok{#   ggtitle("Métricas sobre las distintas particiones obtenidas con la LSTM")}
+\CommentTok{# }
+\CommentTok{# }
+\CommentTok{# sample_predictions_lstm_tbl_prices$predict[[1]]->data}
+\CommentTok{# data %>%}
+\CommentTok{#     spread(key = key, value = value) %>%}
+\CommentTok{#     dplyr::select(-index) %>%}
+\CommentTok{#     filter(!is.na(predict)) %>%}
+\CommentTok{#     rename(}
+\CommentTok{#         truth    = actual,}
+\CommentTok{#         estimate = predict}
+\CommentTok{#     ) %>%}
+\CommentTok{#     filter(truth!=0)->a}
+\CommentTok{# }
+\CommentTok{# MAPE(x = a$estimate,ref=a$truth)*100}
+\CommentTok{# MAE(x = a$estimate,ref=a$truth)*100}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sample_predictions_lstm_tbl_return }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{plot_predictions}\NormalTok{(}\DataTypeTok{predictions_col =}\NormalTok{ predict, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{size =} \DecValTok{1}\NormalTok{, }\DataTypeTok{base_size =} \DecValTok{10}\NormalTok{,}
+                   \DataTypeTok{title =} \StringTok{"Keras Stateful LSTM: Prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{lstm_files/figure-latex/unnamed-chunk-10-1} \end{center}
+
+
+\end{document}

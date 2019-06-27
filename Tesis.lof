@@ -1,0 +1,43 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {II.1}{\ignorespaces Metodología propuesta. Fuente: elaboración propia\relax }}{5}{figure.2.1}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {III.1}{\ignorespaces Diagrama del Test de Turing. Fuente: Wikipedia, adaptado de "Turing Test: 50 Years Later", Saygin, 2000\relax }}{7}{figure.3.1}
+\contentsline {figure}{\numberline {III.2}{\ignorespaces Esquema de funcionamiento de Protrader. Fuente: Chen, Liang (1989). Protrader: an Expert System for Program Trading\relax }}{8}{figure.3.2}
+\contentsline {figure}{\numberline {III.3}{\ignorespaces Esquema de funcionamiento del FAIS. Fuente: informe de la AAAI sobre FinCEN FAIS (1995)\relax }}{9}{figure.3.3}
+\contentsline {figure}{\numberline {III.4}{\ignorespaces Esquema AI. Fuente: Artificial intelligence and machine learning in financial services. Financial Stability Board (FSB) 2017\relax }}{11}{figure.3.4}
+\contentsline {figure}{\numberline {III.5}{\ignorespaces Nivel de precios de los futuros Emini durante el flash crash y cambios en los precios entre transacciones consecutivas. Fuente: Implications of high-frequency trading for security markets, Oliver Linton, Soheil Mahmoodzadeh 2018\relax }}{18}{figure.3.5}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {IV.1}{\ignorespaces Ejemplo de árbol de decisión. Fuente: Classification And Regression Trees for Machine Learning. Jason Brownlee, 2016\relax }}{27}{figure.4.1}
+\contentsline {figure}{\numberline {IV.2}{\ignorespaces Estructura general de una red neuronal recurrente LSTM. Fuente: (Olah, 2015)\relax }}{31}{figure.4.2}
+\contentsline {figure}{\numberline {IV.3}{\ignorespaces Cell state. Cantidad de información que fluye a través de un módulo de la LSTM. Fuente: (Olah, 2015)\relax }}{31}{figure.4.3}
+\contentsline {figure}{\numberline {IV.4}{\ignorespaces Primer paso o puerta en la LSTM. Fuente: (Olah, 2015)\relax }}{32}{figure.4.4}
+\contentsline {figure}{\numberline {IV.5}{\ignorespaces Segundo paso en la LSTM. Puertas 2 y 3. Fuente: (Olah, 2015)\relax }}{32}{figure.4.5}
+\contentsline {figure}{\numberline {IV.6}{\ignorespaces Tercer paso en la LSTM. Aplicación de las puertas 1, 2 y 3. Fuente: (Olah, 2015)\relax }}{33}{figure.4.6}
+\contentsline {figure}{\numberline {IV.7}{\ignorespaces Cuarto y último paso en la LSTM. Elección de la salida de la LSTM. Fuente: (Olah, 2015)\relax }}{34}{figure.4.7}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {V.1}{\ignorespaces Precio de cierre de Coca-Cola Company 03/01/2000 - 28/12/2018\relax }}{43}{figure.5.1}
+\contentsline {figure}{\numberline {V.2}{\ignorespaces Precio de cierre de Apple Inc. 03/01/2000 - 28/12/2018\relax }}{43}{figure.5.2}
+\contentsline {figure}{\numberline {V.3}{\ignorespaces Precio de cierre de American Express CO. 03/01/2000 - 28/12/2018\relax }}{44}{figure.5.3}
+\contentsline {figure}{\numberline {V.4}{\ignorespaces Precio de cierre de Wells Fargo and CO. 03/01/2000 - 28/12/2018\relax }}{44}{figure.5.4}
+\contentsline {figure}{\numberline {V.5}{\ignorespaces Heatmap de la accuracy obtenida con los modelos Random Forest sobre muestra test. Fuente: elaboración propia\relax }}{66}{figure.5.5}
+\contentsline {figure}{\numberline {V.6}{\ignorespaces Heatmap de la sensitividad obtenida con los modelos Random Forest sobre muestra test. Fuente: elaboración propia\relax }}{67}{figure.5.6}
+\contentsline {figure}{\numberline {V.7}{\ignorespaces Heatmap de la especificidad obtenida con los modelos Random Forest sobre muestra test. Fuente: elaboración propia\relax }}{68}{figure.5.7}
+\contentsline {figure}{\numberline {V.8}{\ignorespaces Heatmap de la accuracy obtenida sobre muestra test SMD masivo para 165 empresas. Fuente: elaboración propia\relax }}{73}{figure.5.8}
+\contentsline {figure}{\numberline {V.9}{\ignorespaces Precio de cierre empresa Ferrellgas (FGP). Fuente: elaboración propia\relax }}{75}{figure.5.9}
+\contentsline {figure}{\numberline {V.10}{\ignorespaces Distribución de los resultados de accuracy sobre muestra test en las 3 ventanas temporales consideradas. Fuente: elaboración propia\relax }}{76}{figure.5.10}
+\contentsline {figure}{\numberline {V.11}{\ignorespaces Información obtenida al inicializar el clúster h2o\relax }}{81}{figure.5.11}
+\contentsline {figure}{\numberline {V.12}{\ignorespaces Plan de entrenamiento de la LSTM para los precios de cierre. Fuente: elaboración propia\relax }}{85}{figure.5.12}
+\contentsline {figure}{\numberline {V.13}{\ignorespaces Plan de entrenamiento de la LSTM para los precios de cierre. Ampliado. Fuente: elaboración propia\relax }}{86}{figure.5.13}
+\contentsline {figure}{\numberline {V.14}{\ignorespaces Resultados sobre muestra de prueba de la LSTM sobre los precios de cierre en particiones 1 y 2. Fuente: elaboración propia\relax }}{89}{figure.5.14}
+\contentsline {figure}{\numberline {V.15}{\ignorespaces Resultados sobre muestra de prueba de la LSTM sobre los precios de cierre en particiones 3 y 4. Fuente: elaboración propia\relax }}{89}{figure.5.15}
+\contentsline {figure}{\numberline {V.16}{\ignorespaces Resultados sobre muestra de prueba de la LSTM sobre los precios de cierre en particiones 5 y 6. Fuente: elaboración propia\relax }}{90}{figure.5.16}
+\contentsline {figure}{\numberline {V.17}{\ignorespaces Métricas de rendimiento de las predicciones elaboradas con LSTM sobre las distintas particiones. Precio de cierre. Fuente: elaboración propia\relax }}{91}{figure.5.17}
+\contentsline {figure}{\numberline {V.18}{\ignorespaces Plan de entrenamiento de la LSTM para la rentabilidad de Coca Cola. Fuente: elaboración propia\relax }}{93}{figure.5.18}
+\contentsline {figure}{\numberline {V.19}{\ignorespaces Plan de entrenamiento de la LSTM para los precios de cierre. Ampliado. Fuente: elaboración propia\relax }}{94}{figure.5.19}
+\contentsline {figure}{\numberline {V.20}{\ignorespaces Resultados sobre muestra de prueba de la LSTM sobre la rentabilidad en particiones 1 y 2. Fuente: elaboración propia\relax }}{95}{figure.5.20}
+\contentsline {figure}{\numberline {V.21}{\ignorespaces Resultados sobre muestra de prueba de la LSTM sobre la rentabilidad en particiones 3 y 4. Fuente: elaboración propia\relax }}{95}{figure.5.21}
+\contentsline {figure}{\numberline {V.22}{\ignorespaces Resultados sobre muestra de prueba de la LSTM sobre la rentabilidad en particiones 5 y 6. Fuente: elaboración propia\relax }}{96}{figure.5.22}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

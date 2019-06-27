@@ -1,6 +1,6 @@
 ---
 documentclass: DissertateUSU
-title: 'IA en los mercados financieros. Consecuencias y caso practico'
+title: 'IA en los mercados financieros. Consecuencias y casos practicos'
 author: Arnau Muns Orenga
 bibliography: refs.bib
 csl: accounting-organizations-and-society.csl
@@ -12,8 +12,8 @@ output:
     keep_tex: yes
 geometry: [top=2.5cm, bottom=2.5cm, right=2.5cm, left=2.5cm]
 params:
-  year: '2018'
-  degree: 'Degree'
+  year: 'Curso 2018-2019'
+  degree: 'Doble grado en Economia y Estadistica'
   field: 'Field'
   chair: 'Chair Person'
   committee1: 'Committee Member 1'
@@ -31,7 +31,13 @@ knitr::opts_chunk$set(fig.path = 'figures/',
                       warning = FALSE, 
                       message = FALSE)
 ## Do NOT Remove
-dissertateUSU::preamble_for_title()
+#dissertateUSU::preamble_for_title()
+
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
 ```
 
 <!-- Title page printed automatically -->
@@ -46,7 +52,9 @@ dissertateUSU::preamble_for_title()
 \fancyfoot[C]{}
 \chapter*{\textbf{DEDICACIÓN}}
 
+<!-- \centering -->
 Este trabajo está dedicado a mi familia.
+<!-- \justifying -->
 
 <!-- Resumen -->
 \newpage
@@ -56,21 +64,31 @@ Este trabajo está dedicado a mi familia.
 \fancyfoot[C]{}
 \chapter*{\textbf{RESUMEN}}
 
-Resumen
+```{r child="resume.rmd"}
+```
 
 <!-- Palabras clave -->
 \newpage
 \fancyhead[L]{Palabras clave}
 \fancyhead[R]{\thepage}
 \fancyfoot[C]{}
+
 \chapter*{\textbf{Palabras clave}}
 
-**Stock**, Inteligencia artificial, Aprendizaje automático, Machine Learning, Sector financiero, aprendizaje automático supervisado, aprendizaje automático no supervisado, modelo predictivo, Trading automático (negociación bursátil) precio de apertura, precio de cierre, precio máximo y mínimo.
+Stock, Inteligencia artificial, Aprendizaje automático, Machine Learning, Sector financiero, aprendizaje automático supervisado, aprendizaje automático no supervisado, modelo predictivo, Trading automático (negociación bursátil) precio de apertura, precio de cierre, precio máximo y mínimo.
 
+<!-- Palabras clave -->
+\newpage
+\fancyhead[L]{Clasificación AMS}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+\chapter*{\textbf{Clasificación AMS}}
+
+La clasificación AMS de este trabajo es: 91G99 *Mathematical finance, None of the above but in this field*
 <!-- Front Matter -->
 \newpage
-\fancyhead[L]{Table of Contents}
-\fancyhead[R]{\thepage}
+\fancyhead[L]{Índice}
+\fancyhead[R]{}
 \fancyfoot[C]{}
 \tableofcontents
 
@@ -92,36 +110,35 @@ Resumen
 
 <!-- Introduction -->
 \newpage
-\fancyhead[L]{Introducción}
+\fancyhead[L]{INTRODUCCIÓN}
 \fancyhead[R]{\thepage}
 \fancyfoot[C]{}
 
-\chapter{\textbf{Introducción}}
+\chapter{\textbf{INTRODUCCIÓN}}
 
 ```{r child="introduccion.rmd"}
 ```
 
 <!-- Metodologia -->
-\FloatBarrier
 \newpage
-\fancyhead[L]{Metodología}
+\fancyhead[L]{METODOLOGÍA}
 \fancyhead[R]{\thepage}
 \fancyfoot[C]{}
 
-\chapter{\textbf{Metodología}}
-\justifying
-```{r child="metodologia.rmd"}
+\chapter{\textbf{METODOLOGÍA}}
+
+```{r child="metodologia.rmd"} 
 ```
 
 <!-- Chapter 3-->
 \FloatBarrier
 \newpage
-\fancyhead[L]{Consecuencias de la implantación de la IA en los mercados financieros}
+\fancyhead[L]{CONSECUENCIAS DE LA IMPLANTACIÓN DE LA IA EN LOS MERCADOS FINANCIEROS}
 \fancyhead[R]{\thepage}
 \fancyfoot[C]{}
 
-\chapter{\textbf{Consecuencias de la implantación de la IA en los mercados financieros}}
-
+\chapter{\textbf{CONSECUENCIAS DE LA IMPLANTACIÓN DE LA IA EN LOS MERCADOS FINANCIEROS}}
+\noindent
 En el presente capítulo se procede a analizar las consecuencias de la implantación de la inteligencia artificial en los mercados y el sector financiero. En primer lugar se analiza la proyección histórica y la evolución de la inteligencia artificial como campo de estudio, así como el desarrollo paralelo a lo largo de la historia de las aplicaciones sobre el mundo de las finanzas de la misma. Posteriormente se estudian las aplicaciones actuales de los modelos de machine learning e IA para observar las consecuencias actuales y discutir las posibles consecuencias futuras.
 
 <!-- <!-- contextualizacion -->
@@ -138,184 +155,376 @@ En el presente capítulo se procede a analizar las consecuencias de la implantac
 
 <!-- evolucion historica -->
 \FloatBarrier
-\newpage
 \fancyhead[L]{Evolución histórica y contexto actual}
 \fancyhead[R]{Capítulo \thechapter}
 \fancyfoot[C]{\thepage}
 
-\section{3.1 \textbf{Evolución histórica y contexto actual}}
+\section{III.1 \textbf{Evolución histórica y contexto actual}}
 
 \justifying
 ```{r child="Current.Situation.rmd"}
 ```
 
-<!-- consecuencias economias -->
 \FloatBarrier
-\newpage
-\fancyhead[L]{Aplicaciones y consecuencias económicas}
+\fancyhead[L]{Aplicaciones y consecuencias}
 \fancyhead[R]{Capítulo \thechapter}
 \fancyfoot[C]{\thepage}
 
-\section{3.2 \textbf{Aplicaciones y consecuencias económicas}}
-
-En un mundo donde los datos juegan un papel fundamental (hay quién incluso los llama el petróleo del siglo XXI) y el tratamiento de la información está totalmente implantado, todos los ámbitos de la realidad se ven afectados. En el caso del mundo de las finanzas el impacto ha sido profundo. En los últimos años el campo de la inteligencia artificial ha sido capaz de crear sistemas computacionales y aplicaciones en el campo de las finanzas. En la sección siguiente se examinan los distintos campos del sector financiero en los cuales se aplican actualmente técnicas de machine learning e inteligencia artificial con el objetivo de poder examinar con detalle las consecuencias actuales de su implantación así como las posibles implicaciones futuras.
+\section{III.2 \textbf{Aplicaciones y consecuencias}}
+\noindent
+En un mundo donde los datos juegan un papel fundamental (hay quién incluso los llama el petróleo del siglo XXI) y el tratamiento de la información está totalmente implantado, todos los ámbitos de la realidad se ven afectados. En el caso del mundo de las finanzas el impacto ha sido profundo. En los últimos años el campo de la inteligencia artificial ha sido capaz de crear sistemas computacionales y aplicaciones en el campo de las finanzas. En la sección siguiente se examinan los distintos campos del sector financiero en los cuales se aplican actualmente técnicas de machine learning e inteligencia artificial con el objetivo de poder examinar con detalle las consecuencias actuales de su implantación así como las posibles implicaciones futuras. Éstos son: (3.2.1) centrados en el cliente (o *front office*), que incluyen el *credit scoring*, aplicaciones en el campo de los seguros de vida y no vida, y los chat-bots encargados de interactuar con el cliente; (3.2.2) centrados en las operaciones (o *back office*), con casos como los modelos de gestión del riesgo y modelos de impacto de mercado; (3.2.3) gestión de carteras y inversión en mercados financieros; (3.2.4) casos en los que instituciones financieras y empresas privadas aplican la IA y el aprendizaje automático en regulación y supervisión; y (3.2.5) otras aplicaciones.
 
 \justifying
 ```{r child="aplications.implications.rmd"}
 ```
 
 \FloatBarrier
+\fancyhead[L]{Aplicaciones front office: centradas en el cliente}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\subsection{III.2.1 \textbf{Aplicaciones front office: centradas en el cliente}}
+
+\justifying
+```{r child="frontoffice.rmd"}
+```
+
+\FloatBarrier
+\newpage
+\fancyhead[L]{Aplicaciones back office: centradas en las operaciones}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\subsection{III.2.2 \textbf{Aplicaciones back office: centradas en las operaciones}}
+
+\justifying
+```{r child="backoffice.rmd"}
+```
+
+\FloatBarrier
+\fancyhead[L]{Gestión de carteras e inversión en mercados financieros}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\subsection{III.2.3 \textbf{Gestión de carteras e inversión en mercados financieros}}
+
+\justifying
+```{r child="gestioncarteras.rmd"}
+```
+
+\FloatBarrier
+\fancyhead[L]{Regulación y supervisión}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\subsection{III.2.4 \textbf{Regulación y supervisión}}
+
+\justifying
+```{r child="regulacionsupervision.rmd"}
+```
+
+\FloatBarrier
+\fancyhead[L]{Otras aplicaciones}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\subsection{III.2.5 \textbf{Otras aplicaciones}}
+
+\justifying
+```{r child="Otrasaplicaciones.rmd"}
+```
+
+\FloatBarrier
+\fancyhead[L]{Análisis económico: posibles efectos}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\section{III.3 \textbf{Análisis económico: posibles efectos}}
+\noindent
+Una vez analizadas las diferentes aplicaciones actuales de la inteligencia artificial en el sector de las finanzas, y sus consecuencias más directas, se procede a elaborar un análisis de las posibles efectos o implicaciones de su implantación desde una perspectiva económica. Concretamente se distribuye el análisis en dos partes: por un lado desde una perspectiva micro económica (o micro financiera) y, por otro, desde una perspectiva macro económica.
+
+\FloatBarrier
+\fancyhead[L]{Análisis micro-económico}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\subsection{III.3.1 \textbf{Análisis micro-económico}}
+
+\justifying
+```{r child="microeco.rmd"}
+```
+
+\FloatBarrier
+\fancyhead[L]{Análisis macro-económico}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\subsection{III.3.2 \textbf{Análisis macro-económico}}
+
+\justifying
+```{r child="macroeco.rmd"}
+```
 
 <!-- Chapter 4 -->
+\FloatBarrier
 \newpage
-\fancyhead[L]{Chapter 4's Title}
+\fancyhead[L]{CASOS PRÁCTICOS: MARCO}
 \fancyhead[R]{\thepage}
 \fancyfoot[C]{}
 
-\chapter{\textbf{Caso práctico: modelización predictiva de la dirección de un stock}}
+\chapter{\textbf{CASOS PRÁCTICOS: MARCO}}
 \justifying
-Explicar la motivación para llevar a cabo un caso práctico. Explicar el tipo de modelos que se van a desarrollar y cómo encajan éstos en la situación actual de aplicación de la IA en los mercados financieros.
+\noindent
+Una vez analizada la situación actual de la aplicación de la IA en los mercados financieros, en cuanto a los *use cases*, consecuencias y posibles efectos de la misma, se proceden a elaborar distintas aplicaciones basadas en modelos estadísticos y de machine learning. La motivación para la parte práctica del presente trabajo es la crear distintos modelos que puedan llegar a tener una aplicación práctica en el sector de las finanzas, especialmente en el campo de la inversión en activos. Los modelos que se desarrollan a continuación son únicamente un ejemplo de la gran variaded de técnincas, y sobretodo de maneras de enfocarlas, que se pueden aplicar en este campo del sector financiero.
+
+\noindent
+Esta sección se estructura de la siguiente manera. En primer lugar se describen teóricamente los modelos estadísticos y de machine learning que se utilizaran posteriormente en los diferentes planteamientos de los usos prácticos, así como las métricas de rendimiento que se utilizan para evaluarlos. Posteriormente, cinco apartados indagan en los cinco tipos de aplicaciones de IA que se desarrollan en el presente trabajo, elaborando las conclusiones extraídas a partir del análisis en el mismo apartado
 
 
-\fancyhead[L]{Investigaciones previas}
-\fancyhead[R]{\thepage}
-\fancyfoot[C]{}
-
-\section{4.1 \textbf{Investigaciones previas}}
-
-\FloatBarrier
-\newpage
-\fancyhead[L]{Base de datos}
-\fancyhead[R]{\thepage}
-\fancyfoot[C]{}
-
-\chapter{\textbf{Base de datos}}
-
-<!-- apartado obtencion y descripcion -->
-
-\fancyhead[L]{Obtención y descripción}
-\fancyhead[R]{Capítulo \thechapter}
-\fancyfoot[C]{\thepage}
-
-\section{5.1 \textbf{Obtención y descripción}}
+<!-- Explicar la motivación para llevar a cabo un caso práctico. Explicar el tipo de modelos que se van a desarrollar y cómo encajan éstos en la situación actual de aplicación de la IA en los mercados financieros. -->
 
 
-* Cómo se obtienen. Procedimiento y fuente de los datos. Explicar las distintas tablas que conforman la base de datos.
-* Explicar cuantas empresas forman el portfolio. Explicar con qué criterio se seleccionan las empresas que forman el portfolio (Elección propia en función de los portfolios de distintos gurús del mundo de las financias. i.e. Warren Buffet)
-* Descripción de los datos (variables + estadística descriptiva)
 
-```{r child="descripcion_obtencion.rmd"}
-```
+<!-- SMD caso aplicado a 4 empresas, análisis detallado  RF con distintos alisados -->
+<!-- SMD aplicado a 500 empresas (ver las que quedan + heat map)  RF un tipo de alisado o datos raw -->
+<!-- SMD aplicado a las 4 empresas h2o con un tipo de alisado o datos raw -->
+<!-- predicción de la rentabilidad h2o para 1 empresa o las 4 -->
+<!-- lstm sobre rentabilidad -->
 
-<!-- Apartado preprocessing -->
-\fancyhead[L]{Procesamiento de los datos}
-\fancyhead[R]{Capítulo \thechapter}
-\fancyfoot[C]{\thepage}
 
-\section{5.2 \textbf{Procesamiento de los datos}}
-
-```{r child="smoothing.rmd"}
-```
-
-<!-- Apartado creación de variables -->
-\fancyhead[L]{Creación de variables}
-\fancyhead[R]{Capítulo \thechapter}
-\fancyfoot[C]{\thepage}
-
-\section{5.3 \textbf{Creación de variables}}
-
-```{r child="feature_extraction.rmd"}
-```
-
-\FloatBarrier
-\newpage
-\fancyhead[L]{Modelización}
-\fancyhead[R]{\thepage}
-\fancyfoot[C]{}
-
-\chapter{\textbf{Modelización}}
+<!-- ```{r child="casos_practicos.rmd"} -->
+<!-- ``` -->
 
 <!-- definiciones de los  modelos -->
+\FloatBarrier
 \fancyhead[L]{Definiciones de los modelos}
 \fancyhead[R]{Capítulo \thechapter}
 \fancyfoot[C]{\thepage}
 
-\section{6.1 \textbf{Definiciones de los modelos}}
+\section{IV.1 \textbf{Definiciones de los modelos}}
 
 ```{r child="definiciones de los modelos.rmd"}
 ```
 
 <!-- Apartado Definicion metricas de rendimiento -->
+\FloatBarrier
 \fancyhead[L]{Métricas de rendimiento}
 \fancyhead[R]{Capítulo \thechapter}
 \fancyfoot[C]{\thepage}
 
-\section{6.2 \textbf{Métricas de rendimiento}}
+\section{IV.2 \textbf{Métricas de rendimiento}}
 
 ```{r child="metricas de rendimiento.rmd"}
 ```
 
-<!-- experimentos -->
-\fancyhead[L]{Experimentos}
-\fancyhead[R]{Capítulo \thechapter}
+<!-- Chapter 5-->
+\FloatBarrier
+\newpage
+\fancyhead[L]{CASOS PRÁCTICOS: EJECUCIÓN}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+
+\chapter{\textbf{CASOS PRÁCTICOS: EJECUCIÓN}}
+\justifying
+
+\FloatBarrier
+\fancyhead[L]{Dirección de movimiento del precio: análisis detallado con Random Forest}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{}
+
+\section{V.1 \textbf{Dirección de movimiento del precio de cierre: análisis detallado con Random Forest}}
+\noindent
+En el apartado siguiente se elabora la primera aplicación práctica de un sistema de inteligencia artificial sobre el sector de la inversión en activos financieros. En este apartado se procede a desarrollar un sistema clasificador que sea capaz de predecir la dirección del movimiento de un determinado *stock*. Concretamente, el objetivo de este tipo de aplicación es el de desarrollar un sistema que sea capaz de predecir si el precio de cierre de un activo será mayor o inferior al del momento actual al cabo de una determinada ventana de tiempo.
+
+\noindent
+Se estructura la sección de la manera siguiente: en primer lugar se explica la procedencia y se describe la base de datos utilizada. En segundo lugar se explican los tratamientos de procesamiento de los datos que se aplican sobre los datos sucios extraídos previamente. A continuación se describen detalladamente los procesos de creación de variables que se elaboran para poder utilizarlas como *inputs* del modelo. En última instancia se propone una partición sobre los datos, previa a la realización de los experimentos y al análisis de los resultados.
+
+<!-- apartado obtencion y descripcion -->
+\FloatBarrier
+\fancyhead[L]{Base de datos: Obtención y descripción}
+\fancyhead[R]{Sección V.1}
 \fancyfoot[C]{\thepage}
 
-\section{6.3 \textbf{Experimentos}}
+\subsection{V.1.1 \textbf{Base de datos: Obtención y descripción}}
+
+```{r child="descripcion_obtencion.rmd"}
+```
+
+<!-- Sección preprocessing -->
+\FloatBarrier
+\fancyhead[L]{Procesamiento de los datos}
+\fancyhead[R]{Sección V.1}
+\fancyfoot[C]{\thepage}
+
+\subsection{V.1.2 \textbf{Procesamiento de los datos}}
+
+```{r child="smoothing.rmd"}
+```
+
+<!-- Sección creación de variables -->
+\FloatBarrier
+\fancyhead[L]{Creación de variables}
+\fancyhead[R]{Sección V.1}
+\fancyfoot[C]{\thepage}
+
+\subsection{V.1.3 \textbf{Creación de variables}}
+
+```{r child="feature_extraction.rmd"}
+```
+
+<!-- experimentos -->
+\FloatBarrier
+\fancyhead[L]{Experimentos}
+\fancyhead[R]{Sección V.1}
+\fancyfoot[C]{\thepage}
+
+\subsection{V.1.4 \textbf{Experimentos}}
 
 \justifying
 ```{r child="modelling.rmd"}
 ```
 
+<!-- End of first use case of modelling -->
+
 \FloatBarrier
-\newpage
-\fancyhead[L]{Resultados de los experimentos}
-\fancyhead[R]{\thepage}
-\fancyfoot[C]{}
-
-\chapter{\textbf{Resultados de los experiemtos}}
-
-Keep it going.
-
-
-<!-- Apartado resultados -->
-\fancyhead[L]{Resultados y análisis}
-\fancyhead[R]{Capítulo \thechapter}
+\fancyhead[L]{Dirección de movimiento del precio: análisis masivo con Random Forest}
+\fancyhead[R]{Sección V.2}
 \fancyfoot[C]{\thepage}
 
-\section{7.2 \textbf{Resultados y análisis}}
+\section{V.2 \textbf{Dirección de movimiento del precio: análisis masivo con Random Forest}}
 
-*poner para la prediccion a distintos meses cual es la empresa que mejor resultado da y el alisado etc
+```{r child="massiveSMD.rmd"}
+```
+
+\FloatBarrier
+\fancyhead[L]{Dirección de movimiento del precio: Automatic Machine Learning}
+\fancyhead[R]{Sección V.3}
+\fancyfoot[C]{\thepage}
+
+\section{V.3 \textbf{Dirección de movimiento del precio: Automatic Machine Learning}}
+
+```{r child="h2o.Rmd"}
+```
+
+\FloatBarrier
+\fancyhead[L]{Predicción de la rentabilidad: LSTM-RNN}
+\fancyhead[R]{Sección V.4}
+\fancyfoot[C]{\thepage}
+
+\section{V.4 \textbf{Predicción del precio: LSTM-RNN}}
+
+```{r child="lstm.Rmd"}
+```
+
+\FloatBarrier
+\fancyhead[L]{Predicción de la rentabilidad: LSTM-RNN}
+\fancyhead[R]{Sección V.5}
+\fancyfoot[C]{\thepage}
+
+\section{V.5 \textbf{Predicción de la rentabilidad: LSTM-RNN}}
+
+```{r child="lstm_rent.Rmd"}
+```
+
+<!-- \FloatBarrier -->
+<!-- \newpage -->
+<!-- \fancyhead[L]{Modelización} -->
+<!-- \fancyhead[R]{\thepage} -->
+<!-- \fancyfoot[C]{} -->
+
+<!-- \chapter{\textbf{Modelización}} -->
+
+
+
+<!-- \FloatBarrier -->
+<!-- \newpage -->
+<!-- \fancyhead[L]{Resultados de los experimentos} -->
+<!-- \fancyhead[R]{\thepage} -->
+<!-- \fancyfoot[C]{} -->
+
+<!-- \chapter{\textbf{Resultados de los experiemtos}} -->
+
+<!-- Keep it going. -->
+
+
+<!-- <!-- Apartado resultados -->
+<!-- \fancyhead[L]{Resultados y análisis} -->
+<!-- \fancyhead[R]{Capítulo \thechapter} -->
+<!-- \fancyfoot[C]{\thepage} -->
+
+<!-- \section{7.2 \textbf{Resultados y análisis}} -->
+
+<!-- *poner para la prediccion a distintos meses cual es la empresa que mejor resultado da y el alisado etc -->
 
 <!-- conclusiones -->
 \FloatBarrier
 \newpage
-\fancyhead[L]{Conclusiones}
-\fancyhead[R]{\thepage}
+\fancyhead[L]{CONCLUSIONES}
+\fancyhead[R]{\thechapter}
 \fancyfoot[C]{}
 
-\chapter{\textbf{Conclusiones}}
+\chapter{\textbf{CONCLUSIONES}}
 
-El aumento en la generación de datos, tanto en volumen como en velocidad, junto con el aumento de la capacidad computacional ha hehco que la inteligencia artificial forme parte de nuestros días...muchas empresas trabajndo en  esto
+\noindent
+Una vez terminadas las explicaciones de la parte práctica, habiendo desarrollado todos los experimentos previamente, se procede a la redacción de las conclusiones de la tesina. En primer lugar cabe destacar que la exposición de las conclusiones se elabora en dos partes, siguiendo la línea general del trabajo. Por un lado las conclusiones que se extraen del análisis elaborado en el apartado III. Por el otro las conclusiones extraídas de todos los experimentos que se elaboran en el apartado V.4. La línea que se pretende seguir en la redacción de las conclusiones es la siguiente. Para poder dar una visión general de todo el trabajo, y de sus implicaciones, todas las conclusiones son extraídas a partir de los objetivos fijados para este trabajo. En base a lo que se pretendía analizar, se extraen las conclusiones en base a lo que se ha elaborado.
 
-Los indicadores técnicos sirven para poder predecir el cambio de los precios. queda demostrado que hacen que la prediccion sea superior a 0.5 en muchos casos
+\noindent
+Por lo que respecta al análisis de la situación actual de la aplicación de la inteligencia artificial en el sector de las finanzas, se han cubierto largamente las distintas aplicaciones que ésta tiene hoy en día. Este análisis tenía por objetivo el obtener una visión global de las distintas aplicaciones actuales con tal de poder analizar las consecuencias que esta aplicación ha tenido. Las consecuencias transversales que se han podido observar son las siguientes. En todas las aplicaciones se aprecia la misma tónica y es que el aumento que está experimentando en el siglo XXI la generación de datos, en cuanto a volúmen, variedad y velocidad de generación permite la situación perfecta para la proliferación de aplicaciones de IA que utilizan estos grándes volúmenes de datos como fuente de información. Esto unido al aumento de la capacidad computacional que conlleva la evolución tecnológica ha permitido desarrollar aplicaciones nunca antes vistas, que procesan este gran volumen de información, tradicional y nuevos tipos de datos, de una manera muy rápida, y ha motivado la creación de muchas empresas nuevas que se encargan de desarrollar nuevas soluciones soportadas en sistemas de IA. 
 
-Algunas empresas se predicen mejor que las otras --> que tienen en comun las que se predicen mejor
+\noindent
+Desde una perspectiva de impacto positivo, se ha observado que, de una manera transversal en las distintas aplicaciones analizadas, una de las principales consecuencias de la existencia hoy en día de sistemas de IA que reproducen más rápidamente las tareas que previamente hacían los seres humanos es la reducción en los costes asociados. Esto puede permitir en definitiva una mejora en la eficiencia general del sector financiero. Otra de las consecuencias transversales que se observa es la deriva que está tomando el sector financiero, por un lado,hacia la aparición de nuevos agentes en el mismo que remueven a los bancos de su posición oligopolística, y por otro, hacia la oferta de servicios muchos más personalizados y adaptados a las necesidades específicas de cada cliente. Paralelamente, se ha podido apreciar el potencial que tiene la IA para contribuir al crecimiento económico, visto desde una perspectiva macroeconómica.
 
-posibles resultados distintos si hacemos rolling origin cross validation para los parámetros y rolling origin test para la muestra test...
-Well done.
+\noindent
+Sin embargo, desde una perspectiva de impacto negativo se ha observado una característica compartida por las distintas aplicaciones analizadas. El caracter *black-box* que suelen presentar este tipo de modelos de *machine learning*, en el sentido de que las decisiones internas que toman no son comprensibles de una manera sencilla, hace que todas los sistemas derivados de la utilización de técnicas de IA y *machine learning* tengan un carácter poco transparente. El problema de la falta de transparencia a causa de la utilización de estos modelos, que deriva del carácter poco comprensible de los mismos, se presentará en un futuro como el mayor de los problemas que van a tener que enfrentar las compañías, tanto privadas como entidades reguladoras, que están utilizando o se plantean utilizar sistemas de inteligencia artificial para complementar, mejorar o sustituir sus actividades. En este sentido se aprecia también un creciente interés por parte del sector público o regulatorio por la aplicación de este tipo de sistemas, siguiendo como es habitual el sector privado, que puede hacer cambiar en un futuro cómo se llevan a cabo tareas tales como la detección de fraude. A raíz de esta falta de transparencia presente en los actuales sistemas de IA en finanzas, se ha podido apreciar una deriva creciente, tanto por parte de los consumidores de servicios financieros basados en IA como de las mismas compañías, hacia sistemas de IA que sean fácilmente explicables, comprensibles y mucho más transparentes.
+
+\noindent
+Otra de las potenciales consecuencias negativas que se observa se deriva de la gran implantación que están teniendo este tipo de servicios dentro del sector más clásico de los servicios financieros. La presencia cada vez mayor de sistemas de IA totalmente automatizados genera un potencial riesgo ya que puede contribuir a un efecto en cadena de carácter extremadamente rápido si se produce en *crash* en el sector concreto en el que operen. Si muchos agentes confían en este tipo de aplicaciones o modelos para llevar a cabo su actividad, los efectos desencadenantes que esto puede tener frente a una situación de *shock* son extremadamente rápidos e incontrolables. Esto unido al hecho de que los sistemas de IA en finanzas son mayoritariamente poco transparentes puede dificultar en análisis a tiempo real de los sistemas que están propagando un determinado *crash*, e incluso puede provocar que la comprensión de las causas de un determinado *crash* pueda extenderse durante semanas.
+
+\noindent
+En general se observa que la situación actual de la inteligencia artificial en el sector financiero es muy incierta. Actualmente estamos viviendo una primera etapa de aplicación masiva, donde muchos agentes empiezan a hacer el cambio hacia sistemas basados íntegra o parcialmente en modelos de IA y *machine learning*. La previsión que se puede elaborar en base al análisis elaborado en esta tesis es que la etapa de implantación aun puede durar entre 5 y 15 años, de manera que la predicción a largo plazo es una entrada en una etapa de madurez, donde la IA se usará en la gran mayoría de sub-sectores dentro del sector financiero y habrá permitido mejorar, automatizar, crear y destruir muchos de los empleos dentro de este sector que existen hoy en día.
+
+\noindent
+Por lo que respecta a las conclusiones que se extraen de los experimentos realizados, se proceden a detallar las conclusiones extraídas a partir de los distintos objetivos definidos. En primer lugar el trabajo tenía por objetivo el definir un modelo de predicción de la dirección de movimiento de un precio sobre 4 empresas concretas, utilizando un modelo Random Forest con los parámetros optimizados. Inicialmente se ha constatado que cada empresa presenta una serie temporal de precios de cierre única, con patrones totalmente distintos y con una alta volatilidad. Esto ha sido útil para poder tomar conciencia de la dificultad de obtener rendimientos elevados de los modelos predictivos aplicados a este tipo de datos. También se observa que el hecho de alisar las series temporales reduce el ruido presente en los datos y ayuda a predecir la dirección de movimiento del precio. Por lo que respecta a la optimización de parámetros realizada se ha podido ver que optimizar los parámetros sobre una muestra de validación que consiste en un sólo año de datos, que además puede presentar un patrón distinto a la muestra de prueba, provoca que los modelos generados con dichos parámetros optimizados no tengan un buen rendimiento sobre muestra de prueba. Esto se debe al hecho de que las series temporales consideradas presentan numerosos cambios estructurales, que pueden tener lugar entre la muestra de validación y la de prueba. En general, una vez realizado el análisis se concluye que *los indicadores técnicos considerados en el presente trabajo son útiles cuando se trata de predecir la dirección de movimiento del precio de cierre*. Aunque el rendimiento obtenido de estos modelos no es el mismo para todas las empresas, y en algunos casos no es útil para una situación real de inversión, en general se observa que el hecho de añadir al modelo los indicadores técnicos considerados mejora la predicción ingenua de 50% de probabilidad asignada a cada una de los dos niveles de la variable respuesta (sube o baja).
+
+\noindent
+En segundo lugar este trabajo tenía como objetivo el aplicar este modelo conceptual de predicción de la dirección de movimiento de una manera masiva, generalizada y utilizando computacion en paralelo, sobre un gran conjunto de empresas. El interés de este objetivo es el de poder aplicar este análisis en la realidad y así poder escoger la empresa en la cual invertir en base al mejor rendimiento obtenido sobre muestra de prueba. Pese a la limitada capacidad computacional de la que se ha dispuesto durante la realización de la presente tesis se ha podido realizar el análisis masivo paralelizando la computación para ganar velocidad de cálculo. Gracias a esta aplicación general se ha podido confirmar lo observado en el experimento con 4 empresas concretas. Los indicadores técnicos aportan información útil que permite mejorar la predicción ingenua a la hora de predecir la dirección de movimiento del precio de cierre. Paralelamente se observa gracias a esta aplicación generalizada que los modelos SMD parecen obtener generalmente mejores resultados cuanto más cerca en el tiempo se hace la predicción. Es decir, en general, se obtienen mejores rendimientos cuando se predice la dirección que tomará el precio de cierre al cabo de un mes en vez de al cabo de tres meses. Finalmente también se destaca que esta aplicación masiva ha permitido confirmar una intuición que se desprende del ejemplo concreto aplicado a 4 empresas: el rendimiento obtenido con este tipo de modelos SMD depende de la empresa a la que se aplique, o lo que es lo mismo, no todas las empresas obtienen un buen rendimiento usando este tipo de modelos. De esto se deduce que parece existir algún tipo de característica que hace que los modelos SMD aplicados a una determinada empresa tengan mejor rendimiento que los aplicados en otra. Esta investigación sobre esta característica podría ser el objeto de estudio de posteriores tesis o artículos académicos.
+
+\noindent
+En tercer lugar esta tesis pretendía indagar en el campo de creciente implantación del *machine learning* automatizado. Este campo de estudio hace referencia a automatizar el proceso de creación de modelos de ML tales como modelos tipo *ensemble*, de manera que el usuario no tenga que construirlos "a mano". Gracias a la aplicación de los modelos SMD construidos de una manera automática usando todos los modelos disponibles en el paquete de R *h2o* se ha podido comprobar que se obtiene un rendimiento generalmente parecido al obtenido utilizando los modelos Random Forest. Sin embargo, la conclusión a la que se llega es que, en realidad, la utilización de funciones automatizadas para la creación de modelos de ML parece generalmente más interesante ya que permite obtener más o menos el mismo rendimiento que los modelos Random Forest creados manualmente pero con un esfuerzo o carga de trabajo muy inferiores. Resultados generalmente parecidos con muchas menos horas de trabajo en su realización. Este hecho ha permitido tomar conciencia de que la automatización en la construcción de modelos de ML es una de las tendencias que tiene mayor fuerza en el desarrollo teórico actual del campo de la inteligencia artificial. El hecho de automatizar una tarea, como puede ser la construcción de modelos de IA, puede permitir a la humanidad seguir desarrollando ideas en este campo, de manera que su continua evolución parece estar garantizada.
 
 
+\noindent
+En cuarto lugar, otro de los grandes objetivos del presente trabajo era el de estudiar, en paralelo a la aplicación de los modelos SMD, la construcción de modelos predictivos entrenados directamente sobre el precio de cierre y la rentabilidad. En este sentido, también se pretendía analizar el rendimiento que pueden ofrecer los modelos llamados LSTM, al ser éstos capaces de recordar dependencias temporales grandes. Este tipo de modelos están en auge hoy en día a causa de su gran rendimiento en un variado abanico de aplicaciones, y es por eso que se consideraron ideales para ser probados sobre los datos concretos de una empresa. Aunque los precios de cierre son difíciles de predecir con modelos estadísticos clásicos, el tipo de redes neuronales recurrentes LSTM que se han utilizado en el presente trabajo han probado ser, tras su aplicación satisfactoria, capaces de captar relaciones que no son capaces de captar los modelos estadísticos clásicos. Sin embargo este tipo de modelos se ha aplicado sobre una empresa concreta por simplicidad, por lo que el rendimiento sobre otras empresas es por el momento inexplorado. A su vez, también se constata que sólo se ha realizado el primer paso de todo un seguido de procedimientos que deberían realizarse para aumentar la capacidad predictiva de estos modelos. Durante la redacción de esta tesis no se ha podido disponer de una alta elevada capcidad computacional por lo que se han tenido que mantener estáticos los hyper-parámetros de estos modelos. Por esta razón, se llega a la conclusión de que aun existe un gran potencial latente en este tipo de modelos en cuanto al rendimiento predictivo, que sólo se puede obtener disponiendo de una gran capacidad computacional. Este aumento en la capacidad predictiva vendrá dado por una optimización intensiva de los hyper parámetros del modelo y por un proceso de entrenamiento suficientemente extenso, y ésto sólo se puede conseguir disponiendo de una alta capacidad computacional. De no ser así, el usuario intentando optimizar y entrenar este tipo de modelos se verá a si mismo enfrentando una gran cantidad de horas de espera requeridas hasta la finalización de dicho proceso de optimización y entrenamiento.
 
 \FloatBarrier
-
 \newpage
-\fancyhead[L]{Bibliografía}
+\fancyhead[L]{BIBLIOGRAFÍA}
 \fancyhead[R]{\thepage}
 \fancyfoot[C]{}
 
-\chapter{\textbf{Bibliografía}}
+\chapter{\textbf{\hspace{1pt} BIBLIOGRAFÍA}}
 
 \setlength{\parindent}{-0.5in}
 \setlength{\leftskip}{0.4in}
 \setlength{\parskip}{6pt}
 \noindent
+
+<div id="refs"></div>
+
+\FloatBarrier
+\newpage
+\fancyhead[L]{ANEXO}
+\fancyhead[R]{Capítulo \thechapter}
+\fancyfoot[C]{\thepage}
+
+\chapter{\textbf{\hspace{1pt} ANEXO}}
+\setlength{\parindent}{1cm}
+\setlength{\leftskip}{0.0in}
+
+En el siguiente anexo se añaden los scripts utilizados en el presente trabajo, ordenados por secciones siguiendo la estructura del mismo. Teniendo en cuenta que la propia tesis se ha escrito en R Markdown utilizando LaTeX como soporte, cabe destacar el hecho de que en el anexo se incluyen sólo los códigos para generar las partes técnicas del mismo, no el codigo de R Markdown para generar la tesis. Éste se puede encontrar en un proyecto en el siguiente enlace de GitHub: https://github.com/ArnauMunsOrenga/TFG. Sin embargo, sí que se incluye el código necesario para generar las tablas y los gráficos.
+
+```{r child="appendix.rmd",tidy=TRUE,tidy.opts=list(width.cutoff=60),size="scriptsize"}
+```
+
+
+

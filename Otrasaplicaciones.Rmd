@@ -1,0 +1,13 @@
+---
+output: pdf_document
+---
+
+**Text mining y análisis de sentimiento**
+
+\noindent
+Otra de las grandes aplicaciones de la inteligencia artificial en general, y en especial en los sectores financieros, es la creación de modelos de procesamiento del lenguaje natural (NLP). Las compañías financieras y empresas FinTech ofrecen servicios basados en sistemas que incluyen el procesamiento de todo tipo de noticias, textos en redes sociales (social media) y arículos. La creción de regresores a partir de información escrita potencia la capacidad predictiva de los modelos, haciendo que sea aplicado hoy en día por numerosas empresas de servicios de inversión. No son extraño casos como las compañías AlphaSense, Kensho o Serimag, que ofrece servicios tales como verificación de documentos de identificación on-line o la detección de cláusulas abusivas en las escritura o contrato de una hipoteca (https://serimag.com/en/case-studies/). Este tipo de modelos consigue procesar una cantidad muy elevada de información, y como se trata de leer documentos escritos, sobrepasan enormemente la capacidad de lectura del ser humano. Es por eso que su aplicación sigue creciendo dentro del sector financiero y se desarrolla en nuevas herramientas o sistemas que utilizan esta técnica.
+
+\noindent
+Otra de las aplicaciones del NLP es el análisis de sentimiento. Este conjunto de técnicas se puede considerar un subtipo de análisis dentro del gran campo de estudio dentro del procesamiento del lenguaje natural. Se utiliza para añadir a los modelos predictivos el punto de sentimiento que se deriva de los textos, en general datos de redes sociales y noticias. De esta manera se pueden construir modelos que procesen datos a tiempo real que se pueden utilizar como proxy del estado de animo o sentimiento de ciertos actores económicos, utilizándolos para la predicción, por ejemplo, de la dirección de los mercados o para definir estrategias de inversión.
+
+

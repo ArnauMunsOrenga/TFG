@@ -8,21 +8,25 @@ library(randomForest)
 library(caret)
 set.seed(420)
 library(kableExtra)
-
+library(lubridate)
+library(ROCit)
 ```
 
 *Partición muestras de entrenamiento, validación y test*
 
+\noindent
 Una vez calculada la variable respuesta y las variablex explicativas/predictoras se procede a construir los modelos predictivos. En primer lugar se particionan los conjuntos de datos en las muestras de entrenamiento, validación y test. En la muestra de entrenamiento se encuentran los datos con los que se entrarán los modelos, es decir, son los datos a partir de los cuales los modelos van observar el fenómeno de estudio y van a aprender sobre él. La muestra de validación se utiliza para obtener una optimización de los hyper parámetros. En inglés este proceso se llama *hyper-parameter fine tunning*. Finalmente, la muestra test la forman los datos sobre los cuales se va a evaluar el rendimiento de los modelos entrenados con los datos *train + validation* después de tunear los hyper parámetros. 
 
-\setlength\parskip{5ex}
+\setlength\parskip{8ex}
+\noindent
 Las series temporales de precios necesitan un tratamiento especial al momento de hacer las particiones entre muestras de entrenamiento, validación y test ya que se debe mantener la estructura temporal inherente en los datos. 
 
 * Muestra de entrenamiento: 2000-2015
 * Muestra de validación: 2016
 * Muestra de test: 2017-2018
 
-\setlength\parskip{5ex}
+\setlength\parskip{8ex}
+\noindent
 Los modelos que se construyen requieren una muestra de entrenamiento considerable al tener que captar largas tendencias en los precios. Además los hyper parámetros que se deben optimizar, en el caso del Random Forest, no son demasiados y por eso se decide utilizar 17 años de entrenamiento y sólo 6 meses para la muestra de validación y test.
 
 ```{r}
@@ -33,17 +37,19 @@ load("C:/Users/i0386388/Desktop/tesis/data_model_ready.RData",.GlobalEnv)
 source("C:/Users/i0386388/Desktop/tesis/Tesis/partitioning2.R")
 ```
 
-PONER AQUÍ EL NÚMERO TOTAL DE EXPERIMENTOS: CUANTOS MODELOS SE HACEN DE CADA TIPO, CONTANDO PARAMETER FINE TUNING Y TEST PERFORMANCE
+<!-- PONER AQUÍ EL NÚMERO TOTAL DE EXPERIMENTOS: CUANTOS MODELOS SE HACEN DE CADA TIPO, CONTANDO PARAMETER FINE TUNING Y TEST PERFORMANCE REVISAR -->
 
 *Modelización y resultados*
 
 *Random Forest*
 
 \setlength\parskip{5ex}
+\noindent
 Para realizar los experimentos utilizando este modelo descrito en el apartado 6.1 del presente trabajo se optimiza el parámetro `mtry` [véase @tuningRF]. Acorde con la documentación de la función `randomForest` que se puede consultar en [@RF], el parámetro `mtry` controla el número de variables aleatóriamente muestreadas que son candidatas en cada *split* del árbol. Es decir, es el número de variables a tener en cuenta en cada *split* a partir de las cuales se selecciona la que mejor particiona los datos. Esta optimización se hace sobre la muestra de validación utilizando como métrica el % de casos mal clasificados. Esto significa que se selecciona el valor de `mtry` que propocione un menor porcentage de casos mal clasificados (1-accuracy).  
 
 
 \setlength\parskip{5ex}
+\noindent
 Seguidamente se muestra una tabla resumen con el valor óptimo del hyper parámtero `mtry` para cada tipo de alisado de cada empresa. Además se incluye en la tabla el valor de *accuracy* obtenido con cada modelo sobre la muestra de validación utilizando el parámetro óptimo `mtry` para cada tipo de alisado.
 
 ```{r}
@@ -97,7 +103,7 @@ kable(a, "latex") %>%
   \captionof{table}{Coca Cola CO.: valores optimizados para mtry y accuracy obtenida}
 
 \setlength\parskip{5ex}
-
+\noindent
 Como se puede observar para la empresa Coca-Cola CO. el mejor resultado, es decir la *accuracy* obtenida más alta, para la predicción a 1 mes se obtiene con el alisado correspondiente a una media móbil exponencial a 30 días con un valor de 63.5%. Para la predicción a 2 meses el mejor resultado es de 75% de accuracy y se obtiene alisando los datos con una EMA de 90 días  (el mejor resultado global para la muestra de validación). Por lo que respecta a la predicción a 3 meses el mejor resultado se obtiene alisando los datos con una EMA 90 días con un valor de 67.46%. Para esta empresa no se aprecia un patrón de crecimiento de la *accuracy* sino más bien unos resultados repartidos más o menos uniformente entre los distintos experimentos realizados.
 
 ```{r}
@@ -147,7 +153,7 @@ kable(a, "latex") %>%
   \captionof{table}{Apple Inc.: valores optimizados para mtry y accuracy obtenida}
   
 \setlength\parskip{5ex}
-
+\noindent
 Como se puede apreciar en la tabla 6.2, para la empresa Apple Inc. la situación es diferente. Se obtienen, en general, mejores resultados que en el caso de la empresa Coca Cola. Para la predicción a 1 mes el mejor resultado se obtiene con un alisado utilizando EMA de 90 días con una *accuracy* del 87.30%. Para la predicción hecha a 2 meses el mejor resultado es un 69.84% de accuracy obtenido con un alisado EMA 90 días. Para el caso en el que la predicción es a 3 meses el mejor resultado es de un 73.81% de *accuracy* con un alisado de EMA 90 días. Es decir, en el caso de la empresa Apple Inc el mejor resultado global se obtiene prediciendo si la media móbil exponencial a 90 días del precio de cierre estará más alta o no a 1 meses vista. En este caso los mejores resultados se obtienen con una predicción hecha a 1 mes vista con los datos fuertemente alisados. El hecho de predecir si al cabo de un mes la media móbil exponencial del precio de cierre calculada con 90 días será más alta o no, es de ayuda para el inversor ya que significa que el precio de cierre al cabo de un mes será más alto. Esto se debe al hecho de que si la EMA 90 días será más alta al cabo de un mes significa que los precios de ese último mes han sido más altos.
 
 ```{r}
@@ -196,8 +202,8 @@ kable(a, "latex") %>%
 ```
   \captionof{table}{American Express CO.: valores optimizados para mtry y accuracy obtenida}
   
-\setlength\parskip{5ex}
-
+\setlength\parskip{8ex}
+\noindent
 Los resultados obtenidos para la empresa American Express CO. son globalmente mejores en los casos en los que la predicción está hecha para el siguiente mes y para al cabo de 3 meses. Para el caso en el que la predicción se hace a 1 mes, el mejor resultado obtenido es de 79.76% de *accuracy* en la muestra de validación y se corresponde a un alisado de los datos utilizando la fórmula del alisado exponencial. A su vez se obtiene el mismo resultado con los datos alisados mediante una media móbil exponencial de 30 días. Para el caso en el que la predicción se hace a 2 meses el mejor resultado que se obtiene es de 59.92% de *accuracy* en el caso de alisar los datos con la fórmula del alisado exponencial. Este resultado es ligeramente superior al que se obtendría con una predicción aleatória (50%). El resultado que se obtiene en el caso de la predicción hecha a 3 meses ya que en el mejor de los casos, cuando se alisan los datos con una media móbil exponencial de 90 días, es de 80.16% de *accuracy* (mejor resultado global). Esto significa que, para esta empresa, la mejor clasificación se obtiene prediciendo si la EMA 90 días será más alta o no al cabo de 3 meses. En esencia, este caso de predicción representa que se está analizando si el incremento de los precios ha hecho que la media móbil exponencial haya subido los últimos 3 meses.
 
 ```{r}
@@ -247,13 +253,15 @@ kable(a, "latex") %>%
   \captionof{table}{Wells Fargo and CO.: valores optimizados para mtry y accuracy obtenida}
   
 \setlength\parskip{5ex}
+\noindent
 En el caso de Wells Fargo & CO. los resultados sobre la muestra de validación se pueden observar en la tabla 6.4. Son, en general, peores que los resultados obtenidos con la empresa Apple Inc. y American Express CO.. Para la predicción hecha a 1 mes el mejor resultado se obtiene utilizando la fórmula de alisado exponencial (2) con una *accuracy* de 69.84% (mejor resultado global para esta empresa). Esto significa que sobre la muestra de validación aproximadamente el 70% de los casos queda bien clasificado. En el caso de la predicción a 2 meses el mejor resultado obtenido es de 58.33% de *accuracy* obtenido alisando los datos con la fórmula de alisado exponencial (2). El mejor resultadao cuando la predicción se hace a 3 meses vista es del 64.28% de *accuracy*.
 
-HACER AQUI EL HEATMAP DE LOS ERRORES OBTENIDOS DE CROSSVALIDACION
+<!-- HACER AQUI EL HEATMAP DE LOS ERRORES OBTENIDOS DE CROSSVALIDACION REVISAR -->
 
 
 *Resultados sobre muestra test*
 
+\noindent
 Una vez optimizados los valores del hyper parámetro `mtry` se entrenan los modelos con las muestras de entrenamiento + validación con el objetivo de testar el modelo con los datos de test. En total se construyen 48 modelos: 4 por cada tipo de variable respuesta y, a su vez, 4 por cada empresa. En las tablas siguientes se muestran los valores de *accuracy*, *sensitivity* y *specificity* de los distintos modelos sobre los datos test.
 
 <!-- <!-- models --> 
@@ -556,6 +564,8 @@ CM_KO_30_3m<-confusionMatrix(predict(model_KO_30_3m_target_feature,test_KO_30_3m
 CM_KO_60_3m<-confusionMatrix(predict(model_KO_60_3m_target_feature,test_KO_60_3m_target_feature),test_KO_60_3m_target_feature$target)
 CM_KO_90_3m<-confusionMatrix(predict(model_KO_90_3m_target_feature,test_KO_90_3m_target_feature),test_KO_90_3m_target_feature$target)
 CM_KO_fun_3m<-confusionMatrix(predict(model_KO_fun_3m_target_feature,test_KO_fun_3m_target_feature),test_KO_fun_3m_target_feature$target)
+
+
 
 
 a<-data.frame(acc1m=as.numeric(c(round(CM_KO_30_1m$overall[1]*100,2),
@@ -876,15 +886,16 @@ theme_bw()+
 stock.heatmap
 #https://jcoliver.github.io/learn-r/006-heatmaps.html
 ```
-  \captionof{figure}{Heatmap de la accuracy obtenida con los modelos Random Forest sobre muestra test}
+  \captionof{figure}{Heatmap de la accuracy obtenida con los modelos Random Forest sobre muestra test. Fuente: elaboración propia}
 
 \setlength\parskip{5ex}
 \justifying 
-
+\noindent
 La representación de la accuracy obtenida sobre la muestra de prueba con los distintos modelos Random Forest permite visualizar de una manera más global. En general los mejores resultados se obtienen prediciendo si el precio de cierre será superior o inferior al cabo de un mes. Este resultado se puede observar de manera general para las 4 empresas estudiadas. Otro resultado que se puede apreciar fácilmente para las 4 empresas es el hecho de que el mejor rendimiento se obtiene a corto plazo (prediciendo a 1 mes) utilizando los datos alisados con una EMA 90 días. Este resultado tiene una fácil interpretación: este tipo de alisado es el más agresivo en cuanto a la fuerza del mismo. Esto significa que se remueven de una manera más clara los movimientos día a día y se conserva de una manera más fuerte la tendencia general.
 
 \setlength\parskip{5ex}
 \justifying 
+\noindent
 Sin embargo cuando se analiza el resultado para cada una de las empresas, se puede apreciar que el resultado es totalmente distinto. Para el caso de AAPL se puede observar que el rendimiento del modelo predictivo se reduce a medida que se aleja en el tiempo la predicción. Cuando se intenta predecir si el precio será superior o inferior al cabo de tres meses, el rendimiento que se obtiene es inferior al 50% de accuracy
 
 
@@ -916,7 +927,7 @@ theme_bw()+
 stock.heatmap.sensi
 #https://jcoliver.github.io/learn-r/006-heatmaps.html
 ```
-  \captionof{figure}{Heatmap de la sensitividad obtenida con los modelos Random Forest sobre muestra test}
+  \captionof{figure}{Heatmap de la sensitividad obtenida con los modelos Random Forest sobre muestra test. Fuente: elaboración propia}
 
 \setlength\parskip{5ex}
 \justifying 
@@ -953,15 +964,17 @@ theme_bw()+
 stock.heatmap.speci
 #https://jcoliver.github.io/learn-r/006-heatmaps.html
 ```
-  \captionof{figure}{Heatmap de la especificidad obtenida con los modelos Random Forest sobre muestra test}
+  \captionof{figure}{Heatmap de la especificidad obtenida con los modelos Random Forest sobre muestra test. Fuente: elaboración propia}
 
 \setlength\parskip{5ex}
 \justifying 
 
 
-PONER LAS TABLAS CON LA MEDIA DE ACCURACY OBTENIDA ENTRE TODOS LOS ALISADOS. CREAR REGLA: SI COMO MINIMO 3 ALISADOS DICEN QUE SUBIRA, ES MAS ROBUSTO...
+<!-- PONER LAS TABLAS CON LA MEDIA DE ACCURACY OBTENIDA ENTRE TODOS LOS ALISADOS. CREAR REGLA: SI COMO MINIMO 3 ALISADOS DICEN QUE SUBIRA, ES MAS ROBUSTO... REVISAR -->
 
 *Importancia de las variables*
+
+\noindent
 A la hora de construir los árboles que conforman el bosque aleatorio ciertas variables son más importantes que otras. Éstas son las variables que consiguen partir mejor la base de datos, es decir, son las que consiguen que los nodos hijos sean los más puros posibles. En otras palabras: las variables más importantes a la hora de crear las particiones son aquellas que consiguen una mayor reducción de la impureza. En este sentido en las tablas siguientes se muestran las 4 variables más importantes para cada modelo construido con un alisado distinto. Dichas variables estan ordenadas de mayor a menor decrecimiento medio en la medida de impureza de Gini [@RF].
 
 ```{r}
@@ -1596,17 +1609,45 @@ add_header_above(c(" ", "Variables ordenadas de mayor a menor importancia de izq
   
 \setlength\parskip{5ex}
 
+Seguidamente se da respuesta a una serie de preguntas en relación a cuáles han sido las variables o indicadores técnicos más importantes en la creación de los distintos Random Forest:
+
+\noindent
+i) Cuál ha sido la variable más importante en el *split* con la frecuencia absoluta más alta de **entre todos los modelos de todas las empresas**?
 ```{r}
-#Cuál ha sido la variable más importante en el split con la freq absoluta más alta de entre todos los modelos de todas las empresas?
-table(c(as.character(imp_KO[,2]),as.character(imp_AAPL[,2]),as.character(imp_AXP[,2]),as.character(imp_WFC[,2])))
+#
+table(c(as.character(imp_KO[,2]),as.character(imp_AAPL[,2]),as.character(imp_AXP[,2]),as.character(imp_WFC[,2]))) %>% sort
+```
 
+Como se observa a partir del resultado anterior la variable que se escoge más veces como variable más importante a la hora de hacer las particiones es el *Rate of Change*, seguida por la *simple moving average 10 days* y el *Average True Range*.
+
+También se muestra en proporción:
+
+```{r}
 #El indicador técnico aparece un 39.58% de las veces como variable más importante para un modelo, seguida de atr 20.83 y sma10 20.83 empatadas 
-round(table(c(as.character(imp_KO[,2]),as.character(imp_AAPL[,2]),as.character(imp_AXP[,2]),as.character(imp_WFC[,2])))/sum(table(c(as.character(imp_KO[,2]),as.character(imp_AAPL[,2]),as.character(imp_AXP[,2]),as.character(imp_WFC[,2]))))*100,2)
+round(table(c(as.character(imp_KO[,2]),as.character(imp_AAPL[,2]),as.character(imp_AXP[,2]),as.character(imp_WFC[,2])))/sum(table(c(as.character(imp_KO[,2]),as.character(imp_AAPL[,2]),as.character(imp_AXP[,2]),as.character(imp_WFC[,2]))))*100,2) %>% sort
+```
 
-#Cuál ha sido la variable más importante en el split con la freq absoluta más alta de entre todos los modelos para cada empresa??
+\noindent
+ii) Cuál ha sido la variable más importante en el *split* con la frecuencia relativa más alta de **entre todos los modelos para cada empresa**?
+
+**Coca-Cola CO.**
+```{r}
+#
 sort(round(table(c(as.character(imp_KO[,2])))/sum(table(c(as.character(imp_KO[,2]))))*100,2),decreasing = T)
+```
+
+**Apple Inc.**
+```{r}
 sort(round(table(c(as.character(imp_AAPL[,2])))/sum(table(c(as.character(imp_AAPL[,2]))))*100,2),decreasing = T)
+```
+
+**American Express CO.**
+```{r}
 sort(round(table(c(as.character(imp_AXP[,2])))/sum(table(c(as.character(imp_AXP[,2]))))*100,2),decreasing = T)
+```
+
+**Wells & Fargo CO.**
+```{r}
 sort(round(table(c(as.character(imp_WFC[,2])))/sum(table(c(as.character(imp_WFC[,2]))))*100,2),decreasing = T)
 
 #Para cada tipo de modelo cuales son las variables que más aparecen en el top 4 de más importantes
@@ -1617,6 +1658,7 @@ sort(round(table(c(as.character(imp_WFC[,2])))/sum(table(c(as.character(imp_WFC[
 
 
 
-*Experimentos con los datos sin alisar*
+<!-- *Experimentos con los datos sin alisar* -->
 
-*poner aqui los precios reales para poder comparar... si se predice con la ema90 que subira, es verdad que en ese momento el precio estava mas alto que cuando se hizo la predicción?
+<!-- REVISAR -->
+<!-- *poner aqui los precios reales para poder comparar... si se predice con la ema90 que subira, es verdad que en ese momento el precio estava mas alto que cuando se hizo la predicción? -->

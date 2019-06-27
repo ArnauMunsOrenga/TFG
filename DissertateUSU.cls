@@ -22,6 +22,10 @@
 \counterwithin*{equation}{section}
 \renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
 
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
 
 %{{{ Line-spacing control
 \RequirePackage{setspace}
@@ -37,7 +41,7 @@
 \RequirePackage{graphicx}
 \usepackage{fixltx2e}
 \usepackage{parskip}
-\setlength{\parindent}{1cm}
+\setlength{\parindent}{0cm}
 %\setlength{\parskip}{5ex}
 \RequirePackage{lettrine}
 \RequirePackage{setspace}
@@ -204,7 +208,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \renewcommand{\thefigure}{\arabic{section}.\arabic{figure}}
 
-
+\renewcommand\thechapter{\Roman{chapter}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% LAYOUT: Title Page - info filled above    %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -214,33 +218,33 @@
 	\begin{center}
 	\doublespaced
 	\MakeUppercase{\@title}\\
-	by\\
+	por\\
 	\@author \\ 
 	\singlespaced
-	A dissertation submitted in partial fulfillment\\
-	of the requirements for the degree \\
+	Tesis entregada como cumplimiento parcial\\
+	de los requisitos del grado \\
 	\doublespaced
-	of\\ 
+	de\\ 
 	\MakeUppercase{\degree} \\
-	in\\ 
+	en\\ 
 	\singlespaced
   \field \\
 	\end{center} 
 	\vspace{12pt}
-	\noindent Approved: \\
+	\noindent Aprobado: \\
 	\vspace{20pt}
 	\begin{tabular}{ll}
 	  \centering
     \makebox[2.75in]{\hrulefill} & \makebox[2.7in]{\hrulefill}\\    
-    \chairperson                 & \committeeone \\
-    Dr. Salvador Torra              & Committee Member \\
+    %\chairperson                 & \committeeone \\
+    Dr. Salvador Torra              & Director del trabajo \\
     & \\
     & \\
     \end{tabular}
   \vspace{10pt}
     \begin{center}
 	  \singlespacing
-     UNIVERSITAT DE BARCELONA\\ 
+     UNIVERSITAT DE BARCELONA Y UNIVERSITAT POLITECNICA DE CATALUNYA\\ 
 	    Barcelona, España\\
 	    \doublespacing
 	    \yeardegree

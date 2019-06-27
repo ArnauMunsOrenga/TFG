@@ -1,0 +1,1833 @@
+---
+output: pdf_document
+---
+
+<!-- Appendix -->
+
+*Apartado V.1*
+
+\setlength\parskip{5ex}
+
+#### Obtención y descripción
+
+```{r, eval=F, echo=T,size="scriptsize"}
+library(CombMSC)
+library(randomForest)
+library(quantmod)
+library(TTR)
+library(tidyverse)
+library(caret)
+library(foreach)
+library(kableExtra)
+library(dplyr)
+library(formatR)
+
+getSymbols(Symbols = "KO", from ="2000-01-01",to="2018-12-31")
+getSymbols(Symbols = "WFC", from ="2000-01-01",to="2018-12-31")
+getSymbols(Symbols = "AAPL", from ="2000-01-01",to="2018-12-31")
+getSymbols(Symbols = "AXP", from ="2000-01-01",to="2018-12-31")
+
+prices.KO<-as.data.frame(KO)
+prices.WFC<-as.data.frame(WFC)
+prices.AAPL<-as.data.frame(AAPL)
+prices.AXP<-as.data.frame(AXP)
+str(prices.KO)
+
+
+a<-format(data.frame(paste0(round(summary(prices.KO$KO.Open),2)) %>% rbind(a=paste0(round(summary(prices.KO$KO.High),2))) %>%rbind(b=paste0(round(summary(prices.KO$KO.Low),2))) %>% rbind(c=paste0(round(summary(prices.KO$KO.Close),2))) %>% rbind(paste0(round(summary(prices.KO$KO.Volume)/1000000,3),"M"))),scientific=TRUE)
+
+rownames(a)<-c("Open","High","Low","Close","Volume")
+names(a)<-names(summary(prices.KO$KO.Open))
+
+kable(a,"latex",digits = 2) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+#{Estadísticos descriptivos para los distintos precios de Coca-Cola Company}
+
+
+a<-format(data.frame(paste0(round(summary(prices.AAPL$AAPL.Open),2)) %>% rbind(a=paste0(round(summary(prices.AAPL$AAPL.High),2)))
+                     %>%
+                       rbind(b=paste0(round(summary(prices.AAPL$AAPL.Low),2))) %>% rbind(c=paste0(round(summary(prices.AAPL$AAPL.Close),2))) %>% rbind(paste0(round(summary(prices.AAPL$AAPL.Volume)/1000000,3),"M"))),scientific=TRUE)
+
+rownames(a)<-c("Open","High","Low","Close","Volume")
+names(a)<-names(summary(prices.KO$KO.Open))
+kable(a,"latex") %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+#{Estadísticos descriptivos para los distintos precios de Apple Inc.}
+
+
+a<-format(data.frame(paste0(round(summary(prices.AXP$AXP.Open),2)) %>% rbind(a=paste0(round(summary(prices.AXP$AXP.High),2))) %>%rbind(b=paste0(round(summary(prices.AXP$AXP.Low),2))) %>% rbind(c=paste0(round(summary(prices.AXP$AXP.Close),2))) %>% rbind(paste0(round(summary(prices.AXP$AXP.Volume)/1000000,3),"M"))),scientific=TRUE)
+
+rownames(a)<-c("Open","High","Low","Close","Volume")
+names(a)<-names(summary(prices.KO$KO.Open))
+kable(a,"latex",digits = 2) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+#{Estadísticos descriptivos para los distintos precios de American Express CO.}
+
+
+a<-format(data.frame(paste0(round(summary(prices.WFC$WFC.Open),2)) %>% rbind(a=paste0(round(summary(prices.WFC$WFC.High),2))) %>%rbind(b=paste0(round(summary(prices.WFC$WFC.Low),2))) %>% rbind(c=paste0(round(summary(prices.WFC$WFC.Close),2))) %>% rbind(paste0(round(summary(prices.WFC$WFC.Volume)/1000000,3),"M"))),scientific=TRUE)
+
+rownames(a)<-c("Open","High","Low","Close","Volume")
+names(a)<-names(summary(prices.KO$KO.Open))
+kable(a,"latex",digits = 2) %>%
+#{Estadísticos descriptivos para los distintos precios de Wells Fargo and CO.}
+
+
+chartSeries(KO$KO.Close,name="KO Close",color.vol = T)
+
+chartSeries(AAPL$AAPL.Close,"candlesticks",name="AAPL Close price",color.vol = T)
+
+chartSeries(AXP$AXP.Close,"candlesticks",name="AXP Close price",color.vol = T)
+
+chartSeries(WFC$WFC.Close,"candlesticks",name="WFC Close price",color.vol = T)
+
+
+
+kable(data.frame(Nombre=c("Apple Inc.","Wells Fargo & CO","Coca-Cola Company","American Express CO"),
+                 Media=c(mean(prices.AAPL$AAPL.Open),mean(prices.WFC$WFC.Open),mean(prices.KO$KO.Open),mean(prices.AXP$AXP.Open)),
+                 Desv_std=c(sd(prices.AAPL$AAPL.Open),sd(prices.WFC$WFC.Open),sd(prices.KO$KO.Open),sd(prices.AXP$AXP.Open)),
+                 CoV=c((sd(prices.AAPL$AAPL.Open)/mean(prices.AAPL$AAPL.Open)),(sd(prices.WFC$WFC.Open)/mean(prices.WFC$WFC.Open)),(sd(prices.KO$KO.Open/mean(prices.KO$KO.Open))),(sd(prices.AXP$AXP.Open)/mean(prices.AXP$AXP.Open)))),"latex") %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+kable(data.frame(Nombre=c("Apple Inc.","Wells Fargo & CO","Coca-Cola Company","American Express CO"),
+                 Media=c(mean(prices.AAPL$AAPL.High),mean(prices.WFC$WFC.High),mean(prices.KO$KO.High),mean(prices.AXP$AXP.High)),
+                 Desv_std=c(sd(prices.AAPL$AAPL.High),sd(prices.WFC$WFC.High),sd(prices.KO$KO.High),sd(prices.AXP$AXP.High)),
+                 CoV=c((sd(prices.AAPL$AAPL.High)/mean(prices.AAPL$AAPL.High)),(sd(prices.WFC$WFC.High)/mean(prices.WFC$WFC.High)),(sd(prices.KO$KO.High/mean(prices.KO$KO.High))),(sd(prices.AXP$AXP.High)/mean(prices.AXP$AXP.High)))), "latex") %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+kable(data.frame(Nombre=c("Apple Inc.","Wells Fargo & CO","Coca-Cola Company","American Express CO"),
+                 Media=c(mean(prices.AAPL$AAPL.Low),mean(prices.WFC$WFC.Low),mean(prices.KO$KO.Low),mean(prices.AXP$AXP.Low)),
+                 Desv_std=c(sd(prices.AAPL$AAPL.Low),sd(prices.WFC$WFC.Low),sd(prices.KO$KO.Low),sd(prices.AXP$AXP.Low)),
+                 CoV=c((sd(prices.AAPL$AAPL.Low)/mean(prices.AAPL$AAPL.Low)),(sd(prices.WFC$WFC.Low)/mean(prices.WFC$WFC.Low)),(sd(prices.KO$KO.Low/mean(prices.KO$KO.Low))),(sd(prices.AXP$AXP.Low)/mean(prices.AXP$AXP.Low)))), "latex") %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+kable(data.frame(Nombre=c("Apple Inc.","Wells Fargo & CO","Coca-Cola Company","American Express CO"),
+                 Media=c(mean(prices.AAPL$AAPL.Close),mean(prices.WFC$WFC.Close),mean(prices.KO$KO.Close),mean(prices.AXP$AXP.Close)),
+                 Desv_std=c(sd(prices.AAPL$AAPL.Close),sd(prices.WFC$WFC.Close),sd(prices.KO$KO.Close),sd(prices.AXP$AXP.Close)),
+                 CoV=c((sd(prices.AAPL$AAPL.Close)/mean(prices.AAPL$AAPL.Close)),(sd(prices.WFC$WFC.Close)/mean(prices.WFC$WFC.Close)),(sd(prices.KO$KO.Close/mean(prices.KO$KO.Close))),(sd(prices.AXP$AXP.Close)/mean(prices.AXP$AXP.Close)))), "latex") %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+```
+
+#### Feature extraction
+
+En este apartado se simplifica el código y **se muestra sólo para el caso de una empresa concreta (KO)**. Hay que tener en cuenta que el código original de este apartado incluye las 4 empresas utilizadas como ejemplo.
+
+\setlength\parskip{5ex}
+
+```{r,eval=F, echo=T,size="scriptsize"}
+
+#funcion que calcula la variable respuesta tal como está definida en el presente trabajo
+target_calc<-function(data,freq){
+  target<-c()
+  for(i in 1:(nrow(data)-freq)){
+    if(as.numeric(data[i+freq,4])>as.numeric(data[i,4])){
+      target[i]<-"Up"
+    }else{
+      target[i]<-"Down"
+    }
+  }
+  return(target)
+}
+
+#función de feature extraction: calcula los indicadores técnicos utilizados en el trabajo
+feature_extraction_finance<-function(data){
+  data<-data %>%
+
+  #Aroon
+  cbind(aroon(data[,c("High","Low")],20)) %>%
+
+  #----------------------------------------
+
+#Simple moving average 10 day
+cbind(sma10=SMA(data[,"Close"],10)) %>%
+
+  #----------------------------------------
+
+#exponential moving average 10 day
+#cbind(ema10=EMA(data[,"Close"],10)) %>%
+
+  #----------------------------------------
+
+#momentum 1 day
+cbind(mom1=momentum(data[,"Close"],1)) %>%
+  cbind(mom2=momentum(data[,"Close"],2)) %>%
+  cbind(mom3=momentum(data[,"Close"],3)) %>%
+  cbind(mom4=momentum(data[,"Close"],4)) %>%
+  cbind(mom5=momentum(data[,"Close"],5)) %>%
+
+  #momentum 9 day
+  cbind(mom9=momentum(data[,"Close"],9)) %>%
+
+  cbind(mom15=momentum(data[,"Close"],15)) %>%
+
+  #----------------------------------------
+
+#Rate of change 1 day
+cbind(ROC1=ROC(data[,"Close"],1)) %>%
+
+  #Rate of change 9 day
+  cbind(ROC9=ROC(data[,"Close"],9)) %>%
+
+  #----------------------------------------
+
+#fastK%, fastD% and slowD%
+#nFastK = 14, nFastD = 3, nSlowD = 3
+cbind(data.frame(stoch(as.xts(data[,c("High","Low","Close")])))) %>%
+
+  #SMI
+  #n = 13, nFast = 2, nSlow = 25
+  cbind(SMI=data.frame(SMI(as.xts(data[,c("High","Low","Close")])))[,1]) %>%
+
+  #----------------------------------------
+
+#RSI
+cbind(RSI=RSI(data[,"Close"])) %>%
+
+  #----------------------------------------
+
+#Williams Accumulation/Distribution
+cbind(data.frame(wAD=williamsAD(as.xts(data[,c("High","Low","Close")])))) %>%
+
+    
+  #Williams Percentage range
+  cbind(data.frame(WPR(as.xts(data[,c("High","Low","Close")]))))
+
+#names(data)[23]<-"WPR"
+names(data)[4]<-"Close_"
+names(data)[which(names(data)=="Close")]<-"WPR"
+names(data)[4]<-"Close"
+#----------------------------------------
+
+data<-data %>%
+  #Moving Average convergence divergence
+  cbind(macd=MACD(data[,"Close"],12, 26, 9, maType="EMA" )[,1]) %>%
+
+  #----------------------------------------
+
+#Comodity Channel Index
+cbind(data.frame(CCI=CCI(as.xts(data[,c("High","Low","Close")])))) %>%
+
+  #----------------------------------------
+
+#On Balance Volume
+cbind(OBV=OBV(data[,"Close"],data[,"Volume"])) %>%
+
+  #----------------------------------------
+
+#Average true range, true range1 and true range2
+cbind(data.frame(ATR(as.xts(data[,c("High","Low","Close")]))))
+
+b3<-data.frame(tr2=((data[,4]-data$trueLow)/(data$trueHigh-data$trueLow)))
+
+data<-data %>%
+  cbind(b3) %>%
+
+  select(-c(trueHigh,trueLow)) %>%
+
+  #----------------------------------------
+
+#Trend detection index, using both TDI and DI
+cbind(TDI(data[,"Close"])) %>%
+
+  #ADX and DX and DIp/DIn
+  cbind(data.frame(ADX(as.xts(data[,c("High","Low","Close")]),20)))
+
+b2<-data.frame(PNratio=data$DIp/data$DIn)
+
+data<-data %>%
+  cbind(b2) %>%
+
+  select(-c(DIp,DIn)) %>%
+
+  #Bollinger band width
+  cbind(data.frame(BBands(as.xts(data[,c("High","Low","Close")]))))
+
+b<-data.frame(BBwidth=((data$up-data$dn)/data$mavg))
+
+data<-data %>%
+  cbind(b) %>%
+
+  select(-c(dn,up,mavg)) %>%
+
+  #------------------------------------
+select(-c(oscillator))
+
+data<-data[-c(1:39),] #deleting NA generated by average calculations
+
+data<-data[,-c(1:5)] #borramos variables que no se utilizan
+
+return(data)
+}
+
+##############################################################################################
+#funciones de alisado
+
+#alisa los datos usando una EMA y el periodo definido
+EMA_finance<-function(data,smoothing_period){
+  dates<-rownames(as.data.frame(EMA(data[,4],smoothing_period)))
+  
+    data<-as.data.frame(EMA(data[,1],smoothing_period)) %>% 
+      bind_cols(as.data.frame(EMA(data[,2],smoothing_period))) %>% 
+      bind_cols(as.data.frame(EMA(data[,3],smoothing_period))) %>% 
+      bind_cols(as.data.frame(EMA(data[,4],smoothing_period))) %>% 
+      bind_cols(as.data.frame(EMA(data[,5],smoothing_period)))
+
+data<-data %>%   slice(first(which(!is.na(.[,4]))):nrow(.))
+
+colnames(data)<-c("Open","High","Low","Close","Volume")
+rownames(data)<-dates[-c(1:(length(dates)-nrow(data)))]    
+
+  return(data)
+}
+
+#función que alisa los datos usando una SES
+smooth_formula<-function(data){
+  
+  
+  smooth.open<-c()
+  smooth.low<-c()
+  smooth.high<-c()
+  smooth.close<-c()
+  smooth.close<-c()
+  smooth.volume<-c()
+  
+  
+  data<-as.data.frame(data)
+    
+  data[1,1]->smooth.open[1]
+  data[1,2]->smooth.high[1]
+  data[1,3]->smooth.low[1]
+  data[1,4]->smooth.close[1]
+  data[1,5]->smooth.volume[1]
+  
+  alpha<-0.05
+  
+  for(i in 2:nrow(data)){
+    smooth.open[i]<-(alpha*(data[i,1]))+((1-alpha)*(smooth.open[i-1]))
+    smooth.high[i]<-alpha*data[i,2]+((1-alpha)*smooth.high[i-1])
+    smooth.low[i]<-alpha*data[i,3]+((1-alpha)*smooth.low[i-1])
+    smooth.close[i]<-alpha*data[i,4]+((1-alpha)*smooth.close[i-1])
+    smooth.volume[i]<-alpha*data[i,5]+((1-alpha)*smooth.volume[i-1])
+  }
+  
+  dataa<-data.frame(Open = smooth.open,
+                    High = smooth.high,
+                    Low = smooth.low,
+                    Close = smooth.close,
+                    Volume = smooth.volume)
+  
+  return(dataa)
+}
+
+###########################################################################################3
+```
+
+#### Modelling
+
+```{r,eval=F, echo=T,size="scriptsize"}
+KO_30<-EMA_finance(KO,30)
+KO_60<-EMA_finance(KO,60)
+KO_90<-EMA_finance(KO,90)
+KO_formula<-smooth_formula(KO)
+
+####################################################################################
+#########COCA COLA COMPANY
+  ####### 30 day EMA
+    KO_30_1m<-KO_30 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(KO_30,20))
+
+rownames(KO_30_1m)<-rownames(KO_30)[c(1:(nrow(KO_30)-20))]
+KO_30_1m$target<-factor(KO_30_1m$target)
+    
+    KO_30_2m<-KO_30 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(KO_30,40))
+
+        
+    KO_30_3m<-KO_30 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(KO_30,60))
+
+        rownames(KO_30_2m)<-rownames(KO_30)[c(1:(nrow(KO_30)-40))]    
+KO_30_2m$target<-factor(KO_30_2m$target)
+
+rownames(KO_30_3m)<-rownames(KO_30)[c(1:(nrow(KO_30)-60))]    
+KO_30_3m$target<-factor(KO_30_3m$target)
+
+    # KO_30_target<-list(KO_30_1m = KO_30_1m,
+    #                    KO_30_2m = KO_30_2m,
+    #                    KO_30_3m = KO_30_3m)
+    #rm(KO_30_1m,KO_30_2m,KO_30_3m)
+#######################
+  ####### 60 day EMA
+    KO_60_1m<-KO_60 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(KO_60,20))
+    
+    
+    KO_60_2m<-KO_60 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(KO_60,40))
+
+    
+    
+    KO_60_3m<-KO_60 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(KO_60,60))
+
+        rownames(KO_60_1m)<-rownames(KO_60)[c(1:(nrow(KO_60)-20))]
+KO_60_1m$target<-factor(KO_60_1m$target)    
+
+rownames(KO_60_2m)<-rownames(KO_60)[c(1:(nrow(KO_60)-40))]
+KO_60_2m$target<-factor(KO_60_2m$target)    
+    
+rownames(KO_60_3m)<-rownames(KO_60)[c(1:(nrow(KO_60)-60))]
+KO_60_3m$target<-factor(KO_60_3m$target)    
+
+    
+    # KO_60_target<-list(KO_60_1m = KO_60_1m,
+    #                    KO_60_2m = KO_60_2m,
+    #                    KO_60_3m = KO_60_3m)
+    #rm(KO_60_1m,KO_60_2m,KO_60_3m)
+##############################################3
+  ####### 90 day EMA
+    KO_90_1m<-KO_90 %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(KO_90,20))
+
+
+    KO_90_2m<-KO_90 %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(KO_90,40))
+
+    
+    
+        
+    KO_90_3m<-KO_90 %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(KO_90,60))
+
+    rownames(KO_90_1m)<-rownames(KO_90)[c(1:(nrow(KO_90)-20))]
+KO_90_1m$target<-factor(KO_90_1m$target)    
+rownames(KO_90_2m)<-rownames(KO_90)[c(1:(nrow(KO_90)-40))]
+KO_90_2m$target<-factor(KO_90_2m$target)    
+    
+rownames(KO_90_3m)<-rownames(KO_90)[c(1:(nrow(KO_90)-60))]
+KO_90_3m$target<-factor(KO_90_3m$target)    
+    
+    # KO_90_target<-list(KO_90_1m = KO_90_1m,
+    #                    KO_90_2m = KO_90_2m,
+    #                    KO_90_3m = KO_90_3m)
+    #rm(KO_90_1m,KO_90_2m,KO_90_3m)
+#####################################
+    #target on formula smoothed data
+    KO_fun_1m<-KO_formula %>%
+      slice(1:(nrow(.)-20)) %>% 
+      bind_cols(target=target_calc(KO_formula,20))
+
+    KO_fun_2m<-KO_formula %>%
+      slice(1:(nrow(.)-40)) %>% 
+      bind_cols(target=target_calc(KO_formula,40))
+        
+    KO_fun_3m<-KO_formula %>%
+      slice(1:(nrow(.)-60)) %>% 
+      bind_cols(target=target_calc(KO_formula,60))
+    
+  rownames(KO_fun_1m)<-index(KO)[c(1:(nrow(KO)-20))]
+KO_fun_1m$target<-factor(KO_fun_1m$target)
+
+rownames(KO_fun_2m)<-index(KO)[c(1:(nrow(KO)-40))]
+KO_fun_2m$target<-factor(KO_fun_2m$target)    
+    
+rownames(KO_fun_3m)<-index(KO)[c(1:(nrow(KO)-60))]
+KO_fun_3m$target<-factor(KO_fun_3m$target)  
+
+
+a<-data.frame(EMA30=c(r1=(table(KO_30_1m$target)/sum(table(KO_30_1m$target))),
+                      r2=(table(KO_30_2m$target)/sum(table(KO_30_2m$target))),
+                      r3=(table(KO_30_3m$target)/sum(table(KO_30_3m$target)))),
+              EMA60=c(r1=(table(KO_60_1m$target)/sum(table(KO_60_1m$target))),
+                      r2=(table(KO_60_2m$target)/sum(table(KO_60_2m$target))),
+                      r3=(table(KO_60_3m$target)/sum(table(KO_60_3m$target)))),
+              EMA90=c(r1=(table(KO_90_1m$target)/sum(table(KO_90_1m$target))),
+                      r2=(table(KO_90_2m$target)/sum(table(KO_90_2m$target))),
+                      r3=(table(KO_90_3m$target)/sum(table(KO_90_3m$target)))),
+              exp.smooth=c(r1=(table(KO_fun_1m$target)/sum(table(KO_fun_1m$target))),
+                           r2=(table(KO_fun_2m$target)/sum(table(KO_fun_2m$target))),
+                           r3=(table(KO_fun_3m$target)/sum(table(KO_fun_3m$target))))) %>% 
+  t(.) %>% as_tibble() %>% 
+  mutate_all(.funs = function(x) x*100)
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+kable(a, "latex") %>%
+add_header_above(c(" ", "Predicción 1 mes" = 2, "Predicción 2 meses" = 2,"Predicción 3 meses"=2)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+#{Proporción de la variable respuesta Coca-Cola CO.}
+
+#feature extraction
+KO_30_1m_target_feature<-feature_extraction_finance(KO_30_1m)
+KO_30_2m_target_feature<-feature_extraction_finance(KO_30_2m)
+KO_30_3m_target_feature<-feature_extraction_finance(KO_30_3m)
+
+KO_60_1m_target_feature<-feature_extraction_finance(KO_60_1m)
+KO_60_2m_target_feature<-feature_extraction_finance(KO_60_2m)
+KO_60_3m_target_feature<-feature_extraction_finance(KO_60_3m)
+
+KO_90_1m_target_feature<-feature_extraction_finance(KO_90_1m)
+KO_90_2m_target_feature<-feature_extraction_finance(KO_90_2m)
+KO_90_3m_target_feature<-feature_extraction_finance(KO_90_3m)
+
+KO_fun_1m_target_feature<-feature_extraction_finance(KO_fun_1m)
+KO_fun_2m_target_feature<-feature_extraction_finance(KO_fun_2m)
+KO_fun_3m_target_feature<-feature_extraction_finance(KO_fun_3m)
+
+#Partición train-validation-test
+train_KO_30_1m_target_feature<-
+  KO_30_1m_target_feature[year(rownames(KO_30_1m_target_feature))%in%c(2000:2015),]
+
+validation_KO_30_1m_target_feature<-
+  KO_30_1m_target_feature[year(rownames(KO_30_1m_target_feature))%in%c( 2016) ,]
+
+test_KO_30_1m_target_feature<-
+  KO_30_1m_target_feature[year(rownames(KO_30_1m_target_feature))%in%c(2017:2018) ,]
+
+
+
+train_KO_60_1m_target_feature<-
+  KO_60_1m_target_feature[year(rownames(KO_60_1m_target_feature))%in%c(2000:2015),]
+
+validation_KO_60_1m_target_feature<-
+  KO_60_1m_target_feature[year(rownames(KO_60_1m_target_feature))%in%c( 2016) ,]
+
+test_KO_60_1m_target_feature<-
+  KO_60_1m_target_feature[year(rownames(KO_60_1m_target_feature))%in%c(2017:2018) ,]
+
+
+
+
+train_KO_90_1m_target_feature<-
+  KO_90_1m_target_feature[year(rownames(KO_90_1m_target_feature))%in%c(2000:2015),]
+
+validation_KO_90_1m_target_feature<-
+  KO_90_1m_target_feature[year(rownames(KO_90_1m_target_feature))%in%c( 2016) ,]
+
+test_KO_90_1m_target_feature<-
+  KO_90_1m_target_feature[year(rownames(KO_90_1m_target_feature))%in%c(2017:2018) ,]
+
+
+
+train_KO_30_2m_target_feature<-
+  KO_30_2m_target_feature[year(rownames(KO_30_2m_target_feature))%in%c(2000:2015),]
+
+validation_KO_30_2m_target_feature<-
+  KO_30_2m_target_feature[year(rownames(KO_30_2m_target_feature))%in%c( 2016),]
+
+test_KO_30_2m_target_feature<-
+  KO_30_2m_target_feature[year(rownames(KO_30_2m_target_feature))%in%c(2017:2018),]
+
+
+
+train_KO_60_2m_target_feature<-
+  KO_60_2m_target_feature[year(rownames(KO_60_2m_target_feature))%in%c(2000:2015),]
+
+validation_KO_60_2m_target_feature<-
+  KO_60_2m_target_feature[year(rownames(KO_60_2m_target_feature))%in%c( 2016),]
+
+test_KO_60_2m_target_feature<-
+  KO_60_2m_target_feature[year(rownames(KO_60_2m_target_feature))%in%c(2017:2018),]
+
+
+train_KO_90_2m_target_feature<-
+  KO_90_2m_target_feature[year(rownames(KO_90_2m_target_feature))%in%c(2000:2015),]
+
+validation_KO_90_2m_target_feature<-
+  KO_90_2m_target_feature[year(rownames(KO_90_2m_target_feature))%in%c( 2016) ,]
+
+test_KO_90_2m_target_feature<-
+  KO_90_2m_target_feature[year(rownames(KO_90_2m_target_feature))%in%c(2017:2018) ,]
+
+
+
+train_KO_30_3m_target_feature<-
+  KO_30_3m_target_feature[year(rownames(KO_30_3m_target_feature))%in%c(2000:2015),]
+
+validation_KO_30_3m_target_feature<-
+  KO_30_3m_target_feature[year(rownames(KO_30_3m_target_feature))%in%c( 2016) ,]
+
+test_KO_30_3m_target_feature<-
+  KO_30_3m_target_feature[year(rownames(KO_30_3m_target_feature))%in%c(2017:2018) ,]
+
+
+
+train_KO_60_3m_target_feature<-
+  KO_60_3m_target_feature[year(rownames(KO_60_3m_target_feature))%in%c(2000:2015),]
+
+validation_KO_60_3m_target_feature<-
+  KO_60_3m_target_feature[year(rownames(KO_60_3m_target_feature))%in%c( 2016) ,]
+
+test_KO_60_3m_target_feature<-
+  KO_60_3m_target_feature[year(rownames(KO_60_3m_target_feature))%in%c(2017:2018) ,]
+
+
+train_KO_90_3m_target_feature<-
+  KO_90_3m_target_feature[year(rownames(KO_90_3m_target_feature))%in%c(2000:2015),]
+
+validation_KO_90_3m_target_feature<-
+  KO_90_3m_target_feature[year(rownames(KO_90_3m_target_feature))%in%c( 2016) ,]
+
+test_KO_90_3m_target_feature<-
+  KO_90_3m_target_feature[year(rownames(KO_90_3m_target_feature))%in%c(2017:2018) ,]
+
+
+#fun
+train_KO_fun_1m_target_feature<-
+  KO_fun_1m_target_feature[year(rownames(KO_fun_1m_target_feature))%in%c(2000:2015),]
+
+validation_KO_fun_1m_target_feature<-
+  KO_fun_1m_target_feature[year(rownames(KO_fun_1m_target_feature))%in%c( 2016),]
+
+test_KO_fun_1m_target_feature<-
+  KO_fun_1m_target_feature[year(rownames(KO_fun_1m_target_feature))%in%c(2017:2018),]
+
+train_KO_fun_2m_target_feature<-
+  KO_fun_2m_target_feature[year(rownames(KO_fun_2m_target_feature))%in%c(2000:2015),]
+
+validation_KO_fun_2m_target_feature<-
+  KO_fun_2m_target_feature[year(rownames(KO_fun_2m_target_feature))%in%c( 2016),]
+
+test_KO_fun_2m_target_feature<-
+  KO_fun_2m_target_feature[year(rownames(KO_fun_2m_target_feature))%in%c(2017:2018),]
+
+train_KO_fun_3m_target_feature<-
+  KO_fun_3m_target_feature[year(rownames(KO_fun_3m_target_feature))%in%c(2000:2015),]
+
+validation_KO_fun_3m_target_feature<-
+  KO_fun_3m_target_feature[year(rownames(KO_fun_3m_target_feature))%in%c( 2016),]
+
+test_KO_fun_3m_target_feature<-
+  KO_fun_3m_target_feature[year(rownames(KO_fun_3m_target_feature))%in%c(2017:2018),]
+
+
+#mtry fine tuning for RF. 
+errors_KO_30_1m_target_feature<-c()
+errors_KO_30_2m_target_feature<-c()
+errors_KO_30_3m_target_feature<-c()
+
+errors_KO_60_1m_target_feature<-c()
+errors_KO_60_2m_target_feature<-c()
+errors_KO_60_3m_target_feature<-c()
+
+errors_KO_90_1m_target_feature<-c()
+errors_KO_90_2m_target_feature<-c()
+errors_KO_90_3m_target_feature<-c()
+
+
+
+for(i in 1:32){
+   model_KO_30_1m_target_feature<-randomForest(target~.,data=train_KO_30_1m_target_feature,mtry=i)
+  confusionMatrix(predict(model_KO_30_1m_target_feature,validation_KO_30_1m_target_feature),
+                  validation_KO_30_1m_target_feature$target)->a_KO_30_1m_target_feature
+  errors_KO_30_1m_target_feature<-c(errors_KO_30_1m_target_feature,1-a_KO_30_1m_target_feature$overall[1])
+  
+  model_KO_30_2m_target_feature<-randomForest(target~.,data=train_KO_30_2m_target_feature,mtry=i)
+  confusionMatrix(predict(model_KO_30_2m_target_feature,validation_KO_30_2m_target_feature),
+                  validation_KO_30_2m_target_feature$target)->a_KO_30_2m_target_feature
+  errors_KO_30_2m_target_feature<-c(errors_KO_30_2m_target_feature,1-a_KO_30_2m_target_feature$overall[1])
+  
+  
+  model_KO_30_3m_target_feature<-randomForest(target~.,data=train_KO_30_3m_target_feature,mtry=i)
+  confusionMatrix(predict(model_KO_30_3m_target_feature,validation_KO_30_3m_target_feature),
+                  validation_KO_30_3m_target_feature$target)->a_KO_30_3m_target_feature
+  errors_KO_30_3m_target_feature<-c(errors_KO_30_3m_target_feature,1-a_KO_30_3m_target_feature$overall[1])
+  
+  #~~
+  
+  model_KO_60_1m_target_feature<-randomForest(target~.,data=train_KO_60_1m_target_feature,mtry=i)
+  confusionMatrix(predict(model_KO_60_1m_target_feature,validation_KO_60_1m_target_feature),
+                  validation_KO_60_1m_target_feature$target)->a_KO_60_1m_target_feature
+  errors_KO_60_1m_target_feature<-c(errors_KO_60_1m_target_feature,1-a_KO_60_1m_target_feature$overall[1])
+  
+  model_KO_60_2m_target_feature<-randomForest(target~.,data=train_KO_60_2m_target_feature,mtry=i)
+  confusionMatrix(predict(model_KO_60_2m_target_feature,validation_KO_60_2m_target_feature),
+                  validation_KO_60_2m_target_feature$target)->a_KO_60_2m_target_feature
+  errors_KO_60_2m_target_feature<-c(errors_KO_60_2m_target_feature,1-a_KO_60_2m_target_feature$overall[1])
+  
+  
+  model_KO_60_3m_target_feature<-randomForest(target~.,data=train_KO_60_3m_target_feature,mtry=i)
+  confusionMatrix(predict(model_KO_60_3m_target_feature,validation_KO_60_3m_target_feature),
+                  validation_KO_60_3m_target_feature$target)->a_KO_60_3m_target_feature
+  errors_KO_60_3m_target_feature<-c(errors_KO_60_3m_target_feature,1-a_KO_60_3m_target_feature$overall[1])
+  
+  #~~
+  model_KO_90_1m_target_feature<-randomForest(target~.,data=train_KO_90_1m_target_feature,mtry=i)
+  confusionMatrix(predict(model_KO_90_1m_target_feature,validation_KO_90_1m_target_feature),
+                  validation_KO_90_1m_target_feature$target)->a_KO_90_1m_target_feature
+  errors_KO_90_1m_target_feature<-c(errors_KO_90_1m_target_feature,1-a_KO_90_1m_target_feature$overall[1])
+  
+  model_KO_90_2m_target_feature<-randomForest(target~.,data=train_KO_90_2m_target_feature,mtry=i)
+  confusionMatrix(predict(model_KO_90_2m_target_feature,validation_KO_90_2m_target_feature),
+                  validation_KO_90_2m_target_feature$target)->a_KO_90_2m_target_feature
+  errors_KO_90_2m_target_feature<-c(errors_KO_90_2m_target_feature,1-a_KO_90_2m_target_feature$overall[1])
+  
+  
+  model_KO_90_3m_target_feature<-randomForest(target~.,data=train_KO_90_3m_target_feature,mtry=i)
+  confusionMatrix(predict(model_KO_90_3m_target_feature,validation_KO_90_3m_target_feature),
+                  validation_KO_90_3m_target_feature$target)->a_KO_90_3m_target_feature
+  errors_KO_90_3m_target_feature<-c(errors_KO_90_3m_target_feature,1-a_KO_90_3m_target_feature$overall[1])
+  
+  ##  
+  print("KO OK")
+  
+  
+  model_KO_fun_1m_target_feature<-randomForest(target~.,data=train_KO_fun_1m_target_feature,mtry=i)
+  confusionMatrix(predict(model_KO_fun_1m_target_feature,validation_KO_fun_1m_target_feature),
+                  validation_KO_fun_1m_target_feature$target)->a_KO_fun_1m_target_feature
+  errors_KO_fun_1m_target_feature<-c(errors_KO_fun_1m_target_feature,1-a_KO_fun_1m_target_feature$overall[1])
+  
+  model_KO_fun_2m_target_feature<-randomForest(target~.,data=train_KO_fun_2m_target_feature,mtry=i)
+  confusionMatrix(predict(model_KO_fun_1m_target_feature,validation_KO_fun_2m_target_feature),
+                  validation_KO_fun_2m_target_feature$target)->a_KO_fun_2m_target_feature
+  errors_KO_fun_2m_target_feature<-c(errors_KO_fun_2m_target_feature,1-a_KO_fun_2m_target_feature$overall[1])
+  
+  model_KO_fun_3m_target_feature<-randomForest(target~.,data=train_KO_fun_3m_target_feature,mtry=i)
+  confusionMatrix(predict(model_KO_fun_1m_target_feature,validation_KO_fun_3m_target_feature),
+                  validation_KO_fun_3m_target_feature$target)->a_KO_fun_3m_target_feature
+  errors_KO_fun_3m_target_feature<-c(errors_KO_fun_3m_target_feature,1-a_KO_fun_3m_target_feature$overall[1])
+  
+  print("fun OK")
+  
+  
+  print(paste0(i," finished"))
+}
+
+
+#KO
+#{Coca Cola CO.: valores optimizados para mtry y accuracy obtenida}
+a<-data.frame(mtry1m=as.numeric(c(which(errors_KO_30_1m_target_feature==min(errors_KO_30_1m_target_feature))[1],
+                                    which(errors_KO_60_1m_target_feature==min(errors_KO_60_1m_target_feature[-1]))[1],
+                                   which(errors_KO_90_1m_target_feature==min(errors_KO_90_1m_target_feature[-1]))[1],
+                                   which(errors_KO_fun_1m_target_feature==min(errors_KO_fun_1m_target_feature[-1]))[1])),
+              accuracy1m=as.numeric(c((1-min(errors_KO_30_1m_target_feature))*100,
+                                    (1-min(errors_KO_60_1m_target_feature[-1]))*100,
+                                    (1-min(errors_KO_90_1m_target_feature[-1]))*100,
+                                    (1-min(errors_KO_fun_1m_target_feature[-1]))*100)),
+              
+              
+              mtry2m=as.numeric(c(which(errors_KO_30_2m_target_feature==min(errors_KO_30_2m_target_feature[-1]))[1],
+                                    which(errors_KO_60_2m_target_feature==min(errors_KO_60_2m_target_feature[-1]))[1],
+                                   which(errors_KO_90_2m_target_feature==min(errors_KO_90_2m_target_feature))[1],
+                                   which(errors_KO_fun_2m_target_feature==min(errors_KO_fun_2m_target_feature))[1])),
+              
+                 accuracy2m=as.numeric(c((1-min(errors_KO_30_2m_target_feature[-1]))*100,
+                                    (1-min(errors_KO_60_2m_target_feature[-1]))*100,
+                                    (1-min(errors_KO_90_2m_target_feature))*100,
+                                    (1-min(errors_KO_fun_2m_target_feature))*100)),
+              
+              
+              mtry3m=as.numeric(c(which(errors_KO_30_3m_target_feature==min(errors_KO_30_3m_target_feature[-1]))[1],
+                                    which(errors_KO_60_3m_target_feature==min(errors_KO_60_3m_target_feature[-1]))[1],
+                                   which(errors_KO_90_3m_target_feature==min(errors_KO_90_3m_target_feature[-1]))[1],
+                                   which(errors_KO_fun_3m_target_feature==min(errors_KO_fun_3m_target_feature))[1])),
+              
+              accuracy3m=as.numeric(c((1-min(errors_KO_30_3m_target_feature[-1]))*100,
+                                    (1-min(errors_KO_60_3m_target_feature[-1]))*100,
+                                    (1-min(errors_KO_90_3m_target_feature[-1]))*100,
+                                    (1-min(errors_KO_fun_3m_target_feature))*100))
+              
+              ) 
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+kable(a, "latex") %>%
+  add_header_above(c(" ", "Predicción 1 mes" = 2, "Predicción 2 meses" = 2,"Predicción 3 meses"=2)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+
+#KO models sobre muestra test
+train_vali_KO_30_1m<-
+  train_KO_30_1m_target_feature %>% bind_rows(validation_KO_30_1m_target_feature)
+      rownames(train_vali_KO_30_1m)<-c(rownames(train_KO_30_1m_target_feature),rownames(validation_KO_30_1m_target_feature))
+
+train_vali_KO_60_1m<-
+  train_KO_60_1m_target_feature %>% bind_rows(validation_KO_60_1m_target_feature)
+      rownames(train_vali_KO_60_1m)<-c(rownames(train_KO_60_1m_target_feature),rownames(validation_KO_60_1m_target_feature))
+
+train_vali_KO_90_1m<-
+  train_KO_90_1m_target_feature %>% bind_rows(validation_KO_90_1m_target_feature)
+        rownames(train_vali_KO_90_1m)<-c(rownames(train_KO_90_1m_target_feature),rownames(validation_KO_90_1m_target_feature))
+
+train_vali_KO_fun_1m<-
+  train_KO_fun_1m_target_feature %>% bind_rows(validation_KO_fun_1m_target_feature)
+        rownames(train_vali_KO_fun_1m)<-c(rownames(train_KO_fun_1m_target_feature),rownames(validation_KO_fun_1m_target_feature))
+
+
+        train_vali_KO_30_2m<-
+  train_KO_30_2m_target_feature %>% bind_rows(validation_KO_30_2m_target_feature)
+      rownames(train_vali_KO_30_2m)<-c(rownames(train_KO_30_2m_target_feature),rownames(validation_KO_30_2m_target_feature))
+
+train_vali_KO_60_2m<-
+  train_KO_60_2m_target_feature %>% bind_rows(validation_KO_60_2m_target_feature)
+      rownames(train_vali_KO_60_2m)<-c(rownames(train_KO_60_2m_target_feature),rownames(validation_KO_60_2m_target_feature))
+
+train_vali_KO_90_2m<-
+  train_KO_90_2m_target_feature %>% bind_rows(validation_KO_90_2m_target_feature)
+        rownames(train_vali_KO_90_2m)<-c(rownames(train_KO_90_2m_target_feature),rownames(validation_KO_90_2m_target_feature))
+
+        train_vali_KO_fun_2m<-
+  train_KO_fun_2m_target_feature %>% bind_rows(validation_KO_fun_2m_target_feature)
+        rownames(train_vali_KO_fun_2m)<-c(rownames(train_KO_fun_2m_target_feature),rownames(validation_KO_fun_2m_target_feature))
+
+        train_vali_KO_30_3m<-
+  train_KO_30_3m_target_feature %>% bind_rows(validation_KO_30_3m_target_feature)
+      rownames(train_vali_KO_30_3m)<-c(rownames(train_KO_30_3m_target_feature),rownames(validation_KO_30_3m_target_feature))
+
+train_vali_KO_60_3m<-
+  train_KO_60_3m_target_feature %>% bind_rows(validation_KO_60_3m_target_feature)
+      rownames(train_vali_KO_60_3m)<-c(rownames(train_KO_60_3m_target_feature),rownames(validation_KO_60_3m_target_feature))
+
+train_vali_KO_90_3m<-
+  train_KO_90_3m_target_feature %>% bind_rows(validation_KO_90_3m_target_feature)
+        rownames(train_vali_KO_90_3m)<-c(rownames(train_KO_90_3m_target_feature),rownames(validation_KO_90_3m_target_feature))
+
+        train_vali_KO_fun_3m<-
+  train_KO_fun_3m_target_feature %>% bind_rows(validation_KO_fun_3m_target_feature)
+        rownames(train_vali_KO_fun_3m)<-c(rownames(train_KO_fun_3m_target_feature),rownames(validation_KO_fun_3m_target_feature))
+
+model_KO_30_1m_target_feature<-randomForest(target~.,data=train_vali_KO_30_1m,mtry=13)
+model_KO_60_1m_target_feature<-randomForest(target~.,data=train_vali_KO_60_1m,mtry=2)
+model_KO_90_1m_target_feature<-randomForest(target~.,data=train_vali_KO_90_1m,mtry=2)
+model_KO_fun_1m_target_feature<-randomForest(target~.,data=train_vali_KO_fun_1m,mtry=2)
+
+model_KO_30_2m_target_feature<-randomForest(target~.,data=train_vali_KO_30_2m,mtry=2)
+model_KO_60_2m_target_feature<-randomForest(target~.,data=train_vali_KO_60_2m,mtry=2)
+model_KO_90_2m_target_feature<-randomForest(target~.,data=train_vali_KO_90_2m,mtry=4)
+model_KO_fun_2m_target_feature<-randomForest(target~.,data=train_vali_KO_fun_2m,mtry=16)
+
+model_KO_30_3m_target_feature<-randomForest(target~.,data=train_vali_KO_30_3m,mtry=2)
+model_KO_60_3m_target_feature<-randomForest(target~.,data=train_vali_KO_60_3m,mtry=2)
+model_KO_90_3m_target_feature<-randomForest(target~.,data=train_vali_KO_90_3m,mtry=2)
+model_KO_fun_3m_target_feature<-randomForest(target~.,data=train_vali_KO_fun_3m,mtry=3)
+
+
+#Confusion matrix muestra test
+CM_KO_30_1m<-confusionMatrix(predict(model_KO_30_1m_target_feature,test_KO_30_1m_target_feature),
+                             test_KO_30_1m_target_feature$target)
+CM_KO_60_1m<-confusionMatrix(predict(model_KO_60_1m_target_feature,test_KO_60_1m_target_feature),
+                             test_KO_60_1m_target_feature$target)
+CM_KO_90_1m<-confusionMatrix(predict(model_KO_90_1m_target_feature,test_KO_90_1m_target_feature),
+                             test_KO_90_1m_target_feature$target)
+CM_KO_fun_1m<-confusionMatrix(predict(model_KO_fun_1m_target_feature,test_KO_fun_1m_target_feature),
+                              test_KO_fun_1m_target_feature$target)
+
+
+CM_KO_30_2m<-confusionMatrix(predict(model_KO_30_2m_target_feature,test_KO_30_2m_target_feature),
+                             test_KO_30_2m_target_feature$target)
+CM_KO_60_2m<-confusionMatrix(predict(model_KO_60_2m_target_feature,test_KO_60_2m_target_feature),
+                             test_KO_60_2m_target_feature$target)
+CM_KO_90_2m<-confusionMatrix(predict(model_KO_90_2m_target_feature,test_KO_90_2m_target_feature),
+                             test_KO_90_2m_target_feature$target)
+CM_KO_fun_2m<-confusionMatrix(predict(model_KO_fun_2m_target_feature,test_KO_fun_2m_target_feature),
+                              test_KO_fun_2m_target_feature$target)
+
+CM_KO_30_3m<-confusionMatrix(predict(model_KO_30_3m_target_feature,test_KO_30_3m_target_feature),
+                             test_KO_30_3m_target_feature$target)
+CM_KO_60_3m<-confusionMatrix(predict(model_KO_60_3m_target_feature,test_KO_60_3m_target_feature),
+                             test_KO_60_3m_target_feature$target)
+CM_KO_90_3m<-confusionMatrix(predict(model_KO_90_3m_target_feature,test_KO_90_3m_target_feature),
+                             test_KO_90_3m_target_feature$target)
+CM_KO_fun_3m<-confusionMatrix(predict(model_KO_fun_3m_target_feature,test_KO_fun_3m_target_feature),
+                              test_KO_fun_3m_target_feature$target)
+
+
+a<-data.frame(acc1m=as.numeric(c(round(CM_KO_30_1m$overall[1]*100,2),
+                                    round(CM_KO_60_1m$overall[1]*100,2),
+                                   round(CM_KO_90_1m$overall[1]*100,2),
+                                   round(CM_KO_fun_1m$overall[1]*100,2))),
+              sensi1m=as.numeric(c(round(CM_KO_30_1m$byClass[1]*100,2),
+                                    round(CM_KO_60_1m$byClass[1]*100,2),
+                                    round(CM_KO_90_1m$byClass[1]*100,2),
+                                    round(CM_KO_fun_1m$byClass[1]*100,2))),
+              speci1m=as.numeric(c(round(CM_KO_30_1m$byClass[2]*100,2),
+                                    round(CM_KO_60_1m$byClass[2]*100,2),
+                                    round(CM_KO_90_1m$byClass[2]*100,2),
+                                    round(CM_KO_fun_1m$byClass[2]*100,2))),
+              
+              acc2m=as.numeric(c(round(CM_KO_30_2m$overall[1]*100,2),
+                                    round(CM_KO_60_2m$overall[1]*100,2),
+                                   round(CM_KO_90_2m$overall[1]*100,2),
+                                   round(CM_KO_fun_2m$overall[1]*100,2))),
+              sensi2m=as.numeric(c(round(CM_KO_30_2m$byClass[1]*100,2),
+                                    round(CM_KO_60_2m$byClass[1]*100,2),
+                                    round(CM_KO_90_2m$byClass[1]*100,2),
+                                    round(CM_KO_fun_2m$byClass[1]*100,2))),
+              speci2m=as.numeric(c(round(CM_KO_30_2m$byClass[2]*100,2),
+                                    round(CM_KO_60_2m$byClass[2]*100,2),
+                                    round(CM_KO_90_2m$byClass[2]*100,2),
+                                    round(CM_KO_fun_2m$byClass[2]*100,2))),
+              
+              acc3m=as.numeric(c(round(CM_KO_30_3m$overall[1]*100,2),
+                                    round(CM_KO_60_3m$overall[1]*100,2),
+                                   round(CM_KO_90_3m$overall[1]*100,2),
+                                   round(CM_KO_fun_3m$overall[1]*100,2))),
+              sensi3m=as.numeric(c(round(CM_KO_30_3m$byClass[1]*100,2),
+                                    round(CM_KO_60_3m$byClass[1]*100,2),
+                                    round(CM_KO_90_3m$byClass[1]*100,2),
+                                    round(CM_KO_fun_3m$byClass[1]*100,2))),
+              speci3m=as.numeric(c(round(CM_KO_30_3m$byClass[2]*100,2),
+                                    round(CM_KO_60_3m$byClass[2]*100,2),
+                                    round(CM_KO_90_3m$byClass[2]*100,2),
+                                    round(CM_KO_fun_3m$byClass[2]*100,2)))
+              
+              
+              
+              ) 
+
+rownames(a)<-c("EMA30","EMA60","EMA90","Alisado exponencial")
+
+ConfusionKO<-a
+SensiKO<-ConfusionKO[,grep(x=names(ConfusionKO), pattern="sensi")]
+SpeciKO<-ConfusionKO[,grep(x=names(ConfusionKO), pattern="speci")]
+ConfusionKO<-ConfusionKO[,grep(x=names(ConfusionKO), pattern="acc")]
+
+kable(a, "latex") %>%
+  add_header_above(c(" ", "Predicción 1 mes" = 3, "Predicción 2 meses" = 3,"Predicción 3 meses"=3)) %>%
+  kable_styling(font_size = 10,latex_options = c("basic"))
+
+
+#{Heatmap de la accuracy obtenida con los modelos Random Forest sobre muestra test}
+acc.heatmap<-ConfusionKO %>% rbind(ConfusionAAPL)%>% rbind(ConfusionAXP)%>% rbind(ConfusionWFC)
+
+rownames(acc.heatmap)<-apply(expand.grid(c("EMA30","EMA60","EMA90","smooth f"),
+                                         c("KO", "AAPL", "AXP", "WFC")), 1, paste, collapse=".")
+
+acc.heatmap$comb<-rownames(acc.heatmap);rownames(acc.heatmap)<-NULL;
+acc.heatmap$comb<-rep(c("EMA30","EMA60","EMA90","smooth f"),4)
+
+stock.heatmap <- acc.heatmap %>% 
+  select(comb,acc1m,acc2m,acc3m)%>% 
+  gather("forecast.window","test.acc", 2:4) %>%          
+  cbind(company=rep(c("KO","AAPL","AXP","WFC"),each=4),
+        test.acc.label=as.character(.$test.acc)) %>% 
+  
+  ggplot(mapping = aes(x = comb, y = forecast.window,fill = test.acc)) +
+  geom_tile() +
+  geom_text(aes(label=test.acc.label),size=2)+
+  xlab(label = "Smooth type")+
+  facet_grid(~ company, switch = "x", scales = "free_x", space = "free_x")+
+scale_fill_gradient2('test.acc', low = "blue", mid = "white", high = "red", midpoint = 50)+
+theme_bw()+
+  theme(
+    axis.text.x = element_text(angle=90, hjust = 0.5 )
+  )
+
+stock.heatmap
+
+#{Heatmap de la sensitividad obtenida con los modelos Random Forest sobre muestra test}
+sensi.heatmap<-SensiKO %>% rbind(SensiAAPL)%>% rbind(SensiAAPL)%>% rbind(SensiWFC)
+
+rownames(sensi.heatmap)<-apply(expand.grid(c("EMA30","EMA60","EMA90","smooth f"), 
+                                           c("KO", "AAPL", "AXP", "WFC")), 1, paste, collapse=".")
+
+sensi.heatmap$comb<-rownames(sensi.heatmap);rownames(sensi.heatmap)<-NULL;
+sensi.heatmap$comb<-rep(c("EMA30","EMA60","EMA90","smooth f"),4)
+
+stock.heatmap.sensi <- sensi.heatmap %>% 
+  select(comb,sensi1m,sensi2m,sensi3m)%>% 
+  gather("forecast.window","test.sensi", 2:4) %>%          
+  cbind(company=rep(c("KO","AAPL","AXP","WFC"),each=4),
+        test.sensi.label=as.character(.$test.sensi)) %>% 
+  
+  ggplot(mapping = aes(x = comb, y = forecast.window,fill = test.sensi)) +
+  geom_tile() +
+  geom_text(aes(label=test.sensi.label),size=2)+
+  xlab(label = "Smooth type")+
+  facet_grid(~ company, switch = "x", scales = "free_x", space = "free_x")+
+scale_fill_gradient2('test.sensi', low = "blue", mid = "white", high = "red", midpoint = 50)+
+theme_bw()+
+  theme(
+    axis.text.x = element_text(angle=90, hjust = 0.5 )
+  )
+
+stock.heatmap.sensi
+
+#heatmap specificity
+speci.heatmap<-SpeciKO %>% rbind(SpeciAAPL)%>% rbind(SpeciAAPL)%>% rbind(SpeciWFC)
+
+rownames(speci.heatmap)<-apply(expand.grid(c("EMA30","EMA60","EMA90","smooth f"),
+                                           c("KO", "AAPL", "AXP", "WFC")), 1, paste, collapse=".")
+
+speci.heatmap$comb<-rownames(speci.heatmap);rownames(speci.heatmap)<-NULL;
+speci.heatmap$comb<-rep(c("EMA30","EMA60","EMA90","smooth f"),4)
+
+stock.heatmap.speci <- speci.heatmap %>% 
+  select(comb,speci1m,speci2m,speci3m)%>% 
+  gather("forecast.window","test.speci", 2:4) %>%          
+  cbind(company=rep(c("KO","AAPL","AXP","WFC"),each=4),
+        test.speci.label=as.character(.$test.speci)) %>% 
+  
+  ggplot(mapping = aes(x = comb, y = forecast.window,fill = test.speci)) +
+  geom_tile() +
+  geom_text(aes(label=test.speci.label),size=2)+
+  xlab(label = "Smooth type")+
+  facet_grid(~ company, switch = "x", scales = "free_x", space = "free_x")+
+scale_fill_gradient2('test.speci', low = "blue", mid = "white", high = "red", midpoint = 50)+
+theme_bw()+
+  theme(
+    axis.text.x = element_text(angle=90, hjust = 0.5 )
+  )
+
+stock.heatmap.speci
+```
+
+*Apartado V.2*
+
+\setlength\parskip{5ex}
+
+```{r,eval=F, echo=T,size="scriptsize"}
+source("C:/Users/i0386388/Desktop/TFG-master/functions/smooth_target.R")
+
+source("C:/Users/i0386388/Desktop/tesis/Tesis/target_feature_extraction.R")
+
+# Fetch all Symbols & store only the tickers to retrieve the data
+symbols <- stockSymbols(exchange = "NYSE")
+symbols <- symbols[,1]
+#
+symbols<-symbols[1000:1300]
+n <- length(symbols)
+pb <- txtProgressBar(min = 0, max = n, style=3)
+
+
+library(doParallel)
+
+#setup parallel backend to use many processors
+cores=detectCores()
+cl <- makeCluster(cores[1]-1) #not to overload your computer
+registerDoParallel(cl)
+
+# Actual loop:
+#for(i in 1:length(symbols)) {
+  time<-Sys.time()
+results= foreach::foreach(i=1:length(symbols),
+                          .export = c("symbols","n"),#ls()
+                          .combine = rbind,
+                          .packages = c("quantmod","TTR","tidyverse","caret","randomForest","CombMSC"),
+                          .verbose = TRUE)%dopar%{
+
+#   cat(paste0("Doing ",symbols[i],"\n",length(symbols)-i, "remaining"))
+
+  symbols[i]-> symbol
+  # specify the "from" date to desired start date
+  tryit <- try(getSymbols(symbol,from="2000-01-01", src='yahoo'))
+  if(inherits(tryit, "try-error")){
+    i <- i+1
+  } else {
+    # specify the "from" date to desired start date
+    #data <-
+      getSymbols(symbol, from="2000-01-01", src='yahoo')
+    #dataset <- merge(dataset, Ad(get(symbols[i])))
+    rm(symbol)
+
+  # setTxtProgressBar(pb, i)
+
+
+  if(nrow(get(symbols[i]))>2000){
+  data<-try(EMA_finance(get(symbols[i]),smoothing_period = 90),silent = T)
+
+  if(class(data)!="try-error"){
+
+
+  data_1m<-data %>%
+    slice(1:(nrow(.)-20)) %>%
+    bind_cols(target=target_calc(data,20))
+
+  rownames(data_1m)<-rownames(data)[c(1:(nrow(data)-20))]
+  data_1m$target<-factor(data_1m$target)
+
+  data_2m<-data %>%
+    slice(1:(nrow(.)-40)) %>%
+    bind_cols(target=target_calc(data,40))
+
+  rownames(data_2m)<-rownames(data)[c(1:(nrow(data)-40))]
+  data_2m$target<-factor(data_2m$target)
+
+  data_3m<-data %>%
+    slice(1:(nrow(.)-60)) %>%
+    bind_cols(target=target_calc(data,60))
+
+  rownames(data_3m)<-rownames(data)[c(1:(nrow(data)-60))]
+  data_3m$target<-factor(data_3m$target)
+
+  rm(data)
+
+   data_1m_target_feature<-feature_extraction_finance(data_1m)
+   data_2m_target_feature<-feature_extraction_finance(data_2m)
+   data_3m_target_feature<-feature_extraction_finance(data_3m)
+
+   rm(data_1m,data_2m,data_3m)
+
+   train_data_1m_target_feature<-
+     data_1m_target_feature[1:floor(nrow(data_1m_target_feature)*0.85),]
+   test_data_1m_target_feature<-
+     data_1m_target_feature[(floor(nrow(data_1m_target_feature)*0.85)+1):nrow(data_1m_target_feature),]
+
+   train_data_2m_target_feature<-
+     data_2m_target_feature[1:floor(nrow(data_2m_target_feature)*0.85),]
+   test_data_2m_target_feature<-
+     data_2m_target_feature[(floor(nrow(data_2m_target_feature)*0.85)+1):nrow(data_2m_target_feature),]
+
+   train_data_3m_target_feature<-
+     data_3m_target_feature[1:floor(nrow(data_3m_target_feature)*0.85),]
+   test_data_3m_target_feature<-
+     data_3m_target_feature[(floor(nrow(data_3m_target_feature)*0.85)+1):nrow(data_3m_target_feature),]
+
+   #remover las filas donde el pn ratio sea infinito5
+   if(any(train_data_1m_target_feature$PNratio=="Inf")){
+     RF_1m<-randomForest(target~.,data=train_data_1m_target_feature %>% select(-PNratio),ntree=1500)
+   }else{
+     RF_1m<-randomForest(target~.,data=train_data_1m_target_feature,ntree=1500)
+   }
+
+   if(any(train_data_2m_target_feature$PNratio=="Inf")){
+   RF_2m<-randomForest(target~.,data=train_data_2m_target_feature%>% select(-PNratio),ntree=1500)
+   }else{
+     RF_2m<-randomForest(target~.,data=train_data_2m_target_feature,ntree=1500)
+
+   }
+
+   if(any(train_data_2m_target_feature$PNratio=="Inf")){
+     RF_3m<-randomForest(target~.,data=train_data_3m_target_feature%>% select(-PNratio),ntree=1500)
+
+   }else{
+     RF_3m<-randomForest(target~.,data=train_data_3m_target_feature,ntree=1500)
+
+   }
+
+   if(symbols[i]=="AAPL"){summary(RF_3m)}
+   #poner aqui todas las empresas
+   CM_data_1m<-confusionMatrix(predict(RF_1m,test_data_1m_target_feature),test_data_1m_target_feature$target)
+   CM_data_2m<-confusionMatrix(predict(RF_2m,test_data_2m_target_feature),test_data_2m_target_feature$target)
+   CM_data_3m<-confusionMatrix(predict(RF_3m,test_data_3m_target_feature),test_data_3m_target_feature$target)
+
+   rm(RF_1m,RF_2m,RF_3m)
+
+   a<-data.frame(acc1m=as.numeric(c(round(CM_data_1m$overall[1]*100,2))),
+                 sensi1m=as.numeric(c(round(CM_data_1m$byClass[1]*100,2))),
+                 speci1m=as.numeric(c(round(CM_data_1m$byClass[2]*100,2))),
+
+                 acc2m=as.numeric(c(round(CM_data_2m$overall[1]*100,2))),
+                 sensi2m=as.numeric(c(round(CM_data_2m$byClass[1]*100,2))),
+                 speci2m=as.numeric(c(round(CM_data_2m$byClass[2]*100,2))),
+
+                 acc3m=as.numeric(c(round(CM_data_3m$overall[1]*100,2))),
+                 sensi3m=as.numeric(c(round(CM_data_3m$byClass[1]*100,2))),
+                 speci3m=as.numeric(c(round(CM_data_3m$byClass[2]*100,2)))
+                )
+
+
+   b<-a[,grep(x=names(a), pattern="acc")] %>% mutate(stock=symbols[i])
+   rm(a)
+   b
+   # if(i==1){
+   #   heat.map.data<-a[,grep(x=names(a), pattern="acc")] %>% mutate(stock=symbols[i])
+   #   cat("First done\n")
+   #
+   # }else{
+   #   temp<-a[,grep(x=names(a), pattern="acc")] %>% mutate(stock=symbols[i])
+   #   heat.map.data<-heat.map.data %>% rbind(temp)
+   # }
+
+    }
+
+    }else{  rm(list=symbols[i])}#end of error in EMA
+  }#end of second (try) if
+} #end of loop
+
+stopCluster(cl)
+time
+
+
+
+##heatmap
+#{Heatmap de la accuracy obtenida sobre muestra test SMD masivo para 165 empresas. Fuente: elaboración propia}
+
+results %>%
+  gather("forecast.window","test.acc", 1:3) %>%
+  arrange(stock) %>%
+  cbind(test.acc.label=as.character(.$test.acc)) %>%
+  ggplot(mapping = aes(x = stock, y = forecast.window,fill = test.acc)) +
+  geom_tile() +
+  #geom_text(aes(label=test.acc.label),size=2)+
+  xlab(label = "Companies")+
+  #facet_grid(~ company, switch = "x", scales = "free_x", space = "free_x")+
+  scale_fill_gradient2('test.acc', low = "blue", mid = "white", high = "red", midpoint = 50)+
+  theme_bw()+
+  theme(
+    axis.text.x = element_text(angle=90,vjust = 1,hjust = 0.5,size=7),
+    axis.ticks.length = unit(10, "pt"),
+    legend.position="bottom")+
+  scale_y_discrete(expand=c(0,0))
+
+
+#{Precio de cierre empresa Ferrellgas (FGP). Fuente: elaboración propia}
+
+print(results[results$stock=="FGP",])
+
+library(quantmod)
+getSymbols("FGP",from="2000-01-01")
+
+data.FGP<-try(EMA_finance(FGP,smoothing_period = 90),silent = T)
+add_rownames(as.data.frame(data.FGP),"rownames") %>%
+  mutate(rownames=as.Date(rownames,"%Y-%m-%d")) %>% 
+  ggplot(aes(x=rownames,y=Close))+
+  geom_line() + 
+  theme_bw()+
+  geom_vline(xintercept = as.Date("2016-06-21"),col="red",size=1.5)+
+  scale_x_date(expand=c(0,0))+
+  ggtitle("Stock FGP partición de datos entrenamiento - prueba. Datos alisados con una EMA 90 días")+
+  xlab("")
+
+
+#{Distribución de los resultados de accuracy sobre muestra test 
+#en las 3 ventanas temporales consideradas. Fuente: elaboración propia}
+library(reshape2)
+data<- melt(results[,-4])
+
+
+ggplot(data,aes(x=value, fill=variable)) + 
+  geom_density(alpha=0.25)+
+  theme_bw()+
+  ggtitle("Accuracy sobre muestra test")+
+  xlab("Accuracy")+
+  theme(legend.position="bottom")+
+  scale_x_continuous(expand=c(0,0))
+
+
+library(fBasics)
+basicStats(results[,-4])[c("Mean","Variance","Skewness","Kurtosis"),]
+
+results %>% select(-stock) %>% summary
+
+#{Top 10 empresas con mejor rendimiento sobre muestra test para cada ventana de predicción.}
+library(kableExtra)
+a<-dplyr::top_n(results,n = 10,wt = acc1m) %>% arrange(desc(acc1m)) %>% select(acc1m,stock) %>% 
+  cbind(dplyr::top_n(results,n = 10,wt = acc2m) %>% arrange(desc(acc2m))%>% select(acc2m,stock),
+        dplyr::top_n(results,n = 10,wt = acc3m) %>% arrange(desc(acc3m))%>% select(acc3m,stock))
+
+kable(a, "latex") %>%
+  add_header_above(c("Predicción 1 mes" = 2, "Predicción 2 meses" = 2,"Predicción 3 meses"=2)) %>%
+ kable_styling(font_size = 10,latex_options = c("basic"))
+
+```
+
+*Apartado V.3*
+
+\setlength\parskip{5ex}
+
+```{r,eval=F, echo=T,size="scriptsize"}
+# 
+library(h2o)
+h2o.init()
+h2o.no_progress()  # Turn off progress bars for notebook readability
+# 
+
+
+h2o.SMD<-function(train,test,company){
+  library(tidyverse)
+  train<-as.h2o(train %>% select(-c(aroonUp,aroonDn)))
+  test<-as.h2o(test%>% select(-c(aroonUp,aroonDn)))
+  
+  y <- "target"
+  x <- setdiff(names(train), c(y,"aroonUp","aroonDn"))
+
+  aml <<- h2o.automl(y = y, x = x,
+                    training_frame = train,
+                    max_models =10,
+                    seed = 420,
+                    nfolds = 0, #no cross validation
+                    balance_classes = F,
+                    leaderboard_frame = test)
+  
+  se <<- h2o.getModel(as.data.frame(aml@leaderboard$model_id)[1,1])
+  
+  a<-data.frame(Company=company,
+             AUC=h2o.auc(h2o.performance(se, newdata = test)),
+             Accuracy=h2o.accuracy(h2o.performance(se, newdata = test),thresholds = 0.5)[[1]],
+             Model=as.data.frame(aml@leaderboard$model_id)[1,1])
+  return(a)
+  #accuracy
+  
+}
+
+
+h2o_AXP_30_1m<-h2o.SMD(train = train_vali_AXP_30_1m,test = test_AXP_30_1m_target_feature,company = "AXP")
+h2o_KO_30_1m<-h2o.SMD(train = train_vali_KO_30_1m,test = test_KO_30_1m_target_feature,company = "KO_30_1m")
+h2o_KO_30_2m<-h2o.SMD(train = train_vali_KO_30_2m,test = test_KO_30_2m_target_feature,company = "KO_30_2m")
+h2o_KO_30_3m<-h2o.SMD(train = train_vali_KO_30_3m,test = test_KO_30_3m_target_feature,company = "KO_30_3m")
+
+h2o_KO_60_1m<-h2o.SMD(train = train_vali_KO_60_1m,test = test_KO_60_1m_target_feature,company = "KO_60_1m")
+h2o_KO_60_2m<-h2o.SMD(train = train_vali_KO_60_2m,test = test_KO_60_2m_target_feature,company = "KO_60_2m")
+h2o_KO_60_3m<-h2o.SMD(train = train_vali_KO_60_3m,test = test_KO_60_3m_target_feature,company = "KO_60_3m")
+
+h2o_KO_90_1m<-h2o.SMD(train = train_vali_KO_90_1m,test = test_KO_90_1m_target_feature,company = "KO_90_1m")
+h2o_KO_90_2m<-h2o.SMD(train = train_vali_KO_90_2m,test = test_KO_90_2m_target_feature,company = "KO_90_2m")
+h2o_KO_90_3m<-h2o.SMD(train = train_vali_KO_90_3m,test = test_KO_90_3m_target_feature,company = "KO_90_3m")
+
+h2o.SMD.results<-h2o_KO_30_1m %>%
+  rbind(h2o_KO_30_2m,h2o_KO_30_3m,h2o_KO_60_1m,h2o_KO_60_2m,h2o_KO_60_3m,h2o_KO_90_1m,h2o_KO_90_2m,h2o_KO_90_3m)
+ 
+```
+
+*Apartado V.4*
+\setlength\parskip{5ex}
+
+```{r,eval=F, echo=T,size="scriptsize"}
+libraries <- c("lubridate","tidyverse","tidyr","forecast","ggplot2","seasonal","tidyverse",
+               "manipulate","compiler","scales","lmtest","MASS","glmnet","forecTheta",
+               "neuralnet","tsDyn","changepoint","RSNNS","xgboost","foreach","doSNOW",
+               "tcltk","DescTools","rnn","glue","forcats","timetk","tidyquant","tibbletime",
+               "cowplot","recipes","rsample","yardstick","keras","quantmod","tidyverse"
+)
+# check.libraries <- is.element(libraries, installed.packages()[, 1])==FALSE
+# libraries.to.install <- libraries[check.libraries]
+# if (length(libraries.to.install!=0)) {
+#   install.packages(libraries.to.install)
+# }
+
+lapply(libraries, require, character.only=TRUE)
+library(tidyverse)
+library(quantmod)
+getSymbols(Symbols = "KO", from ="2000-01-01",to="2018-12-31")
+#install_keras()
+
+load("C:/Users/i0386388/Desktop/tesis/lstm_prices.RData")
+sample_predictions_lstm_tbl_prices<-sample_predictions_lstm_tbl
+load("C:/Users/i0386388/Desktop/tesis/lstm_return.RData")
+sample_predictions_lstm_tbl_return<-sample_predictions_lstm_tbl
+rm(sample_predictions_lstm_tbl)
+
+
+
+dates<-rownames(as.data.frame(KO))
+
+Exerci.0<-data.frame(MSales=as.vector(KO$KO.Close),StartDate=dates)#Close prices
+
+rownames(Exerci.0)<-Exerci.0$StartDate
+input<-Exerci.0 %>% dplyr::select(MSales)
+
+
+input.0 <- input %>%
+  tk_tbl() %>%
+  mutate(index = as_date(index)) %>%
+  as_tbl_time(index = index) %>% 
+  rename("value"=MSales)
+
+
+periods_train <- 996 #train length in each resample
+periods_test  <- 83
+skip_span     <- 650
+
+rolling_origin_resamples <- rolling_origin(
+  input.0,
+  initial    = periods_train,
+  assess     = periods_test,
+  cumulative = FALSE,
+  skip       = skip_span
+)
+
+rolling_origin_resamples
+
+
+# Plotting function for a single split
+plot_split <- function(split, expand_y_axis = TRUE, alpha = 1, size = 1, base_size = 14) {
+  
+  # Manipulate data
+  train_tbl <- training(split) %>%
+    add_column(key = "training") 
+  
+  test_tbl  <- testing(split) %>%
+    add_column(key = "testing") 
+  
+  data_manipulated <- bind_rows(train_tbl, test_tbl) %>%
+    as_tbl_time(index = index) %>%
+    mutate(key = fct_relevel(key, "training", "testing"))
+  
+  # Collect attributes
+  train_time_summary <- train_tbl %>%
+    tk_index() %>%
+    tk_get_timeseries_summary()
+  
+  test_time_summary <- test_tbl %>%
+    tk_index() %>%
+    tk_get_timeseries_summary()
+  
+  # Visualize
+  g <- data_manipulated %>%
+    ggplot(aes(x = index, y = value, color = key, group = 1)) +
+    geom_line(size = size, alpha = alpha) +
+    theme_tq(base_size = base_size) +
+    scale_color_tq() +
+    labs(
+      title    = glue("Split: {split$id}"),
+      subtitle = glue("{train_time_summary$start} to {test_time_summary$end}"),
+      y = "", x = ""
+    ) +
+    theme(legend.position = "none") 
+  
+  if (expand_y_axis) {
+    
+    input.0_time_summary <- input.0 %>% 
+      tk_index() %>% 
+      tk_get_timeseries_summary()
+    
+    g <- g +
+      scale_x_date(limits = c(input.0_time_summary$start, 
+                              input.0_time_summary$end))
+  }
+  
+  return(g)
+}
+
+
+plot_sampling_plan <- function(sampling_tbl, expand_y_axis = TRUE, 
+                               ncol = 3, alpha = 1, size = 1, base_size = 14, 
+                               title = "Sampling Plan") {
+  
+  # Map plot_split() to sampling_tbl
+  sampling_tbl_with_plots <- sampling_tbl %>%
+    mutate(gg_plots = map(splits, plot_split, 
+                          expand_y_axis = expand_y_axis,
+                          alpha = alpha, base_size = base_size))
+  
+  # Make plots with cowplot
+  plot_list <- sampling_tbl_with_plots$gg_plots 
+  
+  p_temp <- plot_list[[1]] + theme(legend.position = "bottom")
+  legend <- get_legend(p_temp)
+  
+  p_body  <- plot_grid(plotlist = plot_list, ncol = ncol)
+  
+  p_title <- ggdraw() + 
+    draw_label(title, size = 18, fontface = "bold", colour = palette_light()[[1]])
+  
+  g <- plot_grid(p_title, p_body, legend, ncol = 1, rel_heights = c(0.05, 1, 0.05))
+  
+  return(g)
+  
+}
+
+rolling_origin_resamples %>%
+  plot_sampling_plan(expand_y_axis = T, ncol = 3, alpha = 1, size = 1, base_size = 10, 
+                     title = "Ventana móbil de muestras de entrenamiento y prueba")
+
+rolling_origin_resamples %>%
+  plot_sampling_plan(expand_y_axis = F, ncol = 3, alpha = 1, size = 1, base_size = 10, 
+                     title = "Ventana móbil de muestras de entrenamiento y prueba. Ampliado")
+
+
+#Creating function to train lstm over each split
+
+predict_keras_lstm <- function(split, epochs, ...) {
+  
+  lstm_prediction <- function(split, epochs, ...) {
+    
+    # 5.1.2 Data Setup
+    df_trn <- training(split)
+    df_tst <- testing(split)
+    
+    df <- bind_rows(
+      df_trn %>% add_column(key = "training"),
+      df_tst %>% add_column(key = "testing")
+    ) %>% 
+      as_tbl_time(index = index)
+    
+    # 5.1.3 Preprocessing
+    rec_obj <- recipe(value ~ ., df) %>%
+      step_sqrt(value) %>%
+      step_center(value) %>%
+      step_scale(value) %>%
+      prep()
+    
+    df_processed_tbl <- bake(rec_obj, df)
+    
+    center_history <- rec_obj$steps[[2]]$means["value"]
+    scale_history  <- rec_obj$steps[[3]]$sds["value"]
+    
+    # 5.1.4 LSTM Plan
+    # lag_setting  <- 955 # = nrow(df_test) = periods_test
+    # batch_size   <- 5
+    # train_length <- 3820
+    # tsteps       <- 1
+    # epochs       <- 150
+    
+    #training length / testing length must be a whole number
+    #training length / batch size and testing length / batch size must both be whole numbers
+    
+    
+    lag_setting  <- 83 # = nrow(df_test) = periods_test
+    batch_size   <- 1 #2 gives us more or less good results with AZN
+    train_length <- 996
+    tsteps       <- 6  #because we are only using one lag
+    epochs       <-epochs
+    
+    
+    
+    # 5.1.5 Train/Test Setup
+    lag_train_tbl <- df_processed_tbl %>%
+      mutate(value_lag = lag(value, n = lag_setting)) %>%
+      filter(!is.na(value_lag)) %>%
+      filter(key == "training") %>%
+      tail(train_length)
+    
+    x_train_vec <- lag_train_tbl$value_lag
+    x_train_arr <- array(data = x_train_vec, dim = c(length(x_train_vec), tsteps, 1))
+    
+    y_train_vec <- lag_train_tbl$value
+    y_train_arr <- array(data = y_train_vec, dim = c(length(y_train_vec), 1))
+    
+    lag_test_tbl <- df_processed_tbl %>%
+      mutate(
+        value_lag = lag(value, n = lag_setting)
+      ) %>%
+      filter(!is.na(value_lag)) %>%
+      filter(key == "testing")
+    
+    x_test_vec <- lag_test_tbl$value_lag
+    x_test_arr <- array(data = x_test_vec, dim = c(length(x_test_vec), tsteps, 1))
+    
+    y_test_vec <- lag_test_tbl$value
+    y_test_arr <- array(data = y_test_vec, dim = c(length(y_test_vec), 1))
+    
+    # 5.1.6 LSTM Model
+    model <- keras_model_sequential()
+    
+    model %>%   #with units=300 is working well
+      layer_lstm(units            = 100, 
+                 input_shape      = c(tsteps, 1), 
+                 batch_size       = batch_size,
+                 return_sequences = TRUE,
+                 unit_forget_bias = 1,
+                 stateful         = TRUE) %>% 
+      layer_lstm(units            = 100, 
+                 return_sequences = FALSE, 
+                 unit_forget_bias = 1,
+                 stateful         = TRUE) %>% 
+      layer_dense(units = 1)
+    
+    model %>% 
+      compile(loss = 'mae', optimizer = 'adam')
+    
+    # 5.1.7 Fitting LSTM
+    for (i in 1:epochs) {
+      model %>% fit(x          = x_train_arr, 
+                    y          = y_train_arr, 
+                    batch_size = batch_size,
+                    epochs     = 1, 
+                    verbose    = 1, 
+                    shuffle    = FALSE)
+      
+      model %>% reset_states()
+      cat("Epoch: ", i)
+      
+    }
+    
+    # 5.1.8 Predict and Return Tidy Data
+    # Make Predictions
+    pred_out <- model %>% 
+      predict(x_test_arr, batch_size = batch_size) %>%
+      .[,1] 
+    
+    # Retransform values
+    pred_tbl <- tibble(
+      index   = lag_test_tbl$index,
+      value   = (pred_out * scale_history + center_history)^2
+    ) 
+    
+    # Combine actual data with predictions
+    tbl_1 <- df_trn %>%
+      add_column(key = "actual")
+    
+    tbl_2 <- df_tst %>%
+      add_column(key = "actual")
+    
+    tbl_3 <- pred_tbl %>%
+      add_column(key = "predict")
+    
+    # Create time_bind_rows() to solve dplyr issue
+    time_bind_rows <- function(data_1, data_2, index) {
+      index_expr <- enquo(index)
+      bind_rows(data_1, data_2) %>%
+        as_tbl_time(index = !! index_expr)
+    }
+    
+    ret <- list(tbl_1, tbl_2, tbl_3) %>%
+      reduce(time_bind_rows, index = index) %>%
+      arrange(key, index) %>%
+      mutate(key = as_factor(key))
+    
+    return(ret)
+    
+  }
+  
+  safe_lstm <- possibly(lstm_prediction, otherwise = NA)
+  
+  safe_lstm(split, epochs, ...)
+  
+}
+
+predictions_lstm<-predict_keras_lstm(split)
+
+#training the model and calculating forecasts====
+sample_predictions_lstm_tbl <- rolling_origin_resamples %>%
+  mutate(predict = map(splits, predict_keras_lstm, epochs = 100))
+
+sample_predictions_lstm_tbl
+
+
+calc_mape <- function(prediction_tbl) {
+  
+  mape_calculation <- function(data) {
+    data %>%
+      spread(key = key, value = value) %>%
+      dplyr::select(-index) %>%
+      filter(!is.na(predict)) %>%
+      rename(
+        truth    = actual,
+        estimate = predict
+      ) %>%
+      filter(truth!=0) %>% 
+      mutate(diff=abs(truth-estimate)) %>%
+      mutate(coc=diff/truth) %>% 
+      summarise(mape=mean(coc))*100
+  }
+  
+  safe_mape <- possibly(mape_calculation, otherwise = NA)
+  
+  safe_mape(prediction_tbl)
+  
+}
+
+calc_mape_sfi <- function(prediction_tbl) {
+
+    mape_calculation_sfi <- function(data) {
+    data %>%
+      spread(key = key, value = value) %>%
+      dplyr::select(-index) %>%
+      filter(!is.na(predict)) %>%
+      rename(
+        truth    = actual,
+        estimate = predict
+      ) %>%
+      filter(truth!=0) %>% 
+      summarise(diff=sum(abs(truth-estimate)),
+                total=sum(truth)) %>%
+      mutate(mape=(diff/total)*100) 
+  }
+  
+  safe_mape1 <- possibly(mape_calculation_sfi, otherwise = NA)
+  
+  safe_mape1(prediction_tbl)
+}
+
+
+
+
+# Setup single plot function
+
+plot_prediction <- function(data, id, alpha = 1, size = 2, base_size = 6) {
+  
+  #mape_val <- calc_mape(data)
+  
+  g <- data %>%
+    ggplot(aes(index, value, color = key)) +
+    geom_point(alpha = alpha, size = size) + 
+    #geom_line(size = size) + 
+    tidyquant::theme_tq(base_size = base_size) +
+    tidyquant::scale_color_tq() +
+    theme(legend.position = "none") +
+    labs(
+      #title = glue("{id}, mape: {round(mape_val, digits = 1)}"),
+      x = "", y = ""
+    )
+  
+  return(g)
+}
+
+
+plot_predictions <- function(sampling_tbl, predictions_col, 
+                             ncol = 2, alpha = 1, size = 2, base_size = 18,
+                             title = "Backtested Predictions") {
+  
+  predictions_col_expr <- enquo(predictions_col)
+  
+  # Map plot_split() to sampling_tbl
+  sampling_tbl_with_plots <- sampling_tbl %>%
+    mutate(gg_plots = map2(!! predictions_col_expr, id, 
+                           .f        = plot_prediction, 
+                           alpha     = alpha, 
+                           size      = size, 
+                           base_size = base_size)) 
+  
+  # Make plots with cowplot
+  plot_list <- sampling_tbl_with_plots$gg_plots 
+  
+  p_temp <- plot_list[[1]] + theme(legend.position = "bottom")
+  legend <- get_legend(p_temp)
+  
+  p_body  <- plot_grid(plotlist = plot_list, ncol = ncol)
+  
+  
+  
+  p_title <- ggdraw() + 
+    draw_label(title, size = 18, fontface = "bold", colour = palette_light()[[1]])
+  
+  g <- plot_grid(p_title, p_body, legend, ncol = 1, rel_heights = c(0.05, 1, 0.05))
+  
+  return(g)
+  
+}
+
+
+sample_predictions_lstm_tbl_prices %>%
+  filter(id%in%c("Slice1", "Slice2")) %>% 
+  plot_predictions(predictions_col = predict, alpha = 1, size = 1, base_size = 10,
+                   title = "Predicción sobre las muestras de prueba. Particiones 1 y 2")
+
+sample_predictions_lstm_tbl_prices %>%
+  filter(id%in%c("Slice3","Slice4")) %>% 
+  plot_predictions(predictions_col = predict, alpha = 1, size = 1, base_size = 10,
+                   title = "Predicción sobre las muestras de prueba. Particiones 3 y 4")
+
+sample_predictions_lstm_tbl_prices %>%
+  filter(id%in%c( "Slice5","Slice6")) %>% 
+  plot_predictions(predictions_col = predict, alpha = 1, size = 1, base_size = 10,
+                   title = "Predicción sobre las muestras de prueba. Particiones 5 y 6")
+
+
+
+sample_mape_tbl <- sample_predictions_lstm_tbl_prices %>%
+  mutate(mape = map(predict, calc_mape)) %>% 
+  dplyr::select(id, mape)
+
+
+#sample_predictions_lstm_tbl_prices$predict[[1]]
+# for(i in 1:length(sample_predictions_lstm_tbl_prices$predict)){
+#   temp<-calc_mape_sfi(sample_predictions_lstm_tbl_prices$predict[[i]])
+#   if(base::exists("results")){
+#     results<-results %>% rbind(temp)
+#   }else{results<-temp}
+# }
+
+results<-calc_mape_sfi(sample_predictions_lstm_tbl_prices$predict[[1]]) %>% 
+  rbind(calc_mape_sfi(sample_predictions_lstm_tbl_prices$predict[[2]]),
+        calc_mape_sfi(sample_predictions_lstm_tbl_prices$predict[[3]]),
+        calc_mape_sfi(sample_predictions_lstm_tbl_prices$predict[[4]]),
+        calc_mape_sfi(sample_predictions_lstm_tbl_prices$predict[[5]]),
+        calc_mape_sfi(sample_predictions_lstm_tbl_prices$predict[[6]]))
+
+do.call(rbind.data.frame, sample_mape_tbl$mape) %>% mutate(Split=paste("split",seq(1,6,1))) %>%
+  left_join(
+    results %>% mutate(key=paste("split",seq(1,6,1))),
+    by=c("Split"="key")
+  ) %>%
+  dplyr::rename("MAPE"=mape.x,"MAPE2"=mape.y) %>%
+  dplyr::select(Split,MAPE,MAPE2)
+
+
+#MAPE 1 and 2 plots
+do.call(rbind.data.frame, sample_mape_tbl$mape) %>% mutate(Split=paste("split",seq(1,6,1))) %>%
+  left_join(
+    results %>% mutate(key=paste("split",seq(1,6,1))),
+    by=c("Split"="key")
+  ) %>%
+  dplyr::rename("MAPE"=mape.x,"MAPE2"=mape.y) %>%
+  dplyr::select(Split,MAPE,MAPE2) %>%
+  gather(metrica,valor,2:3) %>%
+  ggplot(aes(x=Split,y=valor,fill=metrica),color="black")+
+  geom_bar(stat = "identity",position=position_dodge())+
+  theme_tq()+
+  scale_fill_brewer(palette="Set1")+
+  theme(legend.text  = element_text(size=15),
+        legend.title = element_text(size=15))+
+  ggtitle("Métricas sobre las distintas particiones obtenidas con la LSTM")
+
+
+#MAE and RMSE calculation
+
+metrics<-function(x){
+  
+a<-x %>%
+    spread(key = key, value = value) %>%
+    dplyr::select(-index) %>%
+    filter(!is.na(predict)) %>%
+    rename(
+        truth    = actual,
+        estimate = predict
+    ) %>%
+    filter(truth!=0)
+  
+return(data.frame(MAE=MAE(x = a$estimate,ref=a$truth),
+                  RMSE=RMSE(x = a$estimate,ref=a$truth)
+        ))
+
+}
+
+
+
+
+metrics(sample_predictions_lstm_tbl_prices$predict[[1]]) %>% 
+  rbind(metrics(sample_predictions_lstm_tbl_prices$predict[[2]]),
+        metrics(sample_predictions_lstm_tbl_prices$predict[[3]]),
+        metrics(sample_predictions_lstm_tbl_prices$predict[[4]]),
+        metrics(sample_predictions_lstm_tbl_prices$predict[[5]]),
+        metrics(sample_predictions_lstm_tbl_prices$predict[[6]])) %>% 
+  mutate(particiones=paste("split",seq(1,6,1))) %>% 
+  dplyr::select(particiones,everything()) %>% 
+  arrange(RMSE)
+
+```
+
+*Apartado V.5*
+\setlength\parskip{5ex}
+
+El código utilizado en el apartado V.5 es el mismo que el utilizado en el apartado V.5, con el cambio en los datos de entrada. En este apartado se aplica la LSTM sobre la rendibilidad en vez de sobre el precio de cierre. Para simplificar el anexo no se vuelve a copiar el mismo código que en el apartado V.4 ya que es exactamente el mismo que el utilizado en el apartado V.5
+\setlength\parskip{5ex}
+
+```{r,eval=F, echo=T,size="scriptsize"}
+libraries <- c("lubridate","tidyverse","tidyr","forecast","ggplot2","seasonal","tidyverse",
+               "manipulate","compiler","scales","lmtest","MASS","glmnet","forecTheta",
+               "neuralnet","tsDyn","changepoint","RSNNS","xgboost","foreach","doSNOW",
+               "tcltk","DescTools","rnn","glue","forcats","timetk","tidyquant","tibbletime",
+               "cowplot","recipes","rsample","yardstick","keras","quantmod","tidyverse"
+)
+# check.libraries <- is.element(libraries, installed.packages()[, 1])==FALSE
+# libraries.to.install <- libraries[check.libraries]
+# if (length(libraries.to.install!=0)) {
+#   install.packages(libraries.to.install)
+# }
+
+lapply(libraries, require, character.only=TRUE)
+library(tidyverse)
+library(quantmod)
+getSymbols(Symbols = "KO", from ="2000-01-01",to="2018-12-31")
+#install_keras()
+
+load("C:/Users/i0386388/Desktop/tesis/lstm_prices.RData")
+sample_predictions_lstm_tbl_prices<-sample_predictions_lstm_tbl
+load("C:/Users/i0386388/Desktop/tesis/lstm_return.RData")
+sample_predictions_lstm_tbl_return<-sample_predictions_lstm_tbl
+rm(sample_predictions_lstm_tbl)
+
+
+
+dates<-rownames(as.data.frame(KO))
+log_return <- diff(log(as.vector(KO$KO.Close)))
+
+Exerci.0<-data.frame(MSales=log_return,StartDate=dates[-length(dates)])#log returns
+
+rownames(Exerci.0)<-Exerci.0$StartDate
+input<-Exerci.0 %>% dplyr::select(MSales)
+
+```

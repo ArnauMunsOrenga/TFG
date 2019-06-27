@@ -1,0 +1,882 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{}
+    \pretitle{\vspace{\droptitle}}
+  \posttitle{}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+
+\begin{document}
+
+\hypertarget{obtencion}{%
+\paragraph{Obtención}\label{obtencion}}
+
+Los datos con los que se va a realizar el presente trabajo se obtienen a
+través del paquete \texttt{quantmod}. Este paquete se diseñó para
+assistir a los \emph{traders} quantitativos en el desarrollo, evaluación
+y puesta en funcionamiento de modelos de \emph{trading} basados en la
+estadística. (revisar, cita (pckg info)). Concretamente, se utiliza la
+función \texttt{getSymbols} para obtener los datos ya que permite cargar
+y manejar \texttt{Symbols} en un ambiente especificado (cita (funs
+help)). Las posibles fuentes de datos son: Yahoo; Google, aunque
+actualmente no funciona; Alphavantage, con la ventaja de que podemos
+obtener datos intra-dia; MySQL, FRED, etc. (cita). Para obtener los
+datos se procede a utilizar \emph{Yahoo Finance} como la fuente.
+
+\setlength\parskip{5ex}
+
+La metodología para la búsqueda de los distintos stocks con los cuales
+entrenar los modelos predictivos empieza con la idea de querer encontrar
+empresas representativas dentro de distintos sectores estratégicos y con
+amplio impacto en la economía real. Además se pretende que los stocks
+utilizados tengan rentabilidad financiera con el objetivo de llevar el
+presente trabajo lo más cerca posible de una situación real de
+inversión. Para ello se utiliza el portfolio a fecha 01/01/2019 del gran
+\emph{gurú} de las finanzas Warren Buffet {[}@warrenbuffet{]}. Dentro de
+las numerosas empresas presentes en este portfolio se escogen los 3
+\emph{stocks} del NYSE (bolsa de nueva york) y una del NASDAQ.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(kableExtra)}
+\KeywordTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:lubridate':
+## 
+##     intersect, setdiff, union
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(quantmod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: xts
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: zoo
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'zoo'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     as.Date, as.Date.numeric
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'xts'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:dplyr':
+## 
+##     first, last
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: TTR
+\end{verbatim}
+
+\begin{verbatim}
+## Version 0.4-0 included new data defaults. See ?getSymbols.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Simbolo=}\KeywordTok{c}\NormalTok{(}\StringTok{"AAPL"}\NormalTok{,}\StringTok{"WFC"}\NormalTok{,}\StringTok{"KO"}\NormalTok{,}\StringTok{"AXP"}\NormalTok{),}
+                 \DataTypeTok{Nombre=}\KeywordTok{c}\NormalTok{(}\StringTok{"Apple Inc."}\NormalTok{,}\StringTok{"Wells Fargo & CO"}\NormalTok{,}\StringTok{"Coca-Cola Company"}\NormalTok{,}\StringTok{"American Express CO"}\NormalTok{),}
+                 \DataTypeTok{Bolsa=}\KeywordTok{c}\NormalTok{(}\StringTok{"NASDAQ"}\NormalTok{,}\StringTok{"NYSE"}\NormalTok{,}\StringTok{"NYSE"}\NormalTok{,}\StringTok{"NYSE"}\NormalTok{)), }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{),}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{bootstrap_options =} \StringTok{"hover"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|l|l}
+\hline
+Simbolo & Nombre & Bolsa\\
+\hline
+AAPL & Apple Inc. & NASDAQ\\
+\hline
+WFC & Wells Fargo \& CO & NYSE\\
+\hline
+KO & Coca-Cola Company & NYSE\\
+\hline
+AXP & American Express CO & NYSE\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+\centering
+  \captionof{table}{Stocks utilizados}
+
+\setlength\parskip{5ex}
+\justifying
+
+Al hecho de que los \emph{stocks} que forman la base de datos formen
+parte del portfolio de uno de los \emph{gurús} del mundo de las finanzas
+y la inversión, se le suma también el hecho de que las empresas
+escogidas son empresas multinacionales con un gran capital que ocupan
+una posición destacada sus respectivos mercados, siendo representativas
+de cada uno de los sectores en los cuales operan.
+
+Coca - cola (explicar un poco la compañía) etc etc
+
+\hypertarget{descripcion}{%
+\paragraph{Descripción}\label{descripcion}}
+
+Después de utilizar la función \texttt{getSymbols} se obtiene una tabla
+para cada stock con un formato estandarizado. Se obtienen 5 series
+temporales con periodicidad diaria que hacen referencia a los precios de
+\textbf{apertura}, \textbf{cierre}, \textbf{máximo}, \textbf{mínimo} y
+\textbf{volúmen}. Además se incluye el precio ajustado pero esta
+variable no será utilizada en este trabajo. Todas las variables
+presentes en la base de datos utilizada son numéricas.
+
+\setlength\parskip{5ex}
+\justifying
+
+Los datos utilizados en este trabajo compreden el período 2000 - ?,
+siendo el día \texttt{2000-01-01} la primera observación de cada serie
+temporal. La última observación de la base de datos es (revisar)
+
+\setlength\parskip{5ex}
+\justifying
+
+La función \texttt{str} permite visualizar fácilmente la estructura y
+formato que presentan en R las distintas tablas de la base de datos
+inicial. En el siguiente output se muestra como ejemplo la empresa
+Coca-Cola Company.
+
+\centering
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{source}\NormalTok{(}\StringTok{"C:/Users/i0386388/Desktop/tesis/Tesis/load.R"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'CombMSC'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:stats':
+## 
+##     BIC
+\end{verbatim}
+
+\begin{verbatim}
+## randomForest 4.6-14
+\end{verbatim}
+
+\begin{verbatim}
+## Type rfNews() to see new features/changes/bug fixes.
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'randomForest'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     combine
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:ggplot2':
+## 
+##     margin
+\end{verbatim}
+
+\begin{verbatim}
+## -- Attaching packages ------------------------------------------------------------------------------------------------------------ tidyverse 1.2.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v tibble  1.4.2     v purrr   0.2.5
+## v tidyr   0.8.1     v stringr 1.3.1
+## v readr   1.1.1     v forcats 0.3.0
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts --------------------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
+## x lubridate::as.difftime() masks base::as.difftime()
+## x randomForest::combine()  masks dplyr::combine()
+## x lubridate::date()        masks base::date()
+## x dplyr::filter()          masks stats::filter()
+## x xts::first()             masks dplyr::first()
+## x lubridate::intersect()   masks base::intersect()
+## x dplyr::lag()             masks stats::lag()
+## x xts::last()              masks dplyr::last()
+## x randomForest::margin()   masks ggplot2::margin()
+## x lubridate::setdiff()     masks base::setdiff()
+## x lubridate::union()       masks base::union()
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: lattice
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'caret'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:purrr':
+## 
+##     lift
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'foreach'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:purrr':
+## 
+##     accumulate, when
+\end{verbatim}
+
+\begin{verbatim}
+## 'getSymbols' currently uses auto.assign=TRUE by default, but will
+## use auto.assign=FALSE in 0.5-0. You will still be able to use
+## 'loadSymbols' to automatically load data. getOption("getSymbols.env")
+## and getOption("getSymbols.auto.assign") will still be checked for
+## alternate defaults.
+## 
+## This message is shown once per session and may be disabled by setting 
+## options("getSymbols.warning4.0"=FALSE). See ?getSymbols for details.
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## WARNING: There have been significant changes to Yahoo Finance data.
+## Please see the Warning section of '?getSymbols.yahoo' for details.
+## 
+## This message is shown once per session and may be disabled by setting
+## options("getSymbols.yahoo.warning"=FALSE).
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prices.KO<-}\KeywordTok{as.data.frame}\NormalTok{(KO)}
+\NormalTok{prices.WFC<-}\KeywordTok{as.data.frame}\NormalTok{(WFC)}
+\NormalTok{prices.AAPL<-}\KeywordTok{as.data.frame}\NormalTok{(AAPL)}
+\NormalTok{prices.AXP<-}\KeywordTok{as.data.frame}\NormalTok{(AXP)}
+\KeywordTok{str}\NormalTok{(prices.KO)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    4778 obs. of  6 variables:
+##  $ KO.Open    : num  29 28.2 28.2 28.5 28.9 ...
+##  $ KO.High    : num  29 28.4 28.7 28.8 30.4 ...
+##  $ KO.Low     : num  27.6 27.8 28 28.3 28.9 ...
+##  $ KO.Close   : num  28.2 28.2 28.5 28.5 30.4 ...
+##  $ KO.Volume  : num  10997000 7308000 9457400 7129200 11474000 ...
+##  $ KO.Adjusted: num  12.4 12.4 12.5 12.5 13.3 ...
+\end{verbatim}
+
+\setlength\parskip{5ex}
+\justifying
+
+\emph{Tablas descriptivas}
+
+Se explora descriptivamente los datos analizando los estadísticos
+descriptivos . Para cada empresa, se obtienen los distintos estadísticos
+de cada una de las variables descritas previamente. Para ello se
+elaboran 4 tablas que hacen referencia a los distintos estadísticos,
+calculados sobre los distintos precios y el volúmen, para una misma
+empresa.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a<-}\KeywordTok{format}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Open),}\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\DataTypeTok{a=}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.High),}\DecValTok{2}\NormalTok{))) }\OperatorTok{%>%}\KeywordTok{rbind}\NormalTok{(}\DataTypeTok{b=}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Low),}\DecValTok{2}\NormalTok{))) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\DataTypeTok{c=}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Close),}\DecValTok{2}\NormalTok{))) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Volume)}\OperatorTok{/}\DecValTok{1000000}\NormalTok{,}\DecValTok{3}\NormalTok{),}\StringTok{"M"}\NormalTok{))),}\DataTypeTok{scientific=}\OtherTok{TRUE}\NormalTok{)}
+
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"Open"}\NormalTok{,}\StringTok{"High"}\NormalTok{,}\StringTok{"Low"}\NormalTok{,}\StringTok{"Close"}\NormalTok{,}\StringTok{"Volume"}\NormalTok{)}
+\KeywordTok{names}\NormalTok{(a)<-}\KeywordTok{names}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Open))}
+
+\KeywordTok{kable}\NormalTok{(a,}\StringTok{"latex"}\NormalTok{,}\DataTypeTok{digits =} \DecValTok{2}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|l|l|l|l|l|l}
+\hline
+  & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max.\\
+\hline
+Open & 18.55 & 23.49 & 28.75 & 31.43 & 40.4 & 50.82\\
+\hline
+High & 18.8 & 23.72 & 29.01 & 31.66 & 40.6 & 50.84\\
+\hline
+Low & 18.5 & 23.26 & 28.47 & 31.19 & 40.15 & 50.25\\
+\hline
+Close & 18.54 & 23.5 & 28.77 & 31.44 & 40.39 & 50.51\\
+\hline
+Volume & 2.147M & 9.821M & 12.972M & 14.692M & 17.49M & 124.169M\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+  \captionof{table}{Estadísticos descriptivos para los distintos precios de Coca-Cola Company}
+
+\setlength\parskip{5ex}
+\justifying
+
+Como se puede apreciar en la tabla 5.2 el rango que han tomado los
+precios de cierre para la empresa Coca-Cola CO. en el período estudiado
+se mueve entre 18.54 y 50.51. El precio medio de cierre para el período
+estudiado es de 31.44 dólares.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a<-}\KeywordTok{format}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Open),}\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\DataTypeTok{a=}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.High),}\DecValTok{2}\NormalTok{))) }\OperatorTok{%>%}\KeywordTok{rbind}\NormalTok{(}\DataTypeTok{b=}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Low),}\DecValTok{2}\NormalTok{))) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\DataTypeTok{c=}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Close),}\DecValTok{2}\NormalTok{))) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Volume)}\OperatorTok{/}\DecValTok{1000000}\NormalTok{,}\DecValTok{3}\NormalTok{),}\StringTok{"M"}\NormalTok{))),}\DataTypeTok{scientific=}\OtherTok{TRUE}\NormalTok{)}
+
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"Open"}\NormalTok{,}\StringTok{"High"}\NormalTok{,}\StringTok{"Low"}\NormalTok{,}\StringTok{"Close"}\NormalTok{,}\StringTok{"Volume"}\NormalTok{)}
+\KeywordTok{names}\NormalTok{(a)<-}\KeywordTok{names}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Open))}
+\KeywordTok{kable}\NormalTok{(a,}\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|l|l|l|l|l|l}
+\hline
+  & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max.\\
+\hline
+Open & 0.93 & 4.37 & 26.13 & 51.65 & 90.52 & 230.78\\
+\hline
+High & 0.94 & 4.47 & 26.53 & 52.13 & 91.37 & 233.47\\
+\hline
+Low & 0.91 & 4.21 & 25.66 & 51.12 & 89.72 & 229.78\\
+\hline
+Close & 0.94 & 4.36 & 26.1 & 51.64 & 90.52 & 232.07\\
+\hline
+Volume & 9.835M & 52.133M & 93.003M & 119.542M & 156.041M & 1855.41M\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+  \captionof{table}{Estadísticos descriptivos para los distintos precios de Apple Inc.}
+
+\setlength\parskip{5ex}
+\justifying
+
+Como se puede apreciar en la tabla 5.3 el rango que han tomado los
+precios de cierre para la empresa Apple Inc.~en el período estudiado se
+mueve entre 0.94 y 232.07. El precio medio de cierre para el período
+estudiado es de 51.64 dólares, superior al de la empresa Coca-Cola CO.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a<-}\KeywordTok{format}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Open),}\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\DataTypeTok{a=}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.High),}\DecValTok{2}\NormalTok{))) }\OperatorTok{%>%}\KeywordTok{rbind}\NormalTok{(}\DataTypeTok{b=}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Low),}\DecValTok{2}\NormalTok{))) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\DataTypeTok{c=}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Close),}\DecValTok{2}\NormalTok{))) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Volume)}\OperatorTok{/}\DecValTok{1000000}\NormalTok{,}\DecValTok{3}\NormalTok{),}\StringTok{"M"}\NormalTok{))),}\DataTypeTok{scientific=}\OtherTok{TRUE}\NormalTok{)}
+
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"Open"}\NormalTok{,}\StringTok{"High"}\NormalTok{,}\StringTok{"Low"}\NormalTok{,}\StringTok{"Close"}\NormalTok{,}\StringTok{"Volume"}\NormalTok{)}
+\KeywordTok{names}\NormalTok{(a)<-}\KeywordTok{names}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Open))}
+\KeywordTok{kable}\NormalTok{(a,}\StringTok{"latex"}\NormalTok{,}\DataTypeTok{digits =} \DecValTok{2}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|l|l|l|l|l|l}
+\hline
+  & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max.\\
+\hline
+Open & 9.99 & 41.14 & 50.19 & 55.59 & 69.94 & 113.99\\
+\hline
+High & 10.66 & 41.58 & 50.89 & 56.16 & 70.45 & 114.55\\
+\hline
+Low & 9.71 & 40.5 & 49.72 & 55 & 69.56 & 112\\
+\hline
+Close & 10.26 & 41.04 & 50.22 & 55.59 & 70.08 & 112.89\\
+\hline
+Volume & 0.837M & 3.85M & 5.314M & 6.979M & 7.965M & 90.337M\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+  \captionof{table}{Estadísticos descriptivos para los distintos precios de American Express CO.}
+
+\setlength\parskip{5ex}
+\justifying
+
+Como se puede apreciar en la tabla 5.4 el rango que han tomado los
+precios de cierre para la American Express CO. en el período estudiado
+se mueve entre 10.26 y 112.89. El precio medio de cierre para el período
+estudiado es de 55.59 dólares, ligeramente superior al de la empresa
+Apple Inc..
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a<-}\KeywordTok{format}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Open),}\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\DataTypeTok{a=}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.High),}\DecValTok{2}\NormalTok{))) }\OperatorTok{%>%}\KeywordTok{rbind}\NormalTok{(}\DataTypeTok{b=}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Low),}\DecValTok{2}\NormalTok{))) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\DataTypeTok{c=}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Close),}\DecValTok{2}\NormalTok{))) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(}\KeywordTok{round}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Volume)}\OperatorTok{/}\DecValTok{1000000}\NormalTok{,}\DecValTok{3}\NormalTok{),}\StringTok{"M"}\NormalTok{))),}\DataTypeTok{scientific=}\OtherTok{TRUE}\NormalTok{)}
+
+\KeywordTok{rownames}\NormalTok{(a)<-}\KeywordTok{c}\NormalTok{(}\StringTok{"Open"}\NormalTok{,}\StringTok{"High"}\NormalTok{,}\StringTok{"Low"}\NormalTok{,}\StringTok{"Close"}\NormalTok{,}\StringTok{"Volume"}\NormalTok{)}
+\KeywordTok{names}\NormalTok{(a)<-}\KeywordTok{names}\NormalTok{(}\KeywordTok{summary}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Open))}
+\KeywordTok{kable}\NormalTok{(a,}\StringTok{"latex"}\NormalTok{,}\DataTypeTok{digits =} \DecValTok{2}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|l|l|l|l|l|l}
+\hline
+  & Min. & 1st Qu. & Median & Mean & 3rd Qu. & Max.\\
+\hline
+Open & 8.65 & 25.95 & 31.19 & 35.19 & 45.82 & 65.89\\
+\hline
+High & 8.94 & 26.29 & 31.48 & 35.56 & 46.23 & 66.31\\
+\hline
+Low & 7.8 & 25.54 & 30.84 & 34.82 & 45.47 & 65.66\\
+\hline
+Close & 8.12 & 25.91 & 31.2 & 35.2 & 45.97 & 65.93\\
+\hline
+Volume & 1.774M & 9.129M & 15.235M & 23.412M & 27.088M & 478.737M\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+  \captionof{table}{Estadísticos descriptivos para los distintos precios de Wells Fargo and CO.}
+
+\setlength\parskip{5ex}
+\justifying
+
+Como se puede apreciar en la tabla 5.4 el rango que han tomado los
+precios de cierre para la empresa Wells Fargo and CO. en el período
+estudiado se mueve entre 8.12 y 65.93. El precio medio de cierre para el
+período estudiado es de 35.2 dólares, ligeramente superior al de
+Coca-Cola CO. inferior al de \texttt{AAPL} y \texttt{AXP}.
+
+\emph{Visualización gráfica}
+
+Seguidamente se explora gráficamente el precio de cierre para cada una
+de las empresas, al ser éste la variable a partir de la cual se
+calculará la variable respuesta sobre la que hacer predicción. El
+objetivo de este tipo de análisis es poder visualizar el tipo de
+evolución que han presentado los distintos \emph{stocks} durante el
+período de estudio.
+
+\setlength\parskip{5ex}
+\justifying
+
+En el siguiente gráfico se representa el precio de cierre de Coca-Cola
+Company para el período comprendido entre el 03/01/2000 y 28/12/2018.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{chartSeries}\NormalTok{(KO}\OperatorTok{$}\NormalTok{KO.Close,}\DataTypeTok{name=}\StringTok{"KO Close"}\NormalTok{,}\DataTypeTok{color.vol =}\NormalTok{ T)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{descripcion_obtencion_files/figure-latex/unnamed-chunk-8-1} \end{center}
+  \captionof{figure}{Precio de cierre de Coca-Cola Company 03/01/2000 - 28/12/2018}
+
+\setlength\parskip{5ex}
+\justifying
+
+En el siguiente gráfico se representa el precio de cierre de Apple
+Inc.~para el período comprendido entre el 03/01/2000 y 28/12/2018.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{chartSeries}\NormalTok{(AAPL}\OperatorTok{$}\NormalTok{AAPL.Close,}\StringTok{"candlesticks"}\NormalTok{,}\DataTypeTok{name=}\StringTok{"AAPL Close price"}\NormalTok{,}\DataTypeTok{color.vol =}\NormalTok{ T)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{descripcion_obtencion_files/figure-latex/unnamed-chunk-9-1} \end{center}
+  \captionof{figure}{Precio de cierre de Apple Inc. 03/01/2000 - 28/12/2018}
+
+\setlength\parskip{5ex}
+\justifying
+
+En el siguiente gráfico se representa el precio de cierre de Wells Fargo
+and CO. para el período comprendido entre el 03/01/2000 y 28/12/2018.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{chartSeries}\NormalTok{(AXP}\OperatorTok{$}\NormalTok{AXP.Close,}\StringTok{"candlesticks"}\NormalTok{,}\DataTypeTok{name=}\StringTok{"AXP Close price"}\NormalTok{,}\DataTypeTok{color.vol =}\NormalTok{ T)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{descripcion_obtencion_files/figure-latex/unnamed-chunk-10-1} \end{center}
+\centering
+  \captionof{figure}{Precio de cierre de American Express CO. 03/01/2000 - 28/12/2018}
+
+\setlength\parskip{5ex}
+\justifying
+
+En el siguiente gráfico se representa el precio de cierre de Wells Fargo
+and CO. para el período comprendido entre el 03/01/2000 y 28/12/2018.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{chartSeries}\NormalTok{(WFC}\OperatorTok{$}\NormalTok{WFC.Close,}\StringTok{"candlesticks"}\NormalTok{,}\DataTypeTok{name=}\StringTok{"WFC Close price"}\NormalTok{,}\DataTypeTok{color.vol =}\NormalTok{ T)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{descripcion_obtencion_files/figure-latex/unnamed-chunk-11-1} \end{center}
+\centering
+  \captionof{figure}{Precio de cierre de Wells Fargo and CO. 03/01/2000 - 28/12/2018}
+
+\setlength\parskip{5ex}
+\justifying
+
+A partir de esta exploración gráfica se descubre que 3 de las 4 empresas
+(KO, AXP y WFC) presentan un comportamiento relativamente similar. Como
+se puede observar en la figura 5.1, 5.3 y 5.4 la evolución de
+\texttt{KO,\ AXP\ y\ WFC} en el período estudiado presenta una
+tendencia, en general, creciente. Si se analiza en detalle el lector
+puede detectar 3 etapas claramente destacada en la evolución de estos
+stocks, siendo la primera de ellas distinta en el caso de Wells Fargo \&
+CO. Estos 3 períodos claramente diferenciados son los correspondientes a
+los años 2000-2007, 2008-2010 y 2011-2018.
+
+\textbf{2000-2006}
+
+En el caso de las empresas Coca-Cola CO. y American Express CO. la
+primera etapa (2000 - inicios de 2006) corresponde a la relajación de
+los mercados financieros posterior al \emph{boom de las .com}. La
+segunda mitad de los 90 fueron una época de expansión económica en la
+cual se produjo un boom financiero en USA {[}ver @stockboomJermann{]}
+que se relajo a partir de finales de milenio.
+
+\textbf{2006-2008}
+
+Esta relajación fué seguida por la segunda etapa, un período de
+crecimiento económico y de los mercados financieros que se produjo a
+partir del 2006 y hasta el 2008. Esta etapa de crecimiento fué previa a
+la gran recesión mundial que tuvo lugar a partir del año 2008 {[}ver
+@crisisreasons, @crisisreasons2, @crisisreasons3 pp. 77-110 para más
+información{]}
+
+\setlength\parskip{5ex}
+\justifying
+
+\emph{Descriptiva financiera}
+
+CONTAR LAS VECES QUE EL PRECIO EN EL DÍA T ES MAYOR/INFERIOR A T-1 QUE
+EL PRECIO A BAJADO EN EL PRECIO SIN ALISAR. DESPUES CON EL PRECIO
+ALISADO Y COMPARANDO LA \% DE DÍA
+
+SABEMOS QUE ESTA VARIABLE SE PUEDE PREDECIR MUY BIEN A.K.A PODEMOS
+CLASIFICAR MUY BIEN CON INDICADORES TECNICOS LOS DÍAS QUE INCREMENTA O
+DECREMENTA EL PRECIO. ESTO PRUEBA QUE LOS INDICADORES TECNICOS SON
+UTILES A LA HORA DE HACER INVERSIONES PORQUE, ANALIZADOS CORRECTAMENTE,
+``PERMITEN'' SABER SI EN UN DIA T EL PRECIO HABRÁ SUBIDO O NO RESPECTO A
+T-1. ESTA NO ES LA VARIABLE RESPUESTA QUE SE UTILIZA EN ESTE TRABAJO, AL
+UTILIZAR INDICADORES TECNICOS CALCULADOS CON EL PROPIO EN PRECIO EN T
+PARA PODER SABER SI EL PRECIO EN T HA SUBIDO RESPECTO T-1
+
+Seguidamente se muestran las distintas tablas comparativas de los
+distintos precios obtenidos inicialmente. Éstas incluyen la media, la
+desviación típica o volatilidad del precio y el coeficiente de
+variación, el cual es un estadístico utilizado de manera frecuente para
+medir la volatilidad de un stock al ser una variable que no tiene en
+cuenta las unidades de medida. Esto significa que permite comparar
+distintos stocks en cuanto a volatilidad se refiere sin tener en cuenta
+la magnitud que éstos presenten.
+
+Este tipo de visualización permite analizar más detenidamente cada uno
+de los precios y poder compararlos fácilmente entre todas las empresas.
+Es además una buena manera de analizar a priori la predictibilidad de
+los distintos precios al poder comparar los distintos coeficientes de
+variación. La idea de evaluar la predictibilidad de una serie temporal
+con el coeficiente de variación sugiere que es más fácil de predecir una
+serie temporal con un comportamiento más estable, esto es, con menos
+unidades de desviación típica por unidad de media {[}@CoVMike{]}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Nombre=}\KeywordTok{c}\NormalTok{(}\StringTok{"Apple Inc."}\NormalTok{,}\StringTok{"Wells Fargo & CO"}\NormalTok{,}\StringTok{"Coca-Cola Company"}\NormalTok{,}\StringTok{"American Express CO"}\NormalTok{),}
+                 \DataTypeTok{Media=}\KeywordTok{c}\NormalTok{(}\KeywordTok{mean}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Open),}\KeywordTok{mean}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Open),}\KeywordTok{mean}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Open),}\KeywordTok{mean}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Open)),}
+                 \DataTypeTok{Desv_std=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sd}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Open),}\KeywordTok{sd}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Open),}\KeywordTok{sd}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Open),}\KeywordTok{sd}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Open)),}
+                 \DataTypeTok{CoV=}\KeywordTok{c}\NormalTok{((}\KeywordTok{sd}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Open)}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Open)),(}\KeywordTok{sd}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Open)}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Open)),(}\KeywordTok{sd}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Open}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Open))),(}\KeywordTok{sd}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Open)}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Open)))),}\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|r|r}
+\hline
+Nombre & Media & Desv\_std & CoV\\
+\hline
+Apple Inc. & 51.64595 & 55.925416 & 1.0828616\\
+\hline
+Wells Fargo \& CO & 35.19440 & 11.806917 & 0.3354771\\
+\hline
+Coca-Cola Company & 31.42690 & 8.652774 & 0.2753302\\
+\hline
+American Express CO & 55.58608 & 21.112421 & 0.3798149\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+\centering
+  \captionof{table}{Estadísticos descriptivos para el precio de apertura (Open).}
+
+COMENTAR TABLAS??
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Nombre=}\KeywordTok{c}\NormalTok{(}\StringTok{"Apple Inc."}\NormalTok{,}\StringTok{"Wells Fargo & CO"}\NormalTok{,}\StringTok{"Coca-Cola Company"}\NormalTok{,}\StringTok{"American Express CO"}\NormalTok{),}
+                 \DataTypeTok{Media=}\KeywordTok{c}\NormalTok{(}\KeywordTok{mean}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.High),}\KeywordTok{mean}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.High),}\KeywordTok{mean}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.High),}\KeywordTok{mean}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.High)),}
+                 \DataTypeTok{Desv_std=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sd}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.High),}\KeywordTok{sd}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.High),}\KeywordTok{sd}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.High),}\KeywordTok{sd}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.High)),}
+                 \DataTypeTok{CoV=}\KeywordTok{c}\NormalTok{((}\KeywordTok{sd}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.High)}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.High)),(}\KeywordTok{sd}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.High)}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.High)),(}\KeywordTok{sd}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.High}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.High))),(}\KeywordTok{sd}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.High)}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.High)))), }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|r|r}
+\hline
+Nombre & Media & Desv\_std & CoV\\
+\hline
+Apple Inc. & 52.13167 & 56.386960 & 1.0816258\\
+\hline
+Wells Fargo \& CO & 35.56184 & 11.819827 & 0.3323739\\
+\hline
+Coca-Cola Company & 31.66443 & 8.670834 & 0.2738351\\
+\hline
+American Express CO & 56.16119 & 21.131090 & 0.3762579\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+\centering
+  \captionof{table}{Estadísticos descriptivos para el precio máximo (High).}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Nombre=}\KeywordTok{c}\NormalTok{(}\StringTok{"Apple Inc."}\NormalTok{,}\StringTok{"Wells Fargo & CO"}\NormalTok{,}\StringTok{"Coca-Cola Company"}\NormalTok{,}\StringTok{"American Express CO"}\NormalTok{),}
+                 \DataTypeTok{Media=}\KeywordTok{c}\NormalTok{(}\KeywordTok{mean}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Low),}\KeywordTok{mean}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Low),}\KeywordTok{mean}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Low),}\KeywordTok{mean}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Low)),}
+                 \DataTypeTok{Desv_std=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sd}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Low),}\KeywordTok{sd}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Low),}\KeywordTok{sd}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Low),}\KeywordTok{sd}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Low)),}
+                 \DataTypeTok{CoV=}\KeywordTok{c}\NormalTok{((}\KeywordTok{sd}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Low)}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Low)),(}\KeywordTok{sd}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Low)}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Low)),(}\KeywordTok{sd}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Low}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Low))),(}\KeywordTok{sd}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Low)}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Low)))), }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|r|r}
+\hline
+Nombre & Media & Desv\_std & CoV\\
+\hline
+Apple Inc. & 51.12417 & 55.450009 & 1.0846143\\
+\hline
+Wells Fargo \& CO & 34.82003 & 11.805231 & 0.3390357\\
+\hline
+Coca-Cola Company & 31.18907 & 8.644319 & 0.2771585\\
+\hline
+American Express CO & 55.00056 & 21.083165 & 0.3833264\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+\centering
+  \captionof{table}{Estadísticos descriptivos para el precio mínimo (Low).}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Nombre=}\KeywordTok{c}\NormalTok{(}\StringTok{"Apple Inc."}\NormalTok{,}\StringTok{"Wells Fargo & CO"}\NormalTok{,}\StringTok{"Coca-Cola Company"}\NormalTok{,}\StringTok{"American Express CO"}\NormalTok{),}
+                 \DataTypeTok{Media=}\KeywordTok{c}\NormalTok{(}\KeywordTok{mean}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Close),}\KeywordTok{mean}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Close),}\KeywordTok{mean}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Close),}\KeywordTok{mean}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Close)),}
+                 \DataTypeTok{Desv_std=}\KeywordTok{c}\NormalTok{(}\KeywordTok{sd}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Close),}\KeywordTok{sd}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Close),}\KeywordTok{sd}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Close),}\KeywordTok{sd}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Close)),}
+                 \DataTypeTok{CoV=}\KeywordTok{c}\NormalTok{((}\KeywordTok{sd}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Close)}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.AAPL}\OperatorTok{$}\NormalTok{AAPL.Close)),(}\KeywordTok{sd}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Close)}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.WFC}\OperatorTok{$}\NormalTok{WFC.Close)),(}\KeywordTok{sd}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Close}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.KO}\OperatorTok{$}\NormalTok{KO.Close))),(}\KeywordTok{sd}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Close)}\OperatorTok{/}\KeywordTok{mean}\NormalTok{(prices.AXP}\OperatorTok{$}\NormalTok{AXP.Close)))), }\StringTok{"latex"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{(}\DataTypeTok{font_size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{latex_options =} \KeywordTok{c}\NormalTok{(}\StringTok{"basic"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{l|r|r|r}
+\hline
+Nombre & Media & Desv\_std & CoV\\
+\hline
+Apple Inc. & 51.63773 & 55.925371 & 1.0830331\\
+\hline
+Wells Fargo \& CO & 35.19502 & 11.807079 & 0.3354758\\
+\hline
+Coca-Cola Company & 31.43855 & 8.656529 & 0.2753476\\
+\hline
+American Express CO & 55.58724 & 21.099819 & 0.3795803\\
+\hline
+\end{tabular}\endgroup{}
+\end{table}
+\centering
+  \captionof{table}{Estadísticos descriptivos para el precio de cierre (Close).}
+
+\justifying
+
+
+\end{document}

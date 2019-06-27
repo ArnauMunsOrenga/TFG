@@ -1,0 +1,11 @@
+---
+output: pdf_document
+---
+
+En el siguiente apartado se procede a detallar las distintas aplicaciones del machine learning y la inteligencia artificial que se elaboran en el presente trabajo.
+
+SMD caso aplicado a 4 empresas, análisis detallado --> RF con distintos alisados
+SMD aplicado a 500 empresas (ver las que quedan + heat map) --> RF un tipo de alisado o datos raw
+SMD aplicado a las 4 empresas h2o con un tipo de alisado o datos raw
+predicción de la rentabilidad h2o para 1 empresa o las 4
+lstm sobre rentabilidad

@@ -1,0 +1,25 @@
+---
+output: pdf_document
+---
+
+\noindent
+En segundo lugar en el presente apartado se procede a analizar las posibles consecuencias y efectos generados de la aplicación de la IA en el sector financiero pero desde una perspectiva macro económica. 
+
+\noindent
+Para empezar se analiza el potencial impacto desde la perspectiva del crecimiento económico. Se puede observar que los servicios financieros apoyados en técnicas de machine learning y de IA tienen el potencial de potenciar la eficiencia de la economía y de contribuir al crecimiento económico a través de los siguientes mecanismos [@macro]:
+
+i) Fortaleciendo la eficiencia de los servicios financieros, gracias a una gestión más eficiente del riesgo que puede beneficiar al sistema de una manera agregada. A su vez, gracias a la ayuda que brinda a la hora de procesar información para el cálculo del valor fundamental de los activos, el machine learning puede ayudar a alinear mejor los fondos hacia los inversores y los proyectos de una manera más efectiva. Además el hecho de que el machine learning aplicado a los servicios financieros puede reducir el coste e incrementar la velocidad de las transacciones puede estimular las transacciones para las actividades económicas reales.
+
+ii) Facilitando la colaboración entre servicios financieros y distintas indústrias, que puede llegar a crear nuevos sectores o economías/servicios que, a su vez, ayude al crecimiento global de la economía. Un claro ejemplo de este punto es la colaboración entre el sector del comercio electónico y las economías basadas en el concepto de compartir (*sharing economies*).
+
+iii) Estimulando la inversión en el propio sector de la inteligencia artificial y las áreas relacionadas. El hecho de que muchas compañías, no sólo del sector financiero, estén dispuestos a aplicar este tipo de herramientas o sistemas de IA genera mayor inversión en el sector que a su vez se traslada en una mayor inversión inter-sectorial y, así, en mayor crecimiento.
+
+\noindent
+Desde otras perspectivas macro económicas se destacan los siguiente. En primer lugar, con la aplicación de la IA en el mercado financiero es posible que afecte a los tipos y grados de **concentración del capital** en los distintos mercados financieros. Por ejemplo, el hecho de que todos estos sistemas de IA estés intrínsecamente ligados al desarrollo tecnológico puede provocar que el acceso a las más nuevas tecnologías en, por ejemplo, el sector de la informática o la infraestructura Big Data, quede restringido a  empresas de gran capital al ser las únicas capaces de poder afrontar el coste. Otro ejemplo podría ser que la aparición de un grupo reducido de compañías ofreciendo servicios avanzados de machine learning podría incrementar la concentración en el sector de cierto tipo de servicio financiero. Por último se destaca el hecho de que las aplicaciones de inteligencia artificial tienen el potencial para fortalecer la interconectividad de los mercados y las instituciones financieras con consecuencias inesperadas. Por ejemplo, el uso cada vez más frecuente de las instituciones del Big Data puede generar mayores dependencias en variables macroeconómicas que antes no se relacionabas, extraídas a partir de sectores no financieros como el e-commerce. Sin embargo, si un sector crítico de las instituciones financieras utiliza las mismas fuentes de datos y las mismas estrategias algorítmicas, entonces es posible que, bajo ciertas conficiones del mercado, un problema en esas fuentes o algoritmos pueda afectar al mismo sector como si fuera un único nodo, actuando como catalizadores del *shock*.
+
+
+
+
+
+
+

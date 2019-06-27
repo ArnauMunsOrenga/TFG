@@ -2,9 +2,11 @@
 output: pdf_document
 ---
 
+\noindent
 Siguiendo la metodología propuesta en la figura 2.1, en primer lugar se procede a elaborar una transformación de todas las variables/precios iniciales. Esta transformación suaviza los datos con el objetivo de remover la variación aleatória y/o el ruido, haciendo que los modelos predictivos de dirección de movimiento elaborados posteriormente sean capaces de detectar más fácilmente una tendencia a largo plazo de los precios dentro del comportamiento de los mismos [@saha2016, p. 4]. El objetivo es, por un lado, crear la variable respuesta utilizando el precio de cierre alisado y, por otro, calcular los indicadores técnicos detallados en la sección 5.3 para, posteriormente, utilizarlos como variables predictoras. 
 
-\setlength\parskip{5ex}
+\setlength\parskip{7ex}
+\noindent
 Por un lado se utilizan las medias móviles exponenciales a 30, 60 y 90 días como nuevas representaciones de los precios. De esta manera se obtiene una nueva representación de los precios en la cual se ha removido la variación aleatória y el ruido. Seguidamente se muestran las gráficas para las medias móviles exponenciales del precio de cierre para la empresa Coca-Cola CO. con el objetivo de visualizar el alisado que se obtiene al aplicar este cálculo. A medida que se añaden más datos en el cálculo de las medias se obtiene un mayor alisado. 
 
 ```{r}
@@ -68,26 +70,32 @@ AXP_formula<-smooth_formula(AXP)
 <!-- ``` -->
 <!--   \captionof{figure}{Media móvil exponencial 90 días sobre el precio de cierre de Coca-Cola CO.} -->
 
-\setlength\parskip{5ex}
 \justifying
+\noindent
 Por otro lado se aplica el mismo tipo de alisado exponencial aplicado por [@saha2016, p. 4]. El objetivo es el mismo que en el caso del cálculo de las medias móviles. El estadístico alisado exponencialmente de un serie temporal $Y$ se puede calcular recursivamente, desde el momento en el que se disponga de dos observaciones, de la manera siguiente:
+
+\setlength\parskip{5ex}
 $$ S_0 = Y_o $$
 $$ S_t = \alpha*Y_y+(1-\alpha)*S_{t-1} \ \ \ \ \forall \ \ t>0 \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1)$$
+
+\setlength\parskip{8ex}
+\noindent
 donde $0 < \alpha < 1$ es el factor de alisado. El método del alisado exponencial otorga más peso a las observaciones más recientes en tanto que hace decrecer exponencialmente el peso de las observaciones más antiguas. (cita articulo, formula internet). Valores elevados de $\alpha$ provocan que el nivel de alisado quede reducido, de manera que en el caso extremo en el que $\alpha=1$ el estadístico exponencialmente alisado es igual que la observación. Es decir $S_t=Y_t \ \ \ \ si \ \alpha=1$. En el presente trabajo se aplica la fórmula anterior sobre cada uno de los precios y el volúmen con un factor de alisado $\alpha=0.05$ para conseguir un alisado más pronunciado que en el caso de las medias móviles exponenciales.
 
-comparativa formula vs 30, 60, 90, quien es mas liso, sentido economico etc. predecir la media de a 1 mes vista de EMA 30 es predecir si en 1 mes la media de los precios de ese mes comparada con las del mes que queda detrás ha subido o no
+<!-- REVISAR comparativa formula vs 30, 60, 90, quien es mas liso, sentido economico etc. predecir la media de a 1 mes vista de EMA 30 es predecir si en 1 mes la media de los precios de ese mes comparada con las del mes que queda detrás ha subido o no -->
 
-revisar, poner toda la grafica junta comparativa de todas las lineas a la vez
+<!-- revisar, poner toda la grafica junta comparativa de todas las lineas a la vez -->
 
 ```{r}
-plot(as.vector(WFC$WFC.Close),type = "l")
-lines(WFC_30$Close,col="red")
-lines(WFC_60$Close,col="blue")
-lines(WFC_90$Close,col="green")
-lines(WFC_formula$Close,col="orange")
+# plot(as.vector(WFC$WFC.Close),type = "l")
+# lines(WFC_30$Close,col="red")
+# lines(WFC_60$Close,col="blue")
+# lines(WFC_90$Close,col="green")
+# lines(WFC_formula$Close,col="orange")
 ```
 
 \justifying
+\noindent
 A su vez se presentan la siguiente tabla para poder visualizar la disminución de variabilidad que se obtiene tras aplicar las distintas medias móviles exponenciales al precio de cierre de las distintas empresas. La volatilidad se evalúa en este caso con el coeficiente de variación para permitir la comparabilidad:
 
 ```{r}
@@ -100,5 +108,7 @@ kable(data.frame(Nombre=c("Apple Inc.","Wells Fargo & CO","Coca-Cola Company","A
 ```
   \captionof{table}{Comparativa coeficiente de variación entre las distintas medias móviles exponenciales}
 
+\setlength\parskip{5ex}
 \justifying
+\noindent
 Una vez alisados los precios de los distintos *stocks* se procede a calcular tanto la variable respuesta como las variables predictoras, en este caso los indicadores técnicos, a partir de éstos.
